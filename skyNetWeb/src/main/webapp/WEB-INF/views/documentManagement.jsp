@@ -32,12 +32,12 @@
           <a class="brand" href="#">Doc Kloud</a>
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
-              Logged in as <a href="#" class="navbar-link">CEO</a>
+              Welcome ${username}
             </p>
             <ul class="nav">
               <li class="active"><a href="#">Home</a></li>
               <li><a href="#about">About</a></li>
-              <li><a href="#contact">Logout</a></li>
+              <li><a href="<c:url value="/j_spring_security_logout" />">Logout</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -126,7 +126,7 @@
       <hr>
 
       <footer>
-        <p>Â© SkyNet - Company 2012</p>
+        <p>© SkyNet - Company 2012</p>
       </footer>
 
     </div>
