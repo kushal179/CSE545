@@ -30,7 +30,6 @@ public class HomeController {
 		
 		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String name = user.getUsername();
-	
 		model.addAttribute("username", name);
 		
 		return "documentManagement";
@@ -40,6 +39,18 @@ public class HomeController {
 	public String login(Locale locale, Model model) {
 		logger.info("Welcome login! screen");
 		return "login";
+	}
+	
+	@RequestMapping(value = "/loginfailed", method = RequestMethod.GET)
+	public String loginFailed(Locale locale, Model model) {
+		logger.info("Welcome login! screen");
+		return "loginfailed";
+	}
+	
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String loginOut(Locale locale, Model model) {
+		logger.info("Welcome login! screen");
+		return "logout";
 	}
 	
 }
