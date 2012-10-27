@@ -4,3 +4,5 @@
 *.jar
 *.war
 *.ear
+skyNetWeb/target/m2e-wtp/web-resources/META-INF/MANIFEST.MF
+skyNetWeb/target/m2e-wtp/web-resources/META-INF/maven/com.asu/edu/pom.properties
