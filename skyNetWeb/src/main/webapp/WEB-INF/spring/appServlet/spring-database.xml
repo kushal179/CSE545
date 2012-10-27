@@ -11,5 +11,9 @@
 		<property name="username" value="root" />
 		<property name="password" value="" />
 	</bean>
+	
+	<bean id="securityDAO" class="com.asu.edu.base.dao.impl.SecurityDAOImpl">
+			<property name="dataSource" ref="dataSource"></property>
+	</bean>
 
 </beans>
