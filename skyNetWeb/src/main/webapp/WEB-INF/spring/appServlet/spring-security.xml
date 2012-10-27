@@ -11,19 +11,9 @@
 			authentication-failure-url="/loginfailed" />
 		<logout logout-success-url="/logout" />
 	</http>
-
+	
 	<authentication-manager>
-		<authentication-provider>
-			<jdbc-user-service data-source-ref="dataSource"
-				
-				users-by-username-query="
-					select user_name,password, is_approved 
-					from user where USER_NAME=?" 
-				
-				authorities-by-username-query="
-				SELECT U.USER_NAME, R.DESC FROM USER U, ROLES R WHERE U.ID = R.ID AND U.USER_NAME = ?" 
-					
-			/>
+		<authentication-provider ref="securityDAO" >
 		</authentication-provider>
 	</authentication-manager> 
 	<!--
