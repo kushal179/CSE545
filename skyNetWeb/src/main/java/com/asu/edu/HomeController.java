@@ -1,6 +1,8 @@
 package com.asu.edu;
 
+import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.asu.edu.base.dao.intrf.SecurityDAOImplInterface;
 
+import com.asu.edu.base.dao.intrf.AdminDAOImplInterface;
+import com.asu.edu.base.dao.intrf.SecurityDAOImplInterface;
+
 /**
  * Handles requests for the application home page.
  */
@@ -24,6 +29,8 @@ public class HomeController {
 	
 	@Autowired
 	private SecurityDAOImplInterface securityDAO = null;
+	@Autowired
+	private AdminDAOImplInterface adminDAO = null;
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -56,6 +63,13 @@ public class HomeController {
 	public String loginOut(Locale locale, Model model) {
 		logger.info("Welcome login! screen");
 		return "logout";
+	}
+	
+	@RequestMapping(value = "/admin", method = RequestMethod.GET)
+	public String admin(Locale locale, Map model) {
+		logger.info("Admin screen");
+		model.put("pendingUsers", adminDAO.getPendingUsers());
+		return "admin";
 	}
 	
 }

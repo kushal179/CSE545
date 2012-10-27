@@ -1,3 +1,6 @@
+<%@page import="com.asu.edu.base.vo.PendingUsersVO"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.ArrayList"%>
 <html lang="en"><head>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <meta charset="utf-8">
@@ -17,6 +20,8 @@
         padding: 9px 0;
       }
     </style>
+    <script type="text/javascript" 
+                  src="<c:url value="/resources/js/commonprj.js" />"></script>
   </head>
 
   <body>
@@ -32,7 +37,7 @@
           <a class="brand" href="#">Doc Kloud</a>
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
-              Logged in as <a href="#" class="navbar-link">Admin</a>
+              Logged in as <a href="#" class="navbar-link">${username}</a>
             </p>
             <ul class="nav">
               <li class="active"><a href="#">Home</a></li>
@@ -69,23 +74,12 @@
             <h3>Pending Requests</h3>
           </div>
           
-          <div class="hero-unitops">
-          	Raj Harry
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
-          	<button class="btn-link" type="button"><i class="icon-search icon-ok"></i>Aproove</button>
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          	<button class="btn-link" type="button"><i class="icon-search icon-remove"></i>Reject</button>
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          	<button class="btn-link" type="button"><i class="icon-search icon-edit"></i>Modify</button>
+          <div class="hero-unitops" id="actionbar">
+          	Select users
           </div>
 
           <div class="row-fluid">
-          	<table class="table table-hover">
+          	<table class="table table-hover"  id="contentsTable">
               <thead>
                 <tr>
                   <th>#</th>
@@ -94,25 +88,17 @@
                   <th>Department</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>John Smith</td>
-                  <td>Regular Employee</td>
-                  <td>Human Resources</td>
+              <tbody id="contentsTableBody">
+              <c:set var="count" value="0" scope="page" />
+              <c:forEach var="item" items="${pendingUsers}"> 
+              	  <tr onclick="selectUsersRow(this);">
+              	  <c:set var="count" value="${count + 1}" scope="page"/>  
+                  <td>${count}</td>
+                  <td>${item.userName}</td>
+                  <td>${item.roleDesc}</td>
+                  <td>${item.deptName}</td>
                 </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Raj Harry</td>
-                  <td>Department Manager</td>
-                  <td>IT Support</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>Daisy Smith</td>
-                  <td>Guest User</td>
-                  <td>Fianance</td>
-                </tr>
+              </c:forEach>
               </tbody>
             </table>
           	<table class="table">
