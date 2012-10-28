@@ -20,6 +20,7 @@ import com.asu.edu.constants.SQLConstants;
 public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface,AuthenticationProvider {
 
 	String calledFunction;
+
 	@Override
 	protected Object toDataObject(ResultSet rs) throws SQLException {
 		
@@ -49,18 +50,16 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 
 		return null;
 	}
-	
-	
-	public String getUserId(String paramValue){
+
+	public String getUserId(String paramValue) {
 		calledFunction = "userId";
 		Object[] param = new Object[1];
 		param[0] = paramValue;
-		String sql  = SQLConstants.USER_REG;
-		String result = (String)this.getRowByCriteria(sql, param);
-		
+		String sql = SQLConstants.USER_REG;
+		String result = (String) this.getRowByCriteria(sql, param);
+
 		return result;
 	}
-
 
 	@Override
 	public Authentication authenticate(Authentication auth)
@@ -94,7 +93,5 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 	public boolean supports(Class<? extends Object> authentication) {
 		return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
 	}
-
-	
 
 }

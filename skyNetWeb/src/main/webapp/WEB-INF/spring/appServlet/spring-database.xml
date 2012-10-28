@@ -9,7 +9,7 @@
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost:3306/dockloud" />
 		<property name="username" value="root" />
-		<property name="password" value="" />
+		<property name="password" value="root" />
 	</bean>
 	
 	<bean id="securityDAO" class="com.asu.edu.base.dao.impl.SecurityDAOImpl">
@@ -20,5 +20,8 @@
 			<property name="dataSource" ref="dataSource"></property>
 	</bean>
 
+	<bean id="registerationDAO" class="com.asu.edu.base.dao.impl.RegisterationDAOImpl">
+			<property name="dataSource" ref="dataSource"></property>
+	</bean>
 
 </beans>

@@ -86,7 +86,7 @@ body {
 														</tr>
 														<tr>
 															<td style="color: white">Password</td>
-															<td><form:input path="password" /> <br /> <font
+															<td><form:password path="password" /> <br /> <font
 																color="red"><form:errors path="password" /></font></td>
 														</tr>
 														<%-- <tr>
