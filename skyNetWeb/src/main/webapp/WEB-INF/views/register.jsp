@@ -36,8 +36,8 @@ body {
 				<div class="nav-collapse collapse">
 					<ul class="nav">
 						<li><a href="#about">About</a></li>
-						<li><a href="#contact">Login</a></li>
-						<li class="active"><a href="#contact">Register</a></li>
+						<li><a href="login">Login</a></li>
+						<li class="active"><a href="#">Register</a></li>
 					</ul>
 				</div>
 				<!--/.nav-collapse -->

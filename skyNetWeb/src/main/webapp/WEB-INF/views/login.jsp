@@ -44,7 +44,7 @@
             <ul class="nav">
               <li><a href="#about">About</a></li>
               <li class="active"><a href="#contact">Login</a></li>
-              <li><a href="#contact">Register</a></li>
+              <li><a href="register">Register</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -84,7 +84,7 @@
 					</div>
 				</c:if>
 				<input class="btn btn-primary" type="submit"/>Submit<br/><br/>
-				<a href="">Register</a>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
+				<a href="register">Register</a>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
 				<a href="">Forgot Password</a>
 				</div>
 			</td>
