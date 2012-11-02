@@ -23,5 +23,9 @@
 	<bean id="registerationDAO" class="com.asu.edu.base.dao.impl.RegisterationDAOImpl">
 			<property name="dataSource" ref="dataSource"></property>
 	</bean>
+	
+	<bean id="commonDAO" class="com.asu.edu.base.dao.impl.CommonDAOImpl">
+			<property name="dataSource" ref="dataSource"></property>
+	</bean>
 
 </beans>

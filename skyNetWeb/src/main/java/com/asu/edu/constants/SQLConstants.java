@@ -20,7 +20,7 @@ public interface SQLConstants {
 
 	public static final String USER_REG = "insert into user(user_name,password,first_name,last_name,email,role_id,dept_id,is_approved,login_attempts) values(?,?,?,?,?,?,?,?,?)";
 
-	public static final String GET_DEPTARTMENTS = "select id,name from department";
+	public static final String GET_DEPTARTMENTS = "select * from department";
 	
-	public static final String GET_ROLES = "select id,`desc` from roles";
+	public static final String GET_ROLES = "select * from roles";
 }
