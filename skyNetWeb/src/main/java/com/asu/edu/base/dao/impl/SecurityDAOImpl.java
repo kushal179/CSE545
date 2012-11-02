@@ -5,12 +5,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.asu.edu.base.dao.BaseDAO;
 import com.asu.edu.base.dao.intrf.SecurityDAOImplInterface;
@@ -51,15 +54,6 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 		return null;
 	}
 
-	public String getUserId(String paramValue) {
-		calledFunction = "userId";
-		Object[] param = new Object[1];
-		param[0] = paramValue;
-		String sql = SQLConstants.USER_REG;
-		String result = (String) this.getRowByCriteria(sql, param);
-
-		return result;
-	}
 
 	@Override
 	public Authentication authenticate(Authentication auth)
@@ -83,15 +77,37 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 				authoritites.add((new GrantedAuthorityImpl(role)));
 				return new UsernamePasswordAuthenticationToken(auth.getName(), auth.getCredentials(), authoritites);
 			}
+			
 		}
-		
-		return null;
+		throw new BadCredentialsException("Username/Password does not match for ");
 	}
 
-
+	
 	@Override
 	public boolean supports(Class<? extends Object> authentication) {
 		return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
 	}
+	
+	public UserVO getUserDetails(Authentication authentication){
+		
+		calledFunction = "authenticate";
+		Object[] prepareParams = new Object[2];
+		prepareParams[0] = authentication.getName();
+		prepareParams[1] = authentication.getCredentials();
+		UserVO userVO = (UserVO)this.getRowByCriteria(SQLConstants.USER_LOGIN, prepareParams);
+		
+		return userVO;
+		
+	}
+	
+	public boolean isLoggedIn() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return isAuthenticated(authentication);
+    }
+	private boolean isAuthenticated(Authentication authentication) {
+        return authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
+    }
+
+
 
 }

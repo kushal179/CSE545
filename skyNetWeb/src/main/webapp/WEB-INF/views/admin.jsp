@@ -77,7 +77,7 @@
           <div class="hero-unitops" id="actionbar">
           	Select users
           </div>
-
+          
           <div class="row-fluid">
           	<table class="table table-hover"  id="contentsTable">
               <thead>
@@ -95,6 +95,7 @@
               	  <c:set var="count" value="${count + 1}" scope="page"/>  
                   <td>${count}</td>
                   <td>${item.userName}</td>
+                  <td style="display:none;">${item.userId}</td>
                   <td>${item.roleDesc}</td>
                   <td>${item.deptName}</td>
                 </tr>

@@ -1,3 +1,4 @@
+<%@page import="com.asu.edu.constants.CommonConstants"%>
 <html lang="en"><head>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <meta charset="utf-8">
@@ -5,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <!-- Le styles -->
     <link href="<c:url value="/resources/bootstrap/css/bootstrap.css" />" rel="stylesheet">
     <style type="text/css">
@@ -32,7 +32,7 @@
           <a class="brand" href="#">Doc Kloud</a>
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
-              Welcome ${username}
+              Welcome ${sessionScope["userVO"].userName} ${sessionScope["userVO"].lastName}
             </p>
             <ul class="nav">
               <li class="active"><a href="#">Home</a></li>

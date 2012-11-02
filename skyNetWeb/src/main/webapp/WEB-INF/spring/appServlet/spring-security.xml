@@ -9,26 +9,12 @@
 		<intercept-url pattern="/welcome*" access="ROLE_MGR" />
 		<intercept-url pattern="/admin" access="ROLE_ADMIN" />
 		<form-login login-page="/login" default-target-url="/welcome"
-			authentication-failure-url="/loginfailed"  />
+			authentication-failure-url="/loginfailed"   />
 		<logout logout-success-url="/logout" />
 	</http>
 	
 	<authentication-manager>
 		<authentication-provider ref="securityDAO" >
-
 		</authentication-provider>
 	</authentication-manager> 
-	<!--
-	<http auto-config="true">
-		<intercept-url pattern="/*" access="ROLE_USER" />
-	</http>
- 
-	<authentication-manager>
-	  <authentication-provider>
-	    <user-service>
-		<user name="kushal" password="123456" authorities="ROLE_USER" />
-	    </user-service>
-	  </authentication-provider>
-	</authentication-manager>
--->
 </beans:beans>

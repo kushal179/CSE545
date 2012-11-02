@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.asu.edu.base.dao.intrf.AdminDAOImplInterface;
 
@@ -35,4 +36,26 @@ public class HomeController {
 		return "admin";
 	}
 	
+	@RequestMapping(value = "/admin/approve", method = RequestMethod.POST)
+	public String pendingUsersApprove(Locale locale, Map model, @RequestParam("userid") String userId) {
+		logger.info("Admin Approve user request");
+		// Approve user
+		adminDAO.approveUser(userId);
+		return "redirect:/admin";
+	}	
+	
+	@RequestMapping(value = "/admin/reject", method = RequestMethod.POST)
+	public String pendingUserReject(Locale locale, Map model, @RequestParam("userid") String userId) {
+		logger.info("Admin Reject user request");
+		// Reject user
+		adminDAO.rejectUser(userId);
+		return "redirect:/admin";
+	}	
+	
+	@RequestMapping(value = "/admin/modify", method = RequestMethod.POST)
+	public String pendingUserModify(Locale locale, Map model, @RequestParam("userid") String userId) {
+		logger.info("Admin Modify user request");
+		// Modify user
+		return "redirect:/admin";
+	}	
 }
