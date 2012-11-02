@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import com.asu.edu.base.dao.intrf.AdminDAOImplInterface;
 import com.asu.edu.base.dao.BaseDAO;
 import com.asu.edu.base.vo.PendingUsersVO;
+import com.asu.edu.base.vo.RegisterationVO;
+import com.asu.edu.base.vo.LogFilesVO;
 import com.asu.edu.constants.SQLConstants;
 
 public class AdminDAOImpl extends BaseDAO implements AdminDAOImplInterface{
@@ -25,7 +27,27 @@ public class AdminDAOImpl extends BaseDAO implements AdminDAOImplInterface{
 		
 		return result;
 	}
-
+	@Override
+	public ArrayList<RegisterationVO> getUsersByRole(int role_id) {
+		calledFunction = "getUsersByRole";
+		Integer roleId = role_id;
+		Object[] param = new Object[1];
+		param[0] = roleId;
+		String sql  = SQLConstants.USERS_BY_ROLE;
+		ArrayList<RegisterationVO> result = (ArrayList<RegisterationVO>)this.getListByCriteria(sql, param);
+		
+		return result;
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public ArrayList<LogFilesVO> getLogFiles() {
+		calledFunction = "getLogFiles";
+		Object[] param = new Object[1];
+		param[0] = 1;
+		String sql  = SQLConstants.LOG_FILES;
+		ArrayList<LogFilesVO> result = (ArrayList<LogFilesVO>)this.getListByCriteria(sql, param);	
+		return result;
+	}
 	@Override
 	public void approveUser(String userId) {
 		calledFunction = "approveUser";
@@ -59,6 +81,23 @@ public class AdminDAOImpl extends BaseDAO implements AdminDAOImplInterface{
 				vo.setRoleDesc(rs.getString("DESC"));
 				vo.setDeptName(rs.getString("NAME"));
 				
+				return vo;
+		}
+		else if(calledFunction=="getUsersByRole")
+		{
+				System.out.println("inside to data object");
+				RegisterationVO vo = new RegisterationVO();
+				vo.setUserName(rs.getString("USER_NAME"));
+				vo.setDepartment(rs.getString("NAME"));
+				return vo;
+		}
+		else if(calledFunction=="getLogFiles")
+		{
+				System.out.println("inside to data object");
+				LogFilesVO vo = new LogFilesVO();
+				System.out.println(rs.getString("PATH"));
+				vo.setPathName(rs.getString("PATH"));
+				vo.setModifiedDate(rs.getString("TIMESTAMP"));
 				return vo;
 		}
 		return null;	

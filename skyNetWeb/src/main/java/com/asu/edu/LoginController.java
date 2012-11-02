@@ -37,7 +37,10 @@ public class LoginController {
 			{
 				/*this is the only place where user details will be generated and stored in the session*/
 				session.setAttribute(CommonConstants.USER, userVO);
-				return "redirect:/welcome/home"; 
+				if(userVO.getIsApproved()==1)
+					return "redirect:/welcome/home";
+				else
+					return "redirect:/welcome/temp";
 			}
 			
 		}

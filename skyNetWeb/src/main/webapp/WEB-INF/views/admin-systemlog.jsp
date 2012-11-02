@@ -17,6 +17,8 @@
         padding: 9px 0;
       }
     </style>
+    <script type="text/javascript" 
+                  src="<c:url value="/resources/js/commonprj.js" />"></script>
   </head>
 
   <body>
@@ -43,108 +45,57 @@
         </div>
       </div>
     </div>
-
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span3">
           <div class="well sidebar-nav">
             <ul class="nav nav-tabs nav-stacked">
               <li class="nav-header">Requests</li>
-              <li><a href="#">Pending</a></li>
+              <li><a href="/edu/admin">Pending</a></li>
               <li class="nav-header">Users</li>
-              <li><a href="#">Corporate Level</a></li>
-              <li><a href="#">Department Managers</a></li>
-              <li><a href="#">Regular Employees</a></li>
-              <li><a href="#">Guest Users</a></li>
+              <li id="copMgr"><a href="/edu/admin-copMgr">Corporate Level</a></li>
+              <li id="deptMgr"><a href="/edu/admin-deptMgr">Department Managers</a></li>
+              <li id="regEmp"><a href="/edu/admin-regularEmp">Regular Employees</a></li>
+              <li id="guestUsr"><a href="/edu/admin-guest">Guest Users</a></li>
               <li class="nav-header">Operations</li>
-              <li class="active"><a href="#">System Log</a></li>
+              <li><a href="/edu/admin-logs">System Log</a></li>
               <li><a href="#">Back-up</a></li>
-              <li><a href="#">Index</a></li>
             </ul>
           </div>
         </div>
-        
-        <div class="span9">
+          
+          <div class="span9">
           <div class="hero-unittitle">
             <h3>System Logs</h3>
           </div>
           
-          <div class="hero-unitops">
-          	9/10/2012_System_log.txt
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
-          	<button class="btn-link" type="button"><i class="icon-search icon-download"></i>Download</button>
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          	<button class="btn-link" type="button"><i class="icon-search icon-remove"></i>Delete</button>
+          <div class="hero-unitops" id="actionbar">
+          	Select Files
           </div>
-
           <div class="row-fluid">
-          	<table class="table table-hover">
+          <table class="table table-hover"  id="contentsTable">
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Name</th>
-                  <th>Modified</th>
+                  <th>PathName</th>
+                  <th>ModifiedDate</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>9/10/2012_System_log.txt</td>
-                  <td>9/10/2012</td>
+              <tbody id="contentsTableBody">
+              <c:set var="count" value="0" scope="page" />
+              <c:forEach var="item" items="${logfiles}"> 
+              	  <tr onclick="selectLogFilesRow(this);">
+              	  <c:set var="count" value="${count + 1}" scope="page"/>  
+                  <td>${count}</td>
+                  <td>${item.pathName}</td>
+                  <td>${item.modifiedDate}</td>
                 </tr>
-                <tr>
-                  <td>2</td>
-                  <td>9/11/2012_System_log.txt</td>
-                  <td>9/11/2012</td>
-                </tr>
-                                <tr>
-                  <td>3</td>
-                  <td>9/12/2012_System_log.txt</td>
-                  <td>9/12/2012</td>
-                </tr>
-                                <tr>
-                  <td>4</td>
-                  <td>9/13/2012_System_log.txt</td>
-                  <td>9/13/2012</td>
-                </tr>
-                                <tr>
-                  <td>5</td>
-                  <td>9/14/2012_System_log.txt</td>
-                  <td>9/14/2012</td>
-                </tr>
-                                <tr>
-                  <td>6</td>
-                  <td>9/15/2012_System_log.txt</td>
-                  <td>9/15/2012</td>
-                </tr>
-                                <tr>
-                  <td>7</td>
-                  <td>9/16/2012_System_log.txt</td>
-                  <td>9/16/2012</td>
-                </tr>
-                                <tr>
-                  <td>8</td>
-                  <td>9/17/2012_System_log.txt</td>
-                  <td>9/17/2012</td>
-                </tr>
-                <tr>
-                  <td>9</td>
-                  <td>9/18/2012_System_log.txt</td>
-                  <td>9/18/2012</td>
-                </tr>
+              </c:forEach>
               </tbody>
             </table>
-          	<table class="table">
-			</table>
           </div>
         </div>
-      </div>
-
+       </div>
 	<br/><br/><br/>
       <hr>
       <footer>

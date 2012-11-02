@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 public abstract class BaseBaseDAO {
 
 	protected Connection connection = null;
-	protected DataSource dataSource;
+	protected static DataSource dataSource;
 	/*private static String url = null;
 	private static String dbName = null;
 	private static String driver = null;

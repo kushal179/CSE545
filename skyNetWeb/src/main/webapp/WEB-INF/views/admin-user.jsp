@@ -1,3 +1,6 @@
+<%@page import="com.asu.edu.base.vo.RegisterationVO"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.ArrayList"%>
 <html lang="en"><head>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <meta charset="utf-8">
@@ -17,7 +20,9 @@
         padding: 9px 0;
       }
     </style>
-  </head>
+    <script type="text/javascript" 
+                  src="<c:url value="/resources/js/commonprj.js" />"></script>
+    </head>
 
   <body>
 
@@ -48,44 +53,41 @@
       <div class="row-fluid">
         <div class="span3">
           <div class="well sidebar-nav">
-            <ul class="nav nav-tabs nav-stacked">
-              <li class="nav-header">Requests</li>
-              <li><a href="#">Pending</a></li>
+            <ul  class="nav nav-tabs nav-stacked">
+              <li id="request" class="nav-header">Requests</li>
+              <li id="pending"><a href="/edu/admin">Pending</a></li>
               <li class="nav-header">Users</li>
-              <li><a href="#">Corporate Level</a></li>
-              <li><a href="#">Department Managers</a></li>
-              <li class="active"><a href="#">Regular Employees</a></li>
-              <li><a href="#">Guest Users</a></li>
+              <li id="copMgr"><a href="/edu/admin-copMgr">Corporate Level</a></li>
+              <li id="deptMgr"><a href="/edu/admin-deptMgr">Department Managers</a></li>
+              <li id="regEmp"><a href="/edu/admin-regularEmp">Regular Employees</a></li>
+              <li id="guestUsr"><a href="/edu/admin-guest">Guest Users</a></li>
               <li class="nav-header">Operations</li>
-              <li><a href="#">System Log</a></li>
+              <li><a href="/edu/admin-logs">System Log</a></li>
               <li><a href="#">Back-up</a></li>
-              <li><a href="#">Index</a></li>
             </ul>
           </div>
         </div>
-        
+        <script type="text/javascript">
+       function highlight(){
+    	    var data = '${role_id}';
+       		var obj = document.getElementById(data);
+       		obj.setAttribute("class", "active");
+       };
+       </script>
+       <script>
+		//call after page loaded
+		window.onload=highlight; 
+		</script>
         <div class="span9">
           <div class="hero-unittitle">
             <h3>Users - Regular Employees</h3>
           </div>
           
-          <div class="hero-unitops">
-          	Hary Ram
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
-          	<button class="btn-link" type="button"><i class="icon-search icon-ok"></i>Delete</button>
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          	<button class="btn-link" type="button"><i class="icon-search icon-edit"></i>Modify</button>
-          	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          	<button class="btn-link" type="button"><i class="icon-search icon-plus-sign"></i>Add</button>
+          <div class="hero-unitops" id="actionbar">
+          	Select users
           </div>
-
           <div class="row-fluid">
-          	<table class="table table-hover">
+          <table class="table table-hover"  id="contentsTable">
               <thead>
                 <tr>
                   <th>#</th>
@@ -93,26 +95,18 @@
                   <th>Department</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Don Nash</td>
-                  <td>Human Resources</td>
+              <tbody id="contentsTableBody">
+              <c:set var="count" value="0" scope="page" />
+              <c:forEach var="item" items="${users}"> 
+              	  <tr onclick="selectUsersRow(this);">
+              	  <c:set var="count" value="${count + 1}" scope="page"/>  
+                  <td>${count}</td>
+                  <td>${item.userName}</td>
+                  <td>${item.department}</td>
                 </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Hary Ram</td>
-                  <td>IT Support</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>Ross Peter</td>
-                  <td>Fianance</td>
-                </tr>
+              </c:forEach>
               </tbody>
             </table>
-          	<table class="table">
-			</table>
           </div>
         </div>
       </div>
