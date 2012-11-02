@@ -5,9 +5,13 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-3.0.3.xsd">
 
+
 	<http auto-config="true">
-		<intercept-url pattern="/welcome*" access="ROLE_MGR" />
-		<intercept-url pattern="/admin" access="ROLE_ADMIN" />
+		<intercept-url pattern="/welcome*" access="ROLE_DEPARTMENT_MGR,ROLE_REGULAR_EMP,ROLE_GUEST_USR,ROLE_CORPORATE_MGR" />
+	<!--  	<intercept-url pattern="/welcome*" access="ROLE_CORPORATE_MGR" />
+		<intercept-url pattern="/welcome*" access="ROLE_REGULAR_EMP" />
+		<intercept-url pattern="/welcome*" access="ROLE_GUEST_USR" />-->
+		<intercept-url pattern="/admin*" access="ROLE_ADMIN" />
 		<form-login login-page="/login" default-target-url="/welcome"
 			authentication-failure-url="/loginfailed"   />
 		<logout logout-success-url="/logout" />
