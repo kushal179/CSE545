@@ -77,7 +77,7 @@ public class RegisterationController {
 			} else {
 				
 				logger.info("department is : " + registerationVO.getDepartments());
-				logger.info("role is : " + registerationVO.getRole());
+				logger.info("role is : " + registerationVO.getRoleId());
 				
 				if (registerationDAO.registerUser(registerationVO)) {
 					logger.info("Registeration successful");

@@ -30,6 +30,8 @@ public class RegisterationVO {
 	private String captcha;
 	@NotEmpty(message = "Email must not be blank.")
 	private int roleId;
+	private String department;
+	private String role;
 	private int isApproved;
 	private int loginAttempts;
 
@@ -117,6 +119,22 @@ public class RegisterationVO {
 
 	public void setCaptcha(String captcha) {
 		this.captcha = captcha;
+	}
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 }
