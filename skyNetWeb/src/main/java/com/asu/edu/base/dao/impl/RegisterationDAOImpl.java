@@ -18,9 +18,8 @@ import com.asu.edu.constants.SQLConstants;
 public class RegisterationDAOImpl extends BaseDAO implements
 		RegisterationDAOImplInterface {
 
-	private static final int LOGIN_ATTEMPTS_POS = 8;
-	private static final int IS_APPROVED_POS = 7;
-	private static final int DEPT_ID_POS = 6;
+	private static final int LOGIN_ATTEMPTS_POS = 7;
+	private static final int IS_APPROVED_POS = 6;
 	private static final int ROLE_ID_POS = 5;
 	private static final int EMAIL_POS = 4;
 	private static final int LAST_NAME_POS = 3;
@@ -37,6 +36,8 @@ public class RegisterationDAOImpl extends BaseDAO implements
 		}
 		else if (calledFunction.equals("getRoles")) {
 			return new Role(rs.getInt("id"), rs.getString("desc"));
+		} else if (calledFunction.equalsIgnoreCase("getUser")){
+			return rs.getInt("id");
 		}
 		return null;
 	}
@@ -44,7 +45,7 @@ public class RegisterationDAOImpl extends BaseDAO implements
 	@Override
 	public boolean registerUser(RegisterationVO user) {
 		calledFunction = "registerUser";
-		Object[] param = new Object[9];
+		Object[] param = new Object[8];
 		param[USER_NAME_POS] = user.getUserName();
 		param[PASSWORD_POS] = user.getPassword();
 		param[FIRST_NAME_POS] = user.getFirstName();
@@ -54,15 +55,40 @@ public class RegisterationDAOImpl extends BaseDAO implements
 		Logger logger = LoggerFactory
 				.getLogger(RegisterationController.class); 
 				logger.info("role is : " + user.getRole() + "  " +  user.getRoleId());
-		param[DEPT_ID_POS] = user.getDepartment();
 		param[IS_APPROVED_POS] = false;
 		param[LOGIN_ATTEMPTS_POS] = 0;
 		String sql = SQLConstants.USER_REG;
 
 		// Query Successful
-		if (preparedStatementUpdate(sql, param, true) > 0)
-			return true;
+		boolean userCreated = preparedStatementUpdate(sql, param, true) > 0; 
 
+		calledFunction = "getUser";
+		param = new Object[1];
+		param[0]=user.getUserName();
+		sql = "select id from user where user_name=?";
+		long userId = ((ArrayList<Integer>) getListByCriteria(sql, param)).get(0);
+				
+		calledFunction = "addToDept";
+		ArrayList<Integer> depts = user.getDepartments();
+		ArrayList<Integer> deptsArray = new ArrayList<Integer>();
+		for (int i=1;i<depts.size();i++) {
+			if(depts.get(i) > 0) deptsArray.add(depts.get(i));
+		}
+		
+		param = new Object[deptsArray.size()*2];
+		sql = "insert into user_dept values ";
+		for(int i=0;i<deptsArray.size();i++){
+			sql+="(?,?)";
+			if(i<deptsArray.size() - 1)
+				sql+=",";
+			param[i]=userId;
+			param[i+1]=deptsArray.get(i);
+		}
+		boolean deptUpdated = preparedStatementUpdate(sql, param, true) > 0; 
+		
+		if(userCreated && deptUpdated)
+			return true;
+		
 		// Query failed
 		return false;
 	}

@@ -18,7 +18,7 @@ public interface SQLConstants {
 	
 	public static final String REJECT_USER = "DELETE FROM DOCKLOUD.USER WHERE ID = ?;";
 
-	public static final String USER_REG = "insert into user(user_name,password,first_name,last_name,email,role_id,dept_id,is_approved,login_attempts) values(?,?,?,?,?,?,?,?,?)";
+	public static final String USER_REG = "insert into user(user_name,password,first_name,last_name,email,role_id,is_approved,login_attempts) values(?,?,?,?,?,?,?,?)";
 
 	public static final String GET_DEPTARTMENTS = "select * from department";
 	

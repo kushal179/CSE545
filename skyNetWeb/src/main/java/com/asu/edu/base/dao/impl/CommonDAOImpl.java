@@ -35,9 +35,8 @@ public class CommonDAOImpl extends BaseDAO implements CommonDAOImplInterface {
 			while(rs.next()){
 			RoleVO roleVO = new RoleVO();
 			roleVO.setId(rs.getInt("ID"));
-			roleVO.setDesc("DESC");
-			roleVO.setCheckIn(rs.getInt("CHECKIN"));
-			roleVO.setCheckOut(rs.getInt("CHECKOUT"));
+			roleVO.setDesc(rs.getString("DESC"));
+			roleVO.setCheckIn(rs.getInt("CHECKIN_OUT"));
 			roleVO.setCreate(rs.getInt("CREATE"));
 			roleVO.setDelete(rs.getInt("DELETE"));
 			roleVO.setCreate(rs.getInt("DOWNLOAD"));

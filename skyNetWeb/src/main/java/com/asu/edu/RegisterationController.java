@@ -1,5 +1,7 @@
 package com.asu.edu;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -20,7 +22,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.asu.edu.base.dao.intrf.RegisterationDAOImplInterface;
+import com.asu.edu.base.vo.DepartmentVO;
 import com.asu.edu.base.vo.RegisterationVO;
+import com.asu.edu.base.vo.RoleVO;
+import com.asu.edu.cache.MasterCache;
 
 /**
  * Handles requests for the application home page.
@@ -34,9 +39,9 @@ public class RegisterationController {
 	@Autowired
 	private RegisterationDAOImplInterface registerationDAO = null;
 
-	private static Map<Integer, String> deptMap;
+	private static ArrayList<DepartmentVO> deptArray;
 
-	private static Map<Integer, String> roleMap;
+	private static ArrayList<RoleVO> rolesArray;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(RegisterationController.class);
@@ -45,24 +50,13 @@ public class RegisterationController {
 	public String home1(Map<String, Object> model) {
 		logger.info("Welcome home! the client locale is ");
 
-		initMaps();
-
+		initArrays();
+		
 		model.put("registerationVO", new RegisterationVO());
-		model.put("deptList", deptMap);
-		model.put("roleList", roleMap);
+		model.put("deptList", deptArray);
+		model.put("roleList", rolesArray);
 
 		return "register";
-	}
-
-	private void initMaps() {
-		if (deptMap == null) {
-			deptMap = registerationDAO.getDepartments();
-		}
-
-		if (roleMap == null) {
-			roleMap = registerationDAO.getRoles();
-		}
-
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
@@ -82,7 +76,7 @@ public class RegisterationController {
 				result.addError(fieldError);
 			} else {
 				
-				logger.info("department is : " + registerationVO.getDepartment());
+				logger.info("department is : " + registerationVO.getDepartments());
 				logger.info("role is : " + registerationVO.getRole());
 				
 				if (registerationDAO.registerUser(registerationVO)) {
@@ -94,10 +88,35 @@ public class RegisterationController {
 		}
 
 		logger.info("form has erros !!!");
-		model.put("deptList", deptMap);
-		model.put("roleList", roleMap);
+		model.put("deptList", deptArray);
+		model.put("roleList", rolesArray);
 
 		return "register";
 	}
 
+	private void initArrays() {
+		if (deptArray == null) {
+			deptArray = new ArrayList<DepartmentVO>();
+			Map deptMap =  MasterCache.getDepartmentMap();
+			Iterator it = deptMap.entrySet().iterator();
+			Map.Entry pairs;
+			while (it.hasNext()) {
+		        pairs = (Map.Entry)it.next();
+		        deptArray.add((DepartmentVO)pairs.getValue());
+		    }
+		}
+
+		if (rolesArray == null) {
+			rolesArray = new ArrayList<RoleVO>();
+			Map rolesMap =  MasterCache.getRoleMap();
+			Iterator it = rolesMap.entrySet().iterator();
+			Map.Entry pairs;
+			while (it.hasNext()) {
+		        pairs = (Map.Entry)it.next();
+		        rolesArray.add((RoleVO)pairs.getValue());
+		    }
+		}
+
+	}
+	
 }

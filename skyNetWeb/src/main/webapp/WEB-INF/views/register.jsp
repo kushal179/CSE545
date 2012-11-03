@@ -95,15 +95,25 @@ body {
 														</tr> --%>
 														<tr>
 															<td style="color: white">Role:</td>
-															<td><form:select path="role">
-																	<form:options items="${roleList}" />
+															<td><form:select path="roleId" >
+																	<c:forEach var="item" items="${roleList}">
+																		<form:option value="${item.id }" label="${item.desc}"/>
+																	</c:forEach>
 																</form:select>
 														</tr>
 														<tr>
 															<td style="color: white">Department:</td>
-															<td><form:select path="department">
-																	<form:options items="${deptList}" />
-																</form:select>
+															<td>
+																<table>
+																	<c:forEach var="item" items="${deptList}">
+																		<tr>
+																			<td><form:checkbox path="departments"
+																					id="role_${item.id}" value="${item.id}" /></td>
+																			<td style="padding-left: 20px; padding-top: 5px;"><label style="color: white">${item.deptName}</label></td>
+																		</tr>
+																	</c:forEach>
+																</table> 
+															</td>
 														</tr>
 														<tr>
 															<td></td>
@@ -114,7 +124,7 @@ body {
 																	<br /> <font color="red"><form:errors
 																			path="captcha" /></font> <br /> <input id="submit"
 																		type="submit" value="Submit" /> <br />
-																</div>
+																</div></td>
 													</tbody>
 												</table> <br>
 											</td>

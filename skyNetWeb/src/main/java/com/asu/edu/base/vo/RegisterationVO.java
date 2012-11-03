@@ -1,5 +1,8 @@
 package com.asu.edu.base.vo;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -13,7 +16,7 @@ public class RegisterationVO {
 	@Size(min = 1, max = 20, message = "Size should be between 1-20")
 	private String userName;
 	@NotEmpty(message = "Password must not be blank.")
-	@Size(min = 6, max = 20, message = "Size should be between 1-20")
+	@Size(min = 6, max = 20, message = "Size should be between 6-20")
 	// @Pattern(regexp="(?!^[0-9]*$)(?!^[a-zA-Z!@#$%^&*()_+=<>?]*$)^([a-zA-Z!@#$%^&*()_+=<>?0-9]{6,15})$")
 	private String password;
 	@NotEmpty(message = "First Name must not be blank.")
@@ -23,16 +26,10 @@ public class RegisterationVO {
 	@NotEmpty(message = "Email must not be blank.")
 	@Pattern(regexp = "^([a-z0-9]+)([._-]([0-9a-z_-]+))*@([a-z0-9]+)([._-]([0-9a-z]+))*([.]([a-z0-9]+){2,4})$", message = "Email-id is not valid")
 	private String email;
-	@NotEmpty(message = "Password must not be blank.")
-	@Pattern(regexp="[0-9]+")
-	private String department;
-	@NotEmpty(message = "Password must not be blank.")
-	@Pattern(regexp="[0-9]+")
-	private String role;
-
+	private ArrayList<Integer> departments;
 	private String captcha;
+	@NotEmpty(message = "Email must not be blank.")
 	private int roleId;
-	private int deptId;
 	private int isApproved;
 	private int loginAttempts;
 
@@ -76,20 +73,13 @@ public class RegisterationVO {
 		this.email = email;
 	}
 
+	
 	public int getRoleId() {
-		return role == null ? Integer.getInteger(role.trim()) : -1;
+		return roleId;
 	}
 
 	public void setRoleId(int roleId) {
 		this.roleId = roleId;
-	}
-
-	public int getDeptId() {
-		return department == null ? Integer.getInteger(department.trim()) : -1;
-	}
-
-	public void setDeptId(int deptId) {
-		this.deptId = deptId;
 	}
 
 	public int getIsApproved() {
@@ -112,22 +102,15 @@ public class RegisterationVO {
 	 * public String getRePassword() { return rePassword; } public void
 	 * setRePassword(String rePassword) { this.rePassword = rePassword; }
 	 */
-	public String getDepartment() {
-		return department;
+
+	public ArrayList<Integer> getDepartments() {
+		return departments;
 	}
 
-	public void setDepartment(String department) {
-		this.department = department;
+	public void setDepartments(ArrayList<Integer> departments) {
+		this.departments = departments;
 	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
+	
 	public String getCaptcha() {
 		return captcha;
 	}
