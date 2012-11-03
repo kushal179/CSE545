@@ -5,10 +5,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,12 +24,23 @@ import com.asu.edu.constants.SQLConstants;
 
 public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface,AuthenticationProvider {
 
+	private static final String GET_USER_DEPARTMENTS = "getUserDepartments";
+
+	private static final String USER_ROLE = "userRole";
+
+	private static final String GET_DEPTARTMENTS = "getdeptartments";
+
+	private static final String AUTHENTICATE = "authenticate";
+
+	@Autowired
+	private ShaPasswordEncoder passwordEncoder;
+	
 	String calledFunction;
 
 	@Override
 	protected Object toDataObject(ResultSet rs) throws SQLException {
 		
-		if(calledFunction=="authenticate")
+		if(calledFunction==AUTHENTICATE)
 		{
 			System.out.println("inside authenticate to data object");
 			UserVO userVO = new UserVO();
@@ -40,12 +53,13 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 			userVO.setIsApproved(rs.getInt("IS_APPROVED"));
 			userVO.setLoginAttempts(rs.getInt("LOGIN_ATTEMPTS"));
 			userVO.setRoleId(rs.getInt("ROLE_ID"));
-			userVO.setDeptId(rs.getInt("DEPT_ID"));
 			
 			return userVO;
 		}
-		
-		if(calledFunction=="userRole")
+		if(calledFunction==GET_DEPTARTMENTS){
+			return rs.getInt("DEPT_ID");
+		}
+		if(calledFunction==USER_ROLE)
 		{
 			System.out.println("inside userRole to data object");
 			return rs.getString("DESC");
@@ -59,23 +73,25 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 	public Authentication authenticate(Authentication auth)
 			throws AuthenticationException {
 
-		calledFunction = "authenticate";
+		calledFunction = AUTHENTICATE;
 		Object[] prepareParams = new Object[2];
 		prepareParams[0] = auth.getName();
-		prepareParams[1] = auth.getCredentials();
+		prepareParams[1] = passwordEncoder.encodePassword((String)auth.getCredentials(),(String)auth.getName());
 		UserVO userVO = (UserVO)this.getRowByCriteria(SQLConstants.USER_LOGIN, prepareParams);
+		
 		if(userVO!=null)
 		{
 			System.out.println(userVO.getUserName());
 			if(userVO.getUserName().equals(auth.getPrincipal()))
 			{
-				calledFunction = "userRole";
+				calledFunction = USER_ROLE;
 				Object[] param = new Object[1];
 				param[0] = userVO.getUserName();
 				String role = (String)this.getRowByCriteria(SQLConstants.USER_ROLE,param);
 				List<GrantedAuthority> authoritites = new ArrayList<GrantedAuthority>();
 				authoritites.add((new GrantedAuthorityImpl(role)));
-				return new UsernamePasswordAuthenticationToken(auth.getName(), auth.getCredentials(), authoritites);
+				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(auth.getName(), auth.getCredentials(), authoritites);
+				return token;
 			}
 			
 		}
@@ -90,11 +106,16 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 	
 	public UserVO getUserDetails(Authentication authentication){
 		
-		calledFunction = "authenticate";
+		calledFunction = AUTHENTICATE;
 		Object[] prepareParams = new Object[2];
 		prepareParams[0] = authentication.getName();
-		prepareParams[1] = authentication.getCredentials();
+		prepareParams[1] = passwordEncoder.encodePassword((String)authentication.getCredentials(),(String)authentication.getName());
 		UserVO userVO = (UserVO)this.getRowByCriteria(SQLConstants.USER_LOGIN, prepareParams);
+		
+		calledFunction = GET_USER_DEPARTMENTS;
+		prepareParams = new Object[1];
+		prepareParams[0] = userVO.getId();
+		userVO.setDepartments((ArrayList<Integer>)getListByCriteria(SQLConstants.USER_DEPT, prepareParams));
 		
 		return userVO;
 		
@@ -108,6 +129,12 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
         return authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
     }
 
+	public ShaPasswordEncoder getPasswordEncoder() {
+		return passwordEncoder;
+	}
 
+	public void setPasswordEncoder(ShaPasswordEncoder passwordEncoder) {
+		this.passwordEncoder = passwordEncoder;
+	}
 
 }

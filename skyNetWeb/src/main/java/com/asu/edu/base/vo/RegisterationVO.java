@@ -28,7 +28,6 @@ public class RegisterationVO {
 	private String email;
 	private ArrayList<Integer> departments;
 	private String captcha;
-	@NotEmpty(message = "Email must not be blank.")
 	private int roleId;
 	private String department;
 	private String role;

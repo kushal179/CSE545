@@ -7,14 +7,20 @@
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/dockloud" />
+		<property name="url" value="jdbc:mysql://10.0.2.125:3306/dockloud" />
 		<property name="username" value="root" />
-		<property name="password" value="" />
+		<property name="password" value="dockloud" />
 	</bean>
 	
 	<bean id="securityDAO" class="com.asu.edu.base.dao.impl.SecurityDAOImpl">
 			<property name="dataSource" ref="dataSource"></property>
+			<property name="passwordEncoder" ref="passwordEncoder"></property>
 	</bean>
+	
+	<bean id="passwordEncoder" 
+    		class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" >
+    		<constructor-arg value="256"/>
+    </bean>
 	
 	<bean id="adminDAO" class="com.asu.edu.base.dao.impl.AdminDAOImpl">
 			<property name="dataSource" ref="dataSource"></property>
@@ -22,6 +28,7 @@
 
 	<bean id="registerationDAO" class="com.asu.edu.base.dao.impl.RegisterationDAOImpl">
 			<property name="dataSource" ref="dataSource"></property>
+			<property name="passwordEncoder" ref="passwordEncoder"></property>
 	</bean>
 	
 	<bean id="commonDAO" class="com.asu.edu.base.dao.impl.CommonDAOImpl">

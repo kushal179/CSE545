@@ -1,5 +1,7 @@
 package com.asu.edu.base.vo;
 
+import java.util.ArrayList;
+
 public class UserVO {
 	
 	private long id;
@@ -9,11 +11,9 @@ public class UserVO {
 	private String lastName;
 	private String email;
 	private int roleId;
-	private int deptId;
+	private ArrayList<Integer> departments;
 	private int isApproved;
 	private int loginAttempts;
-	
-	
 	
 	public long getId() {
 		return id;
@@ -57,12 +57,6 @@ public class UserVO {
 	public void setRoleId(int roleId) {
 		this.roleId = roleId;
 	}
-	public int getDeptId() {
-		return deptId;
-	}
-	public void setDeptId(int deptId) {
-		this.deptId = deptId;
-	}
 	public int getIsApproved() {
 		return isApproved;
 	}
@@ -74,6 +68,12 @@ public class UserVO {
 	}
 	public void setLoginAttempts(int loginAttempts) {
 		this.loginAttempts = loginAttempts;
+	}
+	public ArrayList<Integer> getDepartments() {
+		return departments;
+	}
+	public void setDepartments(ArrayList<Integer> departments) {
+		this.departments = departments;
 	}
 	
 	

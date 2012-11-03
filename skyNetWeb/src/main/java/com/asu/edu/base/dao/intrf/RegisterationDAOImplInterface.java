@@ -8,8 +8,4 @@ public interface RegisterationDAOImplInterface {
 	
 	public boolean registerUser(RegisterationVO user);
 	
-	public Map<Integer, String> getDepartments();
-	
-	public Map<Integer, String> getRoles();
-
 }
