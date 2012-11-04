@@ -52,7 +52,7 @@ public class DashboardController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String admin(@RequestParam("deptId") int deptId,
+	public String getDashBoardContents(@RequestParam("deptId") int deptId,
 			@RequestParam("folderId") long folderId, HttpSession session,
 			Map model) {
 		logger.info("department Id = " + deptId);
