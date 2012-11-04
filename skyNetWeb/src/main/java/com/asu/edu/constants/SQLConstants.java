@@ -28,5 +28,12 @@ public interface SQLConstants {
 	public static final String GET_REGULAR_USER_FILES = "select * from files where owner_id=? and parent_id=?";
 	public static final String GET_DEPT_MANAGER_FILES = "select * from files F inner join user U on F.owner_id=U.id where F.dept_id=? and F.parent_id=? and U.role_id!=5";
 	public static final String GET_CORPORATE_MANAGER_FILES = "select * from files where dept_id=? and parent_id=?";
+	
+	/*file upload download */
+	public static final String GET_FILE_FOR_DOWNLOAD = "select * from files where file_id=?";
+
+	public static final String GET_FILE_PATH = "select path from files where parent_id=?";
+
+	public static final String SAVE_FILE = "inset into files(path,owner_id,dept_id,parent_id,file_name,creation_time,type) values(?,?,?,?,?,?,?)";
 
 }

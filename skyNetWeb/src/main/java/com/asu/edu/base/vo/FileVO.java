@@ -17,12 +17,12 @@ public class FileVO {
 	private String iconFile;
 	private String hyperlink;
 
-	public long getId() {
-		return id;
-	}
-
 	public void setId(long l) {
 		this.id = l;
+	}
+
+	public long getId() {
+		return id;
 	}
 
 	public String getFileName() {
