@@ -99,7 +99,7 @@ public class DashboardController {
 				fileVO.setHyperlink("/edu/Dashboard/deptId="
 						+ fileVO.getDeptId() + "&folderId=" + fileVO.getId());
 			else
-				fileVO.setHyperlink("/welcome/download?id=" + fileVO.getId());
+				fileVO.setHyperlink("/edu/welcome/download?id=" + fileVO.getId());
 		}
 
 	}
