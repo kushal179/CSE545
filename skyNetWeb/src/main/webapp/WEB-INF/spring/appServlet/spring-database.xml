@@ -34,5 +34,9 @@
 	<bean id="commonDAO" class="com.asu.edu.base.dao.impl.CommonDAOImpl">
 			<property name="dataSource" ref="dataSource"></property>
 	</bean>
+	
+	<bean id="dashboardDAO" class="com.asu.edu.base.dao.impl.DashboardDAOImpl">
+			<property name="dataSource" ref="dataSource"></property>
+	</bean>
 
 </beans>

@@ -56,7 +56,7 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 			
 			return userVO;
 		}
-		if(calledFunction==GET_DEPTARTMENTS){
+		if(calledFunction==GET_USER_DEPARTMENTS){
 			return rs.getInt("DEPT_ID");
 		}
 		if(calledFunction==USER_ROLE)

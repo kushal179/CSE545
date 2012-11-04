@@ -41,7 +41,7 @@ public class LoginController {
 				 */
 				session.setAttribute(CommonConstants.USER, userVO);
 				if (userVO.getIsApproved() == 1)
-					return "redirect:/welcome/home";
+					return "redirect:/Dashboard?deptId=-1&folderId=-1";
 				else
 					return "redirect:/welcome/temp";
 			}

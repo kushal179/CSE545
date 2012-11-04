@@ -5,7 +5,7 @@ public class DepartmentVO {
 	private int id;
 	private String deptName;
 	private String deptDesc;
-	
+	private long rootFileId;
 	
 	public int getId() {
 		return id;
@@ -24,6 +24,12 @@ public class DepartmentVO {
 	}
 	public void setDeptDesc(String deptDesc) {
 		this.deptDesc = deptDesc;
+	}
+	public long getRootFileId() {
+		return rootFileId;
+	}
+	public void setRootFileId(long rootFileId) {
+		this.rootFileId = rootFileId;
 	}
 	
 
