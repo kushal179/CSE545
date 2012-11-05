@@ -10,6 +10,6 @@ public interface FileDAOImplInterface {
 
 	public String getParentFilePath(int id);
 
-	public int saveFile(FileVO fileVO);
+	public boolean saveFile(FileVO fileVO);
 
 }

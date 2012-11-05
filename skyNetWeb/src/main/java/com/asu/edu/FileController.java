@@ -47,11 +47,13 @@ public class FileController  {
 			
 			fileVO.setParentId(parentId);
 			String path = fileDAO.getParentFilePath(parentId);
-			fileVO.setPath(path);
-			FileOutputStream  f = new FileOutputStream (path + "/" + multipartFile.getOriginalFilename());
+			fileVO.setPath(path + "/" + multipartFile.getOriginalFilename());
+			if(fileDAO.saveFile(fileVO))
+			{
+			FileOutputStream  f = new FileOutputStream (path);
 			f.write(multipartFile.getBytes());
 			f.close();
-			fileDAO.saveFile(fileVO);
+			}
 			} catch (IOException e) {
 			e.printStackTrace();
 			}
