@@ -2,6 +2,8 @@ package com.asu.edu.base.vo;
 
 public class FileVO {
 
+	private static final String ICON_PATH = "/edu/resources/icons/";
+	
 	private long id;
 	private String fileName;
 	private String type;
@@ -31,11 +33,31 @@ public class FileVO {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
-		if (fileName
-				.matches(".*(.jpg|.JPG|.gif|.GIF|.doc|.DOC|.pdf|.PDF|.txt|.TXT)"))
-			setIconFile("resources/icons/file.jpg");
-		else
-			setIconFile("resources/icons/folder.png");
+		if (fileName.matches(".*(.jpg|.JPG|.gif|.GIF|.png|.PNG)")) {
+			setIconFile(ICON_PATH + "image.jpg");
+			setType("Image file");
+		} else if (fileName.matches(".*(.doc|.DOC)")) {
+			setIconFile(ICON_PATH + "doc.jpg");
+			setType("Word Doc");
+		} else if (fileName.matches(".*(.pdf|.PDF)")) {
+			setIconFile(ICON_PATH + "pdf.jpg");
+			setType("PDF Doc");
+		} else if (fileName.matches(".*(.ppt|.PPT|.pptx|.PPTX)")) {
+			setIconFile(ICON_PATH + "ppt.jpg");
+			setType("Presentation");
+		} else if (fileName.matches(".*(.xls|.XLS|.xlsx|.XLSX)")) {
+			setIconFile(ICON_PATH + "xls.jpg");
+			setType("Excel Doc");
+		} else if (fileName.matches(".*(.txt|.TXT)")) {
+			setIconFile(ICON_PATH + "txt.jpg");
+			setType("Text Doc");
+		} else if (fileName.matches(".*[.].+")) {
+			setIconFile(ICON_PATH + "file.jpg");
+			setType("File");
+		} else {
+			setIconFile(ICON_PATH + "folder.png");
+			setType("Folder");
+		}
 	}
 
 	public String getType() {

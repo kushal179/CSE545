@@ -17,7 +17,7 @@ public class RegisterationVO {
 	private String userName;
 	@NotEmpty(message = "Password must not be blank.")
 	@Size(min = 6, max = 20, message = "Size should be between 6-20")
-	// @Pattern(regexp="(?!^[0-9]*$)(?!^[a-zA-Z!@#$%^&*()_+=<>?]*$)^([a-zA-Z!@#$%^&*()_+=<>?0-9]{6,15})$")
+	@Pattern(regexp="(?!^[0-9]*$)(?!^[a-zA-Z!@#$%^&*()_+=<>?]*$)^([a-zA-Z!@#$%^&*()_+=<>?0-9]{6,15})$")
 	private String password;
 	@NotEmpty(message = "First Name must not be blank.")
 	private String firstName;

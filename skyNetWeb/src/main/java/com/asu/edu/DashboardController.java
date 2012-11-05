@@ -86,6 +86,9 @@ public class DashboardController {
 			updateHyperlinks(files);
 
 			model.put("files", files);
+			model.put("deptId", deptId);
+			model.put("deptDesc", dept.getDeptDesc());
+			model.put("parentFileId", folderId);
 
 			return "documentManagement";
 		}
