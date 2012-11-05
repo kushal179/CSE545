@@ -12,6 +12,9 @@ public interface AdminDAOImplInterface {
 		public void approveUser(String userId);
 		
 		public void rejectUser(String userId);
+		
+		public void modifyUser(PendingUsersVO user);
+		
 		public ArrayList<RegisterationVO> getUsersByRole(int role_id);
 		public ArrayList<LogFilesVO> getLogFiles();
 }

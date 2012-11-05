@@ -1,18 +1,30 @@
 package com.asu.edu;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.servlet.ServletRequest;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.asu.edu.base.dao.intrf.AdminDAOImplInterface;
+import com.asu.edu.base.vo.DepartmentVO;
+import com.asu.edu.base.vo.PendingUsersVO;
+import com.asu.edu.base.vo.RegisterationVO;
+import com.asu.edu.base.vo.RoleVO;
+import com.asu.edu.cache.MasterCache;
 
 /**
  * Handles requests for the application home page.
@@ -29,11 +41,19 @@ public class HomeController {
 	 */
 	
 	
+	private static ArrayList<DepartmentVO> deptArray;
+	private static ArrayList<RoleVO> rolesArray;
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin", method = RequestMethod.GET)
-	public String admin(Locale locale, Map model) {
+	public String pendingRequests(Locale locale, Map model) {
 		logger.info("Admin screen");
+		initArrays();
+		model.put("deptList", deptArray);
+		model.put("roleList", rolesArray);
 		model.put("pendingUsers", adminDAO.getPendingUsers());
+		model.put("modifiedUserVO", new PendingUsersVO());
+		
 		return "admin";
 	}
 	
@@ -92,5 +112,36 @@ public class HomeController {
 		logger.info("Admin screen");
 		model.put("logfiles", adminDAO.getLogFiles());
 		return "admin-systemlog";
+	}
+
+	@RequestMapping(value = "/admin/modifynapprove", method = RequestMethod.POST)
+	public String modifyAndApprove(@ModelAttribute("modifiedUserVO") PendingUsersVO modifiedUserVO, BindingResult result, ServletRequest servletRequest, Map<String, Object> model) {
+		logger.info("Admin Modify user request");
+		// Modify user
+		adminDAO.modifyUser(modifiedUserVO);
+		return "redirect:/admin";
+	}
+
+	private void initArrays() {
+		if (deptArray == null) {
+			deptArray = new ArrayList<DepartmentVO>();
+			Map deptMap =  MasterCache.getDepartmentMap();
+			Iterator it = deptMap.entrySet().iterator();
+			Map.Entry pairs;
+			while (it.hasNext()) {
+		        pairs = (Map.Entry)it.next();
+		        deptArray.add((DepartmentVO)pairs.getValue());
+		    }
+		}
+		if (rolesArray == null) {
+			rolesArray = new ArrayList<RoleVO>();
+			Map rolesMap =  MasterCache.getRoleMap();
+			Iterator it = rolesMap.entrySet().iterator();
+			Map.Entry pairs;
+			while (it.hasNext()) {
+		        pairs = (Map.Entry)it.next();
+		        rolesArray.add((RoleVO)pairs.getValue());
+		    }
+		}
 	}
 }
