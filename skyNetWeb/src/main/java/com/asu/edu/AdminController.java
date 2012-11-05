@@ -30,9 +30,9 @@ import com.asu.edu.cache.MasterCache;
  * Handles requests for the application home page.
  */
 @Controller
-public class HomeController {
+public class AdminController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
 	@Autowired
 	private AdminDAOImplInterface adminDAO = null;
