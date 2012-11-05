@@ -62,7 +62,7 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 	}
 
 	public int saveFile(FileVO fileVO) {
-		Object[] param = new Object[6];
+		Object[] param = new Object[7];
 		param = new Object[7];
 		param[0] = fileVO.getPath();
 		param[1] = fileVO.getOwnerId();
@@ -70,7 +70,7 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		param[3] = fileVO.getParentId();
 		param[4] = fileVO.getFileName();
 		param[5] = new java.sql.Timestamp((new Date().getTime())).getTime();
-		param[7] = fileVO.getContentType();
+		param[6] = fileVO.getContentType();
 		String sql = SQLConstants.SAVE_FILE;
 		return preparedStatementUpdate(sql, param, true);
 
