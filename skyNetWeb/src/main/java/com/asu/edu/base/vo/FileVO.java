@@ -2,7 +2,7 @@ package com.asu.edu.base.vo;
 
 public class FileVO {
 
-	private static final String ICON_PATH = "/edu/resources/icons/";
+	private static final String ICON_PATH = "resources/icons/";
 	
 	private long id;
 	private String fileName;
