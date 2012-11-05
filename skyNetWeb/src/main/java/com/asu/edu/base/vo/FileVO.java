@@ -18,6 +18,7 @@ public class FileVO {
 	private boolean isDir;
 	private String iconFile;
 	private String hyperlink;
+	private String contentType;
 
 	public void setId(long l) {
 		this.id = l;
@@ -155,5 +156,14 @@ public class FileVO {
 	public void setHyperlink(String hyperlink) {
 		this.hyperlink = hyperlink;
 	}
+
+	public String getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+	
 
 }

@@ -38,7 +38,7 @@ public class FileController  {
 		MultipartFile multipartFile = multipartRequest.getFile("file");
 		FileVO fileVO = new FileVO();
 		fileVO.setFileName(multipartFile.getOriginalFilename());
-		fileVO.setType(multipartFile.getContentType());
+		fileVO.setContentType(multipartFile.getContentType());
 		fileVO.setOwnerId(((UserVO) session.getAttribute(CommonConstants.USER))
 				.getId());
 		try {
@@ -65,7 +65,7 @@ public class FileController  {
 	public void download(HttpServletRequest request,
 			HttpServletResponse response) {
 		FileVO fileVO = (FileVO) fileDAO.getFile(request);
-		response.setContentType(fileVO.getType());
+		response.setContentType(fileVO.getContentType());
 		response.setHeader("Content-Disposition", "attachment;filename="
 				+ fileVO.getFileName());
 		File file = new File(fileVO.getPath());
