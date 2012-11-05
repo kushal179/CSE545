@@ -39,7 +39,7 @@
             <ul class="nav">
               <li class="active"><a href="#">Home</a></li>
               <li><a href="#about">About</a></li>
-              <li><a href="#contact">Logout</a></li>
+              <li><a href="<c:url value="/j_spring_security_logout" />">Logout</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -58,7 +58,7 @@
               <li id="regEmp"><a href="/edu/admin-regularEmp">Regular Employees</a></li>
               <li id="guestUsr"><a href="/edu/admin-guest">Guest Users</a></li>
               <li class="nav-header">Operations</li>
-              <li><a href="/edu/admin-logs">System Log</a></li>
+              <li class="active"><a href="/edu/admin-logs">System Log</a></li>
               <li><a href="#">Back-up</a></li>
             </ul>
           </div>

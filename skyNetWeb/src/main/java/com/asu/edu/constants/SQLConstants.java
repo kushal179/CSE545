@@ -9,10 +9,10 @@ public interface SQLConstants {
 	public static final String ADD_DEPT_FOR_USER = "insert into user_dept values ";
 
 	public static final String USER_DEPTS = "select d.id, d.name from user_dept ud, department d where ud.dept_id = d.id AND ud.user_id = ?;";
+	
+	public static final String USERS_BY_ROLE = "select U.user_name, D.name from dockloud.user U, dockloud.department D, dockloud.user_dept U_D, dockloud.roles R where U.id=U_D.user_id and D.id=U_D.dept_id and R.id=U.role_id AND R.id = ?;";
 
-	public static final String USERS_BY_ROLE = "SELECT U.USER_NAME, D.NAME FROM user U, roles R, department D WHERE D.ID = U.DEPT_ID AND U.ROLE_ID = R.ID AND R.ID = ?;";
-
-	public static final String LOG_FILES = "SELECT L.PATH, DATE_FORMAT(L.TIMESTAMP, '%d/%m/%Y') AS TIMESTAMP FROM DOCKLOUD.LOGS L WHERE ?";
+	public static final String LOG_FILES = "SELECT L.path, DATE_FORMAT(L.timestamp, '%d/%m/%Y') AS timestamp FROM dockloud.logs L WHERE ?";
 
 	public static final String USER_REG = "insert into user(user_name,password,first_name,last_name,email,role_id,is_approved,login_attempts) values(?,?,?,?,?,?,?,?)";
 
