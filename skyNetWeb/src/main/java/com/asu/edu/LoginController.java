@@ -29,7 +29,7 @@ public class LoginController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/welcome", method = RequestMethod.GET)
+	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String dispatcher(Model model, HttpSession session) {
 		if (securityDAO.isLoggedIn()) {
 			UserVO userVO = securityDAO.getUserDetails(SecurityContextHolder
@@ -43,7 +43,7 @@ public class LoginController {
 				if (userVO.getIsApproved() == 1)
 					return "redirect:/Dashboard?deptId=-1&folderId=-1";
 				else
-					return "redirect:/welcome/temp";
+					return "redirect:/temp";
 			}
 
 		}

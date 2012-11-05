@@ -96,10 +96,10 @@ public class DashboardController {
 	private void updateHyperlinks(ArrayList<FileVO> files) {
 		for (FileVO fileVO : files) {
 			if (fileVO.isDir())
-				fileVO.setHyperlink("/edu/Dashboard/deptId="
+				fileVO.setHyperlink("Dashboard?deptId="
 						+ fileVO.getDeptId() + "&folderId=" + fileVO.getId());
 			else
-				fileVO.setHyperlink("/edu/welcome/download?id=" + fileVO.getId());
+				fileVO.setHyperlink("download?id=" + fileVO.getId());
 		}
 
 	}

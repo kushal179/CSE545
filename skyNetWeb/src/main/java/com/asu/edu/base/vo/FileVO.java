@@ -33,9 +33,9 @@ public class FileVO {
 		this.fileName = fileName;
 		if (fileName
 				.matches(".*(.jpg|.JPG|.gif|.GIF|.doc|.DOC|.pdf|.PDF|.txt|.TXT)"))
-			setIconFile("/edu//resources/icons/file.jpg");
+			setIconFile("resources/icons/file.jpg");
 		else
-			setIconFile("/edu/resources/icons/folder.png");
+			setIconFile("resources/icons/folder.png");
 	}
 
 	public String getType() {

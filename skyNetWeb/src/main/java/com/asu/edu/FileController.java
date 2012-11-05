@@ -31,7 +31,7 @@ public class FileController {
 	@Autowired
 	private FileDAOImplInterface fileDAO = null;
 
-	@RequestMapping(value = "/welcome/upload", method = RequestMethod.GET)
+	@RequestMapping(value = "/upload", method = RequestMethod.GET)
 	public String upload(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session) {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
@@ -61,7 +61,7 @@ public class FileController {
 		return "documentManagement";
 	}
 
-	@RequestMapping(value = "/welcome/download", method = RequestMethod.GET)
+	@RequestMapping(value = "/download", method = RequestMethod.GET)
 	public void download(HttpServletRequest request,
 			HttpServletResponse response) {
 		FileVO fileVO = (FileVO) fileDAO.getFile(request);

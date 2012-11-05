@@ -81,7 +81,7 @@ public class RegisterationController {
 				
 				if (registerationDAO.registerUser(registerationVO)) {
 					logger.info("Registeration successful");
-					return "login";
+					return "redirect:/login";
 				}
 				logger.info("Registeration failed");
 			}
