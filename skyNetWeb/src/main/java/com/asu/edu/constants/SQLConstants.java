@@ -30,7 +30,7 @@ public interface SQLConstants {
 
 	public static final String GET_FILE_PATH = "select path from files where file_id=?";
 
-	public static final String SAVE_FILE = "inset into files(path,owner_id,dept_id,parent_id,file_name,creation_time,type) values(?,?,?,?,?,?,?)";
+	public static final String SAVE_FILE = "insert into files(path,owner_id,dept_id,parent_id,file_name,creation_time,type) values(?,?,?,?,?,?,?)";
 
 	// Used by Bharath
 	public static final String APPROVE_USER = "UPDATE user SET IS_APPROVED = ? WHERE ID = ?;";
