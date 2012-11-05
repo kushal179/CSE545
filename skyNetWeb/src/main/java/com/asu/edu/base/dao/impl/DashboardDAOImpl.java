@@ -4,6 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
+
 import com.asu.edu.base.dao.BaseDAO;
 import com.asu.edu.base.dao.intrf.DashboardDAOImplInterface;
 import com.asu.edu.base.vo.DepartmentVO;
@@ -17,7 +20,9 @@ public class DashboardDAOImpl extends BaseDAO implements
 
 	private static final String GET_FILES = "getRegularEmployeeFiles";
 	String calledFunction;
-
+	
+	@Autowired
+	private ShaPasswordEncoder passwordEncoder;
 	@Override
 	public ArrayList<FileVO> getRegularEmployeeFiles(UserVO userVO,
 			DepartmentVO departmentVO, long folderId) {

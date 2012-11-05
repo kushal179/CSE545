@@ -14,4 +14,10 @@
 		<property name="privateKey" value="6LdIMtgSAAAAALIW_Ec3pU6m0OUBV2BMLnNOYCVD"></property>
 	</bean>
 	
+	<bean id="multipartResolver"
+    class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+    <!-- one of the properties available; the maximum file size in bytes -->
+    <property name="maxUploadSize" value="100000"/>
+	</bean>
 </beans>

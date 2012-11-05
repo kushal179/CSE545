@@ -28,7 +28,7 @@ public interface SQLConstants {
 	/* file upload download */
 	public static final String GET_FILE_FOR_DOWNLOAD = "select * from files where file_id=?";
 
-	public static final String GET_FILE_PATH = "select path from files where parent_id=?";
+	public static final String GET_FILE_PATH = "select path from files where file_id=?";
 
 	public static final String SAVE_FILE = "inset into files(path,owner_id,dept_id,parent_id,file_name,creation_time,type) values(?,?,?,?,?,?,?)";
 

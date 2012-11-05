@@ -26,12 +26,12 @@ import com.asu.edu.base.vo.UserVO;
 import com.asu.edu.constants.CommonConstants;
 
 @Controller
-public class FileController {
+public class FileController  {
 
 	@Autowired
 	private FileDAOImplInterface fileDAO = null;
 
-	@RequestMapping(value = "/upload", method = RequestMethod.GET)
+	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public String upload(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session) {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;

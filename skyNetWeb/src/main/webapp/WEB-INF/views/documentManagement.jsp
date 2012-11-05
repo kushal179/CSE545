@@ -61,19 +61,14 @@ body {
 						<li class="nav-header">Departments</li>
 						<%
 							ArrayList<Integer> depts = ((UserVO) session.getAttribute("userVO"))
-																									.getDepartments();
-																							Map<Integer, DepartmentVO> deptMap = MasterCache.getDepartmentMap();
-																							for (Integer departmentId : depts) {
-																								String deptDesc = deptMap.get(departmentId).getDeptDesc();
-																								request.setAttribute("departDesc", deptDesc);
-																								request.setAttribute("departId", departmentId);
-																								if(departmentId == request.getAttribute("deptId"))
-																									request.setAttribute("liClass","active");
-																								else
-																									request.setAttribute("liClass","");
+																					.getDepartments();
+																			Map<Integer, DepartmentVO> deptMap = MasterCache.getDepartmentMap();
+																			for (Integer departmentId : depts) {
+																				String deptName = deptMap.get(departmentId).getDeptName();
+																				request.setAttribute("departName", deptName);
+																				request.setAttribute("departId", departmentId);
 						%>
-						<li class="${liClass }"><a
-							href="/edu/Dashboard/?deptId=${departId}&folderId=-1">${departDesc}</a></li>
+						<li><a href="/edu/Dashboard/?deptId=${departId}&folderId=-1">${departName}</a></li>
 						<%
 							}
 						%>
@@ -87,14 +82,13 @@ body {
 			<div class="span9">
 				<noscript>
 					<div class="hero-unitops">
-						<p class="text-error">
-							<b>JavaScript is turned off in your web browser. Turn it on
-								to take full advantage of this site, then refresh the page.</b>
-						</p>
+						<p class="text-error"><b>JavaScript is turned off in your web
+							browser. Turn it on to take full advantage of this site, then
+							refresh the page.</b></p>
 					</div>
 				</noscript>
 				<div class="hero-unittitle">
-					<h3>${deptDesc}</h3>
+					<h3>Human Resources</h3>
 				</div>
 
 				<div class="hero-unitops">
@@ -106,7 +100,7 @@ body {
 						<i class="icon-search icon-download"></i>Read
 					</button>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<button class="btn-link" type="button" id="upload-button">
+					<button class="btn-link" type="button" id="upload_button">
 						<i class="icon-search icon-upload"></i>Update
 					</button>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -123,24 +117,13 @@ body {
 					</button>
 				</div>
 
-				<div id="upload-bar" class="hero-unitops" style="display: none;">
-					<form id="upload-submit" action="/upload" method="post" enctype="multipart/form-data">
-
-						<table cellpadding="5">
-							<tr>
-								<td><input type="file" name="file" id="file-upload"></td>
-								<td><input type="checkbox" id="enable-encryption" /></td>
-								<td><input type="hidden" id="parent-file-id" value="${parentFileId }"></td>
-								<td><input type="hidden" id="dept-id" value="${deptId }"></td>
-								<td><label for="ency">&nbsp;&nbsp;Encrypt file</label></td>
-								<td><input disabled="disabled" type="password"
-									name="encrypt" id="password-field"></td>
-								<td><input type="submit" name="Upload" value="Upload"
-									 /></td>
-							</tr>
-						</table>
-
-					</form>
+				<div id="upload_bar" class="hero-unitops">
+					<input type="file">
+					<div style="display: inline-block; width: 100px;">
+						<input type="checkbox" id="ency" /><label for="ency">encrypted
+							?</label>
+					</div>
+					<input type="password"> <input type="submit" name="Upload" />
 				</div>
 
 				<div class="row-fluid">
@@ -150,18 +133,16 @@ body {
 								<th></th>
 								<th>Name</th>
 								<th>Modification Date</th>
-								<th>File Type</th>
 								<th>Locked</th>
 							</tr>
 						</thead>
 						<tbody>
 							<c:forEach var="item" items="${files}">
-								<tr onclick="selectFileRow(this);">
+								<tr onclick="selectUsersRow(this);">
 									<td width="40px"><img height="30px" width="30px"
 										src="${item.iconFile}"></td>
 									<td><a href="${item.hyperlink }">${item.fileName}</a></td>
 									<td>${item.modTime}</td>
-									<td>${item.type}</td>
 									<td>${item.lock}</td>
 								</tr>
 							</c:forEach>
@@ -181,7 +162,10 @@ body {
 		</footer>
 
 	</div>
-	<script type="text/javascript" 
-                  src="<c:url value="/resources/js/dashboard.js" />"></script>
+	<script>
+		$("#upload_button").click(function() {
+			$("#upload_bar").toggle("slow");
+		});
+	</script>
 </body>
 </html>
