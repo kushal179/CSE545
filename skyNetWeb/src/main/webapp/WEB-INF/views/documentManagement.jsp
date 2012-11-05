@@ -130,8 +130,8 @@ body {
 							<tr>
 								<td><input type="file" name="file" id="file-upload"></td>
 								<td><input type="checkbox" id="enable-encryption" /></td>
-								<td><input type="hidden" id="parent-file-id" value="${parentFileId }"></td>
-								<td><input type="hidden" id="dept-id" value="${deptId }"></td>
+								<td><input type="hidden" id="parent-file-id" name="parent-file-id" value="${parentFileId }"></td>
+								<td><input type="hidden" id="dept-id" name="dept-id" value="${deptId }"></td>
 								<td><label for="ency">&nbsp;&nbsp;Encrypt file</label></td>
 								<td><input disabled="disabled" type="password"
 									name="encrypt" id="password-field"></td>

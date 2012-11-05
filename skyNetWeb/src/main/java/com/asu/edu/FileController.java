@@ -17,6 +17,7 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -32,7 +33,7 @@ public class FileController  {
 	private FileDAOImplInterface fileDAO = null;
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public String upload(HttpServletRequest request,
+	public String upload(HttpServletRequest request,@RequestParam("dept-id") int deptId,@RequestParam("parent-file-id") int parentId,
 			HttpServletResponse response, HttpSession session) {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		MultipartFile multipartFile = multipartRequest.getFile("file");
@@ -42,18 +43,15 @@ public class FileController  {
 		fileVO.setOwnerId(((UserVO) session.getAttribute(CommonConstants.USER))
 				.getId());
 		try {
-			fileVO.setDeptId(ServletRequestUtils.getRequiredIntParameter(
-					request, "deptId"));
-			int parentId = ServletRequestUtils.getRequiredIntParameter(request,
-					"parentId");
+			fileVO.setDeptId(deptId);
+			
 			fileVO.setParentId(parentId);
 			String path = fileDAO.getParentFilePath(parentId);
 			fileVO.setPath(path);
 			FileOutputStream  f = new FileOutputStream (path + "/" + multipartFile.getOriginalFilename());
 			f.write(multipartFile.getBytes());
 			f.close();
-			} catch (ServletRequestBindingException e) {
-			e.printStackTrace();
+			fileDAO.saveFile(fileVO);
 			} catch (IOException e) {
 			e.printStackTrace();
 			}
