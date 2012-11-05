@@ -73,7 +73,7 @@ body {
 																									request.setAttribute("liClass","");
 						%>
 						<li class="${liClass }"><a
-							href="/edu/Dashboard/?deptId=${departId}&folderId=-1">${departDesc}</a></li>
+							href="Dashboard/?deptId=${departId}&folderId=-1">${departDesc}</a></li>
 						<%
 							}
 						%>
@@ -124,7 +124,7 @@ body {
 				</div>
 
 				<div id="upload-bar" class="hero-unitops" style="display: none;">
-					<form id="upload-submit" action="/upload" method="post" enctype="multipart/form-data">
+					<form id="upload-submit" action="upload" method="post" enctype="multipart/form-data">
 
 						<table cellpadding="5">
 							<tr>
