@@ -2,6 +2,7 @@ package com.asu.edu;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import com.asu.edu.base.vo.FileVO;
 import com.asu.edu.base.vo.ShareVO;
 import com.asu.edu.base.vo.UserVO;
 import com.asu.edu.cache.MasterCache;
+import com.asu.edu.security.EncryptDecrypt;
 
 /**
  * Handles requests for the application home page.
@@ -37,7 +39,7 @@ public class DashboardController {
 	private static final int ROLE_DEPARTMENT_MANAGER = 4;
 
 	private static final int ROLE_REGULAR_EMP = 3;
-	
+
 	private static final int ROLE_GUEST_USER = 2;
 
 	private static final Logger logger = LoggerFactory
@@ -45,6 +47,8 @@ public class DashboardController {
 
 	@Autowired
 	private DashboardDAOImplInterface dashboardDAO = null;
+
+	private EncryptDecrypt encryptDecrypt;
 
 	private Map<Integer, DepartmentVO> departmentMap;
 
@@ -54,6 +58,7 @@ public class DashboardController {
 
 	public DashboardController() {
 		departmentMap = MasterCache.getDepartmentMap();
+		encryptDecrypt = new EncryptDecrypt();
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -61,34 +66,35 @@ public class DashboardController {
 			@RequestParam("folderId") String folderId, HttpSession session,
 			Map model) {
 		logger.info("department Id = " + deptId);
+		logger.info("folder Id = " + folderId);
 		logger.info("Dashboard screen");
 
 		UserVO user = (UserVO) session.getAttribute("userVO");
 		long parentId;
 		int departmentId;
 
-		if(user.getRoleId() == ROLE_GUEST_USER){
-			// HANDLE 
-		}
-		
 		if (user != null) {
-			/*if (deptId.equals("-1"))
-				departmentId = user.getDepartments().get(0);
-			else {
-				byte[] decodedBytes = Base64.decode(deptId.getBytes());
-				departmentId = Integer.valueOf(new String(decodedBytes));
-			}*/
-			
+
+			if (user.getRoleId() == ROLE_GUEST_USER) {
+				// HANDLE
+			}
+
+			/*
+			 * if (deptId.equals("-1")) departmentId =
+			 * user.getDepartments().get(0); else { byte[] decodedBytes =
+			 * Base64.decode(deptId.getBytes()); departmentId =
+			 * Integer.valueOf(new String(decodedBytes)); }
+			 */
+
 			if (deptId == -1)
 				departmentId = user.getDepartments().get(0);
 			else
-				departmentId= deptId;
+				departmentId = deptId;
 
 			if (folderId.equals("-1")) {
 				parentId = departmentMap.get(departmentId).getRootFileId();
 			} else {
-				byte[] decodedBytes = Base64.decode(folderId.getBytes());
-				parentId = Long.valueOf(new String(decodedBytes));
+				parentId = Long.valueOf(encryptDecrypt.decrypt(folderId));
 			}
 
 			ArrayList<FileVO> files = null;
@@ -105,6 +111,8 @@ public class DashboardController {
 				files = dashboardDAO.getManagerFiles(user, dept, parentId);
 				break;
 			case ROLE_CORPORATE_MANAGER:
+				dept = departmentMap.get(departmentId);
+				files = dashboardDAO.getCorporateManagerFiles(user, dept, parentId);
 				break;
 			}
 
@@ -115,7 +123,7 @@ public class DashboardController {
 			model.put("files", files);
 			model.put("deptId", departmentId);
 			model.put("deptDesc", dept.getDeptDesc());
-			model.put("parentFileId", folderId);
+			model.put("parentFileId", parentId);
 			model.put("shareVO", new ShareVO());
 			model.put("approvedUsers", new ArrayList<UserVO>());
 
@@ -129,25 +137,35 @@ public class DashboardController {
 
 		for (FileVO fileVO : files) {
 			byte[] encodedBytes = null;
+
+			String hashedId;
 			try {
-				encodedBytes = Base64.encode(String.valueOf(fileVO.getId())
-						.getBytes("UTF8"));
-				fileVO.setHashedId(new String(encodedBytes));
+				hashedId = URLEncoder.encode(
+						encryptDecrypt.encrypt(String.valueOf(fileVO.getId())),
+						"UTF-8");
+				fileVO.setHashedId(hashedId);
 			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
+			String hashedParentId;
 			try {
-				encodedBytes = Base64.encode(String.valueOf(fileVO.getParentId())
-						.getBytes("UTF8"));
-				fileVO.setHashedParentId(new String(encodedBytes));
+				hashedParentId = URLEncoder
+						.encode(encryptDecrypt.encrypt(String.valueOf(fileVO
+								.getParentId())), "UTF-8");
+				fileVO.setHashedParentId(hashedParentId);
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			
-			
+
 			if (fileVO.isDir())
 				fileVO.setHyperlink("Dashboard?deptId=" + fileVO.getDeptId()
 						+ "&folderId=" + fileVO.getHashedId());
@@ -157,11 +175,11 @@ public class DashboardController {
 
 	}
 
-	@ExceptionHandler(IOException.class)
-	public String handleIOException(IOException ex, HttpServletRequest request) {
+	@ExceptionHandler(Exception.class)
+	public String handleIOException(Exception ex, HttpServletRequest request) {
 
 		System.out.println("in exceptopn handler");
-		return "documentManagement";
+		return "error-page";
 	}
 
 	static {
