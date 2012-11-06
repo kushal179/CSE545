@@ -78,7 +78,7 @@ body {
 									request.setAttribute("liClass", "");
 						%>
 						<li class="${liClass }"><a
-							href="Dashboard/?deptId=${departId}&folderId=-1">${departDesc}</a></li>
+							href="Dashboard?deptId=${departId}&folderId=-1">${departDesc}</a></li>
 						<%
 							}
 						%>
