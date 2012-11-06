@@ -61,6 +61,7 @@ public class DashboardController {
 		encryptDecrypt = new EncryptDecrypt();
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(method = RequestMethod.GET)
 	public String getDashBoardContents(@RequestParam("deptId") int deptId,
 			@RequestParam("folderId") String folderId, HttpSession session,
@@ -125,7 +126,7 @@ public class DashboardController {
 			model.put("deptDesc", dept.getDeptDesc());
 			model.put("parentFileId", encryptDecrypt.encrypt(String.valueOf(parentId)));
 			model.put("shareVO", new ShareVO());
-			model.put("approvedUsers", new ArrayList<UserVO>());
+			model.put("shareToUsers", dashboardDAO.getapprovedNonAdminUsers(user.getId()));
 
 			return "documentManagement";
 		}

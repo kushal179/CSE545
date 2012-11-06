@@ -1,7 +1,10 @@
 package com.asu.edu.base.dao.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +15,10 @@ import org.springframework.web.bind.ServletRequestUtils;
 import com.asu.edu.base.dao.BaseDAO;
 import com.asu.edu.base.dao.intrf.FileDAOImplInterface;
 import com.asu.edu.base.vo.FileVO;
+import com.asu.edu.base.vo.PendingUsersVO;
+import com.asu.edu.base.vo.ShareVO;
 import com.asu.edu.constants.SQLConstants;
+import com.asu.edu.security.EncryptDecrypt;
 
 public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 	String calledFunction;
@@ -32,6 +38,9 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		}
 		if (calledFunction == "getParentFilePath") {
 			return rs.getString("PATH");
+		}
+		if(calledFunction == "selectItem"){
+			return rs.getInt("file_id");
 		}
 
 		return null;
@@ -85,4 +94,55 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		
 	}
 
+	@Override
+	public boolean shareItem(ShareVO shareVO, Long fromUserId) {
+		calledFunction = "selectItem";
+		EncryptDecrypt encryptDecrypt = new EncryptDecrypt();
+		Integer itemId = 0 ;
+		try {
+			itemId = Integer.parseInt(encryptDecrypt.decrypt(URLDecoder.decode(shareVO.getItemhashedId(),"UTF-8")));
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Object[] param = new Object[3];
+		param[0] = itemId;
+		param[1] = fromUserId;
+		param[2] = shareVO.getToUserId();
+		String sql = SQLConstants.SHARE_SELECT_ITEM;
+		Integer fileid = (Integer) getRowByCriteria(sql, param);
+		
+		calledFunction = "shareItem";
+		param = new Object[6];
+
+		if (fileid == null) {
+			param[0] =  itemId;
+			param[1] = fromUserId;
+			param[2] = shareVO.getToUserId();
+			param[3] = param[4] = param[5] = 0;
+			ArrayList<Integer> permissionsList = shareVO.getPermissions();
+			for (int i = 0; i < permissionsList.size(); i++) {
+				param[2 + permissionsList.get(i)] = 1;
+			}
+			sql = SQLConstants.SHARE_INSERT_ITEM; 
+		} else {
+			param[0] = param[1] = param[2] = 0;
+			param[3] = itemId;
+			param[4] = fromUserId;
+			param[5] = shareVO.getToUserId();
+			ArrayList<Integer> permissionsList = shareVO.getPermissions();
+			for (int i = 0; i < permissionsList.size(); i++) {
+				param[permissionsList.get(i) -1] = 1;
+			}
+
+			sql = SQLConstants.SHARE_UPDATE_ITEM;
+		}
+		return preparedStatementUpdate(sql, param, true) > 0;
+	}	
 }

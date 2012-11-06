@@ -21,9 +21,10 @@ public class DashboardDAOImpl extends BaseDAO implements
 	private static final String GET_FILES = "getRegularEmployeeFiles";
 	private static final String GET_SHARED_FILES = "getSharedFiles";
 	String calledFunction;
-	
+
 	@Autowired
 	private ShaPasswordEncoder passwordEncoder;
+
 	@Override
 	public ArrayList<FileVO> getRegularEmployeeFiles(UserVO userVO,
 			DepartmentVO departmentVO, long folderId) {
@@ -118,6 +119,20 @@ public class DashboardDAOImpl extends BaseDAO implements
 
 		return files;
 	}
+	
+	public ArrayList<UserVO> getapprovedNonAdminUsers(long userid) {
+		calledFunction = "getapprovedNonAdminUsers";
+		String sql = SQLConstants.SHARE_TO_USERS;
+		Object[] params = new Object[3];
+		params[0] = 1;
+		params[1] = 1;
+		params[2] = userid;
+		ArrayList<UserVO> users = (ArrayList<UserVO>) getListByCriteria(sql,
+				params);
+
+		return users;
+
+	}
 
 	@Override
 	protected Object toDataObject(ResultSet rs) throws SQLException {
@@ -134,6 +149,7 @@ public class DashboardDAOImpl extends BaseDAO implements
 			fileVO.setLock(rs.getBoolean("LOCK"));
 			fileVO.setDir(rs.getBoolean("IS_DIR"));
 			return fileVO;
+			
 		} else if (calledFunction == GET_SHARED_FILES) {
 			FileVO fileVO = new FileVO();
 			fileVO.setId(rs.getLong("FILE_ID"));
@@ -149,7 +165,14 @@ public class DashboardDAOImpl extends BaseDAO implements
 			fileVO.setSharedByName(rs.getString("first_name") + " "
 					+ rs.getString("last_name"));
 			return fileVO;
+			
+		} else if (calledFunction == "getapprovedNonAdminUsers") {
+			UserVO userVO=new UserVO();
+			userVO.setId(rs.getLong("id"));
+			userVO.setUserName(rs.getString("user_name"));
+			return userVO;
 		}
+
 		return null;
 	}
 

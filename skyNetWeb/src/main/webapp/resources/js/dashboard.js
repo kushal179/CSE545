@@ -5,11 +5,25 @@ function bodyload() {
 function onItemselected(id) {
 	document.getElementById("itemname").innerText = id
 			.getElementsByTagName('td')[1].innerText;
+	document.getElementById("fileName").innerText = id
+			.getElementsByTagName('td')[1].innerText;
+	document.getElementById("itemId").value = id.getElementsByTagName('td')[6].innerText;
+
+	var table = document.getElementById("fileslist");
+	for ( var i = 0, row; row = table.rows[i]; i++) {
+		row.style.backgroundColor = '#ffffff';
+	}
+	id.style.backgroundColor = '#E2E6A8';
+
 	$("#selectItem").hide();
 	$("#itemSelected").show();
 }
 
 function onheaderBarClicked() {
+	var table = document.getElementById("fileslist");
+	for ( var i = 0, row; row = table.rows[i]; i++) {
+		row.style.backgroundColor = '#ffffff';
+	}
 	$("#itemSelected").hide();
 	$("#upload-bar").hide();
 	$("#selectItem").show();

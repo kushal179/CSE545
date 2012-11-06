@@ -1,6 +1,7 @@
 package com.asu.edu.base.dao.intrf;
 
 import com.asu.edu.base.vo.FileVO;
+import com.asu.edu.base.vo.ShareVO;
 
 public interface FileDAOImplInterface {
 
@@ -13,5 +14,7 @@ public interface FileDAOImplInterface {
 	public boolean lock(Object[] param);
 	
 	public boolean lockAuthorization(Object[] param);
+
+	public boolean shareItem(ShareVO shareVO, Long fromUserId);
 
 }

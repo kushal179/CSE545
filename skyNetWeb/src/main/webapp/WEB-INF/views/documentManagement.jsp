@@ -126,7 +126,7 @@ body {
 				<div class="hero-unitops" id="itemSelected">
 					<table>
 						<tr>
-							<td width="50%"><label id="itemname"></label></td>
+							<td width="45%"><label id="itemname"></label></td>
 							<td width="10%">
 								<button class="btn-link" type="button">
 									<i class="icon-download"></i>Read
@@ -137,7 +137,7 @@ body {
 									<i class="icon-upload"></i>Update
 								</button>
 							</td>
-							<td width="10%">
+							<td width="15%">
 								<button class="btn-link" type="button">
 									<i class="icon-lock"></i>Check-Out
 								</button>
@@ -179,7 +179,7 @@ body {
 				</div>
 
 				<div class="row-fluid">
-					<table class="table table-hover">
+					<table class="table table-hover" id="fileslist">
 						<thead>
 							<tr>
 								<th></th>
@@ -203,6 +203,9 @@ body {
 													src="resources/icons/lock.jpg" />
 											</c:when>
 										</c:choose></td>
+
+									<td>${item.lock}</td>
+									<td id="selectedfileid">${item.hashedId}</td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -226,16 +229,20 @@ body {
 				<div class="modal-body">
 					<table>
 						<tr>
+							<td align="right">Item :</td>
+							<td style="padding-left: 20px;"><label id="fileName"></label></td>
+							<td style="display: none;"><form:input id="itemId"
+									path="itemhashedId" /></td>
+						</tr>
+						<tr>
 							<td align="right">From User:</td>
-							<td style="padding-left: 20px;"><label id="userName">${sessionScope["userVO"].userName}</label></td>
-							<td style="display: none;"><form:input id="fromUser"
-									path="fromUser" /></td>
+							<td style="padding-left: 20px;">${sessionScope["userVO"].userName}</td>
 						</tr>
 						<tr>
 							<td align="right">To User:</td>
 							<td style="padding-left: 20px;"><form:select id="toUser"
-									path="toUser">
-									<c:forEach var="item" items="${approvedUsers}">
+									path="toUserId">
+									<c:forEach var="item" items="${shareToUsers}">
 										<form:option value="${item.id}" label="${item.userName}" />
 									</c:forEach>
 								</form:select></td>
@@ -246,21 +253,27 @@ body {
 								<table>
 									<tr>
 										<td style="padding-left: 20px;"><form:checkbox
-												path="permissions" id="read" value="read" /></td>
+												path="permissions" id="read" value="1" /></td>
 										<td style="padding-left: 10px; padding-top: 5px;"><label>Read</label></td>
 									</tr>
 									<tr>
 										<td style="padding-left: 20px;"><form:checkbox
-												path="permissions" id="update" value="update" /></td>
+												path="permissions" id="update" value="2" /></td>
 										<td style="padding-left: 10px; padding-top: 5px;"><label>Update</label></td>
 									</tr>
 									<tr>
 										<td style="padding-left: 20px;"><form:checkbox
-												path="permissions" id="lock" value="lock" /></td>
+												path="permissions" id="lock" value="3" /></td>
 										<td style="padding-left: 10px; padding-top: 5px;"><label>CheckIn-CheckOut</label></td>
 									</tr>
 								</table>
 							</td>
+						</tr>
+						<tr>
+							<td><input type="hidden" id="parent-file-id"
+								name="parent-file-id" value="${parentFileId }"></td>
+							<td><input type="hidden" id="dept-id" name="dept-id"
+								value="${deptId }"></td>
 						</tr>
 					</table>
 				</div>

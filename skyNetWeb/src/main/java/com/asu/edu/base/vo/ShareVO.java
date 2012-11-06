@@ -4,43 +4,33 @@ import java.util.ArrayList;
 
 public class ShareVO {
 
-	private String path;
+	private String itemhashedId;
 
-	private String fromUser;
+	private Integer toUserId;
 
-	private String toUser;
+	private ArrayList<Integer> permissions;
 
-	private ArrayList<String> permissions;
-
-	public String getPath() {
-		return path;
+	public String getItemhashedId() {
+		return itemhashedId;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public void setItemhashedId(String itemhashedId) {
+		this.itemhashedId = itemhashedId;
 	}
 
-	public String getFromUser() {
-		return fromUser;
+	public Integer getToUserId() {
+		return toUserId;
 	}
 
-	public void setFromUser(String fromUser) {
-		this.fromUser = fromUser;
+	public void setToUserId(Integer toUserId) {
+		this.toUserId = toUserId;
 	}
 
-	public String getToUser() {
-		return toUser;
-	}
-
-	public void setToUser(String toUser) {
-		this.toUser = toUser;
-	}
-
-	public ArrayList<String> getPermissions() {
+	public ArrayList<Integer> getPermissions() {
 		return permissions;
 	}
 
-	public void setPermissions(ArrayList<String> permissions) {
+	public void setPermissions(ArrayList<Integer> permissions) {
 		this.permissions = permissions;
 	}
 }

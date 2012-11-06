@@ -1,7 +1,7 @@
 package com.asu.edu.constants;
 
 public interface SQLConstants {
-
+	
 	public static final String USER_LOGIN = "select * from user where USER_NAME=? AND PASSWORD=?";
 	public static final String USER_ROLE = "SELECT U.USER_NAME, R.DESC FROM user U, roles R WHERE U.ROLE_ID = R.ID AND U.USER_NAME = ?";
 	public static final String USER_DEPT = "select dept_id from user_dept where user_id=?";
@@ -9,7 +9,7 @@ public interface SQLConstants {
 	public static final String ADD_DEPT_FOR_USER = "insert into user_dept values ";
 
 	public static final String USER_DEPTS = "select d.id, d.name from user_dept ud, department d where ud.dept_id = d.id AND ud.user_id = ?;";
-	
+
 	public static final String USERS_BY_ROLE = "select U.user_name, D.name from dockloud.user U, dockloud.department D, dockloud.user_dept U_D, dockloud.roles R where U.id=U_D.user_id and D.id=U_D.dept_id and R.id=U.role_id AND R.id = ?;";
 
 	public static final String LOG_FILES = "SELECT L.path, DATE_FORMAT(L.timestamp, '%d/%m/%Y') AS timestamp FROM dockloud.logs L WHERE ?";
@@ -45,10 +45,16 @@ public interface SQLConstants {
 
 	public static final String DELETE_USER_DEPTS = "delete from user_dept WHERE user_id = ?;";
 
-	// *********************************
+	// In share dailog populate approved, non admin and not current user
+	public static final String SHARE_TO_USERS = "select u.user_name, u.id from user u where u.role_id <> ? and u.is_approved = ? and u.id <> ?;";
 
 	public static final String GET_EMAIL_ID = "select email from user where user_name=?;";
 
 	public static final String UPDATE_PASSWORD = "update user set password=? where user_name=?;";
 
+	// Share items
+	public static final String SHARE_SELECT_ITEM = "select * from sharing where file_id = ? and user_id_by = ? and user_id_to=?;";
+	public static final String SHARE_INSERT_ITEM = "insert into sharing (file_id,user_id_by,user_id_to,download,file_update,checkin_out) values (?,?,?,?,?,?);";
+	public static final String SHARE_UPDATE_ITEM = "update sharing s set s.download=? , s.file_update=? , s.checkin_out=? where s.file_id=? and s.user_id_by=? and s.user_id_to=?;";
+	// *********************************
 }

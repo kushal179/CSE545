@@ -2,6 +2,8 @@ package com.asu.edu.base.dao.intrf;
 
 import java.util.ArrayList;
 
+import org.springframework.security.config.authentication.UserServiceBeanDefinitionParser;
+
 import com.asu.edu.base.vo.DepartmentVO;
 import com.asu.edu.base.vo.FileVO;
 import com.asu.edu.base.vo.UserVO;
@@ -21,4 +23,7 @@ public interface DashboardDAOImplInterface {
 
 	public ArrayList<FileVO> getSharedToDocuments(UserVO userVO,
 			DepartmentVO departmentVO, long folderId);
+	
+	public ArrayList<UserVO> getapprovedNonAdminUsers(long userid);
+
 }
