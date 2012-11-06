@@ -71,6 +71,7 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		param[4] = fileVO.getFileName();
 		param[5] = new java.sql.Timestamp(new java.util.Date().getTime());
 		param[6] = fileVO.getContentType();
+		param[7] = new java.sql.Timestamp(new java.util.Date().getTime());
 		String sql = SQLConstants.SAVE_FILE;
 		return preparedStatementUpdate(sql, param, true) > 0;
 
