@@ -45,6 +45,7 @@ body {
 					<ul class="nav">
 						<li class="active"><a href="#">Home</a></li>
 						<li><a href="#about">About</a></li>
+						<li><a href="changePassword"/></li>
 						<li><a href="<c:url value="/j_spring_security_logout" />">Logout</a></li>
 					</ul>
 				</div>

@@ -146,19 +146,19 @@ public class LoginController {
 	@RequestMapping(value = "/forgotPassword", method = RequestMethod.GET)
 	public String forgotPassword(Locale locale, Map<String, Object> model) {
 		logger.info("In Get");
-		model.put("userVO", new UserVO());
+		model.put("changePasswordVO", new ChangePasswordVO());
 		return "forgotPassword";
 	}
 
 	@RequestMapping(value = "/forgotPassword", method = RequestMethod.POST)
-	public String sendPassword(UserVO userVO, HttpSession session, Model attr) {
+	public String sendPassword(ChangePasswordVO changePasswordVO, HttpSession session, Model attr) {
 		logger.info("In post ");
-		logger.info(userVO.getForgot_userName());
+		logger.info(changePasswordVO.getUserName());
 
 		ServletContext context1 = session.getServletContext();
 		String realContextPath1 = context1.getRealPath("");
 		logger.info(realContextPath1);
-		String userName = userVO.getForgot_userName();
+		String userName = changePasswordVO.getUserName();
 		String email_id = securityDAO.getEmailForUser(userName);
 		String errorMessage = null;
 

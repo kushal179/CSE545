@@ -66,7 +66,7 @@ body {
 								<td>
 									<table border="0" cellpadding="3" cellspacing="3">
 										<tbody>
-											<form:form modelAttribute="userVO" name="my_form"
+											<form:form modelAttribute="changePasswordVO" name="my_form"
 												method="post" onsubmit="return button_actions()">
 												<tr>
 													<td colspan="2">
@@ -77,7 +77,7 @@ body {
 
 												<tr>
 													<td style="color: white">Enter Username:</td>
-													<td><form:input path="forgot_userName" id="userName" /></td>
+													<td><form:input path="userName" id="userName" /></td>
 												</tr>
 												<tr><td style="color: red">${errorMessage}</td></tr>>
 

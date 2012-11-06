@@ -26,6 +26,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.asu.edu.base.dao.BaseDAO;
 import com.asu.edu.base.dao.intrf.SecurityDAOImplInterface;
+import com.asu.edu.base.vo.ChangePasswordVO;
 import com.asu.edu.base.vo.PendingUsersVO;
 import com.asu.edu.base.vo.RegisterationVO;
 import com.asu.edu.base.vo.UserRegistrationServiceVO;
@@ -83,8 +84,8 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 		if(calledFunction=="sendEmail")
 		{
 			System.out.println("inside sendEmail to data object");
-			UserVO uservo = new UserVO();
-			uservo.setForgot_userName(rs.getString("USER_NAME"));
+			ChangePasswordVO changePasswordVO = new ChangePasswordVO();
+			changePasswordVO.setUserName(rs.getString("USER_NAME"));
 			
 		}
 
