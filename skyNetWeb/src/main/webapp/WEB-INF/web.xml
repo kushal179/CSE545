@@ -5,7 +5,8 @@
     <param-value>
 		/WEB-INF/spring/root-context.xml,
 		/WEB-INF/spring/appServlet/spring-database.xml,
-		/WEB-INF/spring/appServlet/spring-security.xml
+		/WEB-INF/spring/appServlet/spring-security.xml,
+		/WEB-INF/spring/appServlet/mail-simple.xml
 		</param-value>
   </context-param>
   <context-param>

@@ -3,9 +3,16 @@ package com.asu.edu.base.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,7 +26,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.asu.edu.base.dao.BaseDAO;
 import com.asu.edu.base.dao.intrf.SecurityDAOImplInterface;
+import com.asu.edu.base.vo.PendingUsersVO;
+import com.asu.edu.base.vo.RegisterationVO;
+import com.asu.edu.base.vo.UserRegistrationServiceVO;
 import com.asu.edu.base.vo.UserVO;
+import com.asu.edu.constants.CommonConstants;
 import com.asu.edu.constants.SQLConstants;
 
 public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface,AuthenticationProvider {
@@ -64,15 +75,39 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 			System.out.println("inside userRole to data object");
 			return rs.getString("DESC");
 		}
+		else if(calledFunction=="getEmailForUser")
+		{
+				String email_id= rs.getString("EMAIL");
+				return email_id;
+		}
+		if(calledFunction=="sendEmail")
+		{
+			System.out.println("inside sendEmail to data object");
+			UserVO uservo = new UserVO();
+			uservo.setForgot_userName(rs.getString("USER_NAME"));
+			
+		}
+
 
 		return null;
 	}
-
+	public boolean isValidPassword(String userName, String password)
+	{		
+		calledFunction = AUTHENTICATE;
+		Object[] prepareParams = new Object[2];
+		prepareParams[0] = userName;
+		prepareParams[1] = passwordEncoder.encodePassword(password, userName);
+		UserVO userVO = (UserVO)this.getRowByCriteria(SQLConstants.USER_LOGIN, prepareParams);
+		if(userVO!=null)
+		{
+			return true;
+		}
+		return false;
+	}
 
 	@Override
 	public Authentication authenticate(Authentication auth)
 			throws AuthenticationException {
-
 		calledFunction = AUTHENTICATE;
 		Object[] prepareParams = new Object[2];
 		prepareParams[0] = auth.getName();
@@ -136,5 +171,23 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 	public void setPasswordEncoder(ShaPasswordEncoder passwordEncoder) {
 		this.passwordEncoder = passwordEncoder;
 	}
-
+	public String getEmailForUser(String userName) {
+		calledFunction = "getEmailForUser";
+		
+		Object[] param = new Object[1];
+		param[0] = userName;
+		String sql  = SQLConstants.GET_EMAIL_ID;
+		String result = (String)this.getRowByCriteria(sql, param);
+		return result;
+	}
+	public void setPasswordForUser(String userName, String passwd)
+	{
+		calledFunction = "setPasswordForUser";
+		Object[] param = new Object[2];
+		param[1]=userName;
+		param[0]=passwordEncoder.encodePassword(passwd, userName);
+		String sql = SQLConstants.UPDATE_PASSWORD;
+		preparedStatementUpdate(sql, param,true);
+		
+	}
 }

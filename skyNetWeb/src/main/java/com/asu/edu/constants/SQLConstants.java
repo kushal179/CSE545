@@ -45,4 +45,8 @@ public interface SQLConstants {
 
 	// *********************************
 
+	public static final String GET_EMAIL_ID = "select email from user where user_name=?;";
+
+	public static final String UPDATE_PASSWORD = "update user set password=? where user_name=?;";
+
 }
