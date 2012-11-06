@@ -62,17 +62,17 @@ body {
 				<div class="well sidebar-nav">
 					<ul class="nav nav-tabs nav-stacked">
 						<li class="nav-header">Requests</li>
-						<li class="active" id="pending"><a href="/edu/admin">Pending</a></li>
+						<li class="active" id="pending"><a href="admin">Pending</a></li>
 						<li class="nav-header">Users</li>
-						<li id="copMgr"><a href="/edu/admin-copMgr">Corporate
+						<li id="copMgr"><a href="admin-copMgr">Corporate
 								Level</a></li>
-						<li id="deptMgr"><a href="/edu/admin-deptMgr">Department
+						<li id="deptMgr"><a href="admin-deptMgr">Department
 								Managers</a></li>
-						<li id="regEmp"><a href="/edu/admin-regularEmp">Regular
+						<li id="regEmp"><a href="admin-regularEmp">Regular
 								Employees</a></li>
-						<li id="guestUsr"><a href="/edu/admin-guest">Guest Users</a></li>
+						<li id="guestUsr"><a href="admin-guest">Guest Users</a></li>
 						<li class="nav-header">Operations</li>
-						<li><a href="/edu/admin-logs">System Log</a></li>
+						<li><a href="admin-logs">System Log</a></li>
 					</ul>
 				</div>
 			</div>

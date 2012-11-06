@@ -85,7 +85,7 @@
 				</c:if>
 				<input class="btn btn-primary" type="submit" value="Sign in"/>Submit<br/><br/>
 				<a href="register">Register</a>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
-				<a href="/edu/forgotPassword">Forgot Password</a>
+				<a href="forgotPassword">Forgot Password</a>
 				</div>
 			</td>
 		</tr>
