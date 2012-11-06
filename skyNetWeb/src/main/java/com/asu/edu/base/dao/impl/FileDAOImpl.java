@@ -57,8 +57,8 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 	}
 
 	public boolean saveFile(FileVO fileVO) {
-		Object[] param = new Object[7];
-		param = new Object[7];
+		Object[] param = new Object[8];
+		param = new Object[8];
 		param[0] = fileVO.getPath();
 		param[1] = fileVO.getOwnerId();
 		param[2] = fileVO.getDeptId();

@@ -42,7 +42,8 @@ public class FileController {
 		
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		MultipartFile multipartFile = multipartRequest.getFile("file");
-		int deptId = Integer.parseInt(util.decrypt(dept_Id));
+		//int deptId = Integer.parseInt(util.decrypt(dept_Id));
+		int deptId = Integer.parseInt(dept_Id);
 		int parentId = Integer.parseInt(util.decrypt(parent_Id));
 		FileVO fileVO = new FileVO();
 		fileVO.setFileName(multipartFile.getOriginalFilename());
@@ -103,7 +104,8 @@ public class FileController {
 			@RequestParam("dept-id") String dept_Id,
 			@RequestParam("parent-file-id") String parent_Id, HttpSession session) {
 			int id  = Integer.parseInt(util.decrypt(Id));
-			int deptId = Integer.parseInt(util.decrypt(dept_Id));
+			//int deptId = Integer.parseInt(util.decrypt(dept_Id));
+			int deptId = Integer.parseInt(dept_Id);
 			int parentId = Integer.parseInt(util.decrypt(parent_Id));
 			Object[] param = new Object[1];
 			param[0]=id;

@@ -123,7 +123,7 @@ public class DashboardController {
 			model.put("files", files);
 			model.put("deptId", departmentId);
 			model.put("deptDesc", dept.getDeptDesc());
-			model.put("parentFileId", parentId);
+			model.put("parentFileId", encryptDecrypt.encrypt(String.valueOf(parentId)));
 			model.put("shareVO", new ShareVO());
 			model.put("approvedUsers", new ArrayList<UserVO>());
 
