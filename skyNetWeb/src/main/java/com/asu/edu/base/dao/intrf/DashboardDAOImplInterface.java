@@ -9,7 +9,7 @@ import com.asu.edu.base.vo.UserVO;
 public interface DashboardDAOImplInterface {
 
 	public ArrayList<FileVO> getRegularEmployeeFiles(UserVO userVO,
-			DepartmentVO departmentVO,long folderId);
+			DepartmentVO departmentVO, long folderId);
 
 	public ArrayList<FileVO> getManagerFiles(UserVO userVO,
 			DepartmentVO departmentVO, long folderId);
@@ -17,4 +17,8 @@ public interface DashboardDAOImplInterface {
 	public ArrayList<FileVO> getCorporateManagerFiles(UserVO userVO,
 			DepartmentVO departmentVO, long folderId);
 
+	public ArrayList<FileVO> getSharedByDocuments(UserVO userVO, long folderId);
+
+	public ArrayList<FileVO> getSharedToDocuments(UserVO userVO,
+			DepartmentVO departmentVO, long folderId);
 }

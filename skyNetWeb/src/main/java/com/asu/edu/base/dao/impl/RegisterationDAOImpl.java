@@ -74,22 +74,29 @@ public class RegisterationDAOImpl extends BaseDAO implements
 
 		calledFunction = "addToDept";
 		ArrayList<Integer> depts = user.getDepartments();
-		ArrayList<Integer> deptsArray = new ArrayList<Integer>();
-		for (int i = 0; i < depts.size(); i++) {
-			if (depts.get(i) > 0)
-				deptsArray.add(depts.get(i));
-		}
 
-		param = new Object[deptsArray.size() * 2];
-		sql = SQLConstants.ADD_DEPT_FOR_USER;
-		for (int i = 0; i < deptsArray.size(); i++) {
-			sql += "(?,?)";
-			if (i < deptsArray.size() - 1)
-				sql += " , ";
-			param[2*i] = userId;
-			param[2*i + 1] = deptsArray.get(i);
-		}
-		boolean deptUpdated = preparedStatementUpdate(sql, param, true) > 0;
+		boolean deptUpdated;
+		
+		// For a guest user
+		if (depts != null) {
+			ArrayList<Integer> deptsArray = new ArrayList<Integer>();
+			for (int i = 0; i < depts.size(); i++) {
+				if (depts.get(i) > 0)
+					deptsArray.add(depts.get(i));
+			}
+
+			param = new Object[deptsArray.size() * 2];
+			sql = SQLConstants.ADD_DEPT_FOR_USER;
+			for (int i = 0; i < deptsArray.size(); i++) {
+				sql += "(?,?)";
+				if (i < deptsArray.size() - 1)
+					sql += " , ";
+				param[2 * i] = userId;
+				param[2 * i + 1] = deptsArray.get(i);
+			}
+			deptUpdated = preparedStatementUpdate(sql, param, true) > 0;
+		} else
+			deptUpdated = true;
 
 		if (userCreated && deptUpdated)
 			return true;

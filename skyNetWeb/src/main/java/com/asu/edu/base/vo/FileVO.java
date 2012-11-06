@@ -5,6 +5,7 @@ public class FileVO {
 	private static final String ICON_PATH = "resources/icons/";
 	
 	private long id;
+	private String hashedId;
 	private String fileName;
 	private String type;
 	private String path;
@@ -15,10 +16,13 @@ public class FileVO {
 	private boolean lock;
 	private String password;
 	private long parentId;
+	private String hashedParentId;
 	private boolean isDir;
 	private String iconFile;
 	private String hyperlink;
 	private String contentType;
+	private String sharedByName;
+	private String sharedToName;
 
 	public void setId(long l) {
 		this.id = l;
@@ -165,5 +169,36 @@ public class FileVO {
 		this.contentType = contentType;
 	}
 	
+	public String getHashedId() {
+		return hashedId;
+	}
+
+	public void setHashedId(String hashedId) {
+		this.hashedId = hashedId;
+	}
+	
+	public String getHashedParentId() {
+		return hashedParentId;
+	}
+
+	public void setHashedParentId(String hashedParentId) {
+		this.hashedParentId = hashedParentId;
+	}
+
+	public String getSharedToName() {
+		return sharedToName;
+	}
+
+	public void setSharedToName(String sharedToName) {
+		this.sharedToName = sharedToName;
+	}
+
+	public String getSharedByName() {
+		return sharedByName;
+	}
+
+	public void setSharedByName(String sharedByName) {
+		this.sharedByName = sharedByName;
+	}
 
 }

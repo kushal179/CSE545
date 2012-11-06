@@ -1,3 +1,4 @@
+<%@page import="com.asu.edu.base.vo.FileVO"%>
 <%@page import="com.asu.edu.base.vo.DepartmentVO"%>
 <%@page import="com.asu.edu.cache.MasterCache"%>
 <%@page import="org.apache.taglibs.standard.tei.ForEachTEI"%>
@@ -45,10 +46,14 @@ body {
 				</a> <a class="brand" href="#">Doc Kloud</a>
 				<div class="nav-collapse collapse">
 					<p class="navbar-text pull-right">Welcome
-						${sessionScope["userVO"].userName}
+						${sessionScope["userVO"].firstName}
 						${sessionScope["userVO"].lastName}</p>
 					<ul class="nav">
+<<<<<<< Updated upstream
 						<li class="active"><a href="/">Home</a></li>
+=======
+						<li class="active"><a href="#">Home</a></li>
+>>>>>>> Stashed changes
 						<li><a href="#about">About</a></li>
 						<li><a href="<c:url value="/j_spring_security_logout" />">Logout</a></li>
 					</ul>
@@ -152,17 +157,26 @@ body {
 				</div>
 
 				<div id="upload-bar" class="hero-unitops" style="display: none;">
+<<<<<<< Updated upstream
 					<form id="upload-submit" action="upload" method="post"
+=======
+					<form id="upload-submit" action="/upload" method="post"
+>>>>>>> Stashed changes
 						enctype="multipart/form-data">
 
-						<table cellpadding="5">
+						<table>
 							<tr>
 								<td><input type="file" name="file" id="file-upload"></td>
 								<td><input type="checkbox" id="enable-encryption" /></td>
 								<td><input type="hidden" id="parent-file-id"
+<<<<<<< Updated upstream
 									name="parent-file-id" value="${parentFileId }"></td>
 								<td><input type="hidden" id="dept-id" name="dept-id"
 									value="${deptId }"></td>
+=======
+									value="${parentFileId }"></td>
+								<td><input type="hidden" id="dept-id" value="${deptId }"></td>
+>>>>>>> Stashed changes
 								<td><label for="ency">&nbsp;&nbsp;Encrypt file</label></td>
 								<td><input disabled="disabled" type="password"
 									name="encrypt" id="password-field"></td>
@@ -192,7 +206,12 @@ body {
 									<td><a href="${item.hyperlink }">${item.fileName}</a></td>
 									<td>${item.modTime}</td>
 									<td>${item.type}</td>
-									<td>${item.lock}</td>
+									<td><c:choose>
+											<c:when test="${item.lock}">
+												<img height="25px" width="25px"
+													src="/edu/resources/icons/lock.jpg" />
+											</c:when>
+										</c:choose></td>
 								</tr>
 							</c:forEach>
 						</tbody>
