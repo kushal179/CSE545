@@ -51,7 +51,7 @@ body {
 					<ul class="nav">
 						<li class="active"><a href="">Home</a></li> 
 						<li><a href="#about">About</a></li>
-						<li><a href="changePassword"/></li>
+						<li><a href="changePassword"></a></li>
 						<li><a href="<c:url value="/j_spring_security_logout" />">Logout</a></li>
 					</ul>
 				</div>
@@ -200,7 +200,7 @@ body {
 									<td><c:choose>
 											<c:when test="${item.lock}">
 												<img height="25px" width="25px"
-													src="/edu/resources/icons/lock.jpg" />
+													src="resources/icons/lock.jpg" />
 											</c:when>
 										</c:choose></td>
 								</tr>

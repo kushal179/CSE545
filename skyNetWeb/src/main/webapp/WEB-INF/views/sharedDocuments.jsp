@@ -45,7 +45,7 @@ body {
 					<ul class="nav">
 						<li class="active"><a href="#">Home</a></li>
 						<li><a href="#about">About</a></li>
-						<li><a href="changePassword"/></li>
+						<li><a href="changePassword"></a></li>
 						<li><a href="<c:url value="/j_spring_security_logout" />">Logout</a></li>
 					</ul>
 				</div>
@@ -121,19 +121,20 @@ body {
 				</div>
 
 				<div id="upload-bar" class="hero-unitops" style="display: none;">
-					<form id="upload-submit" action="/upload" method="post" enctype="multipart/form-data">
+					<form id="upload-submit" action="/upload" method="post"
+						enctype="multipart/form-data">
 
 						<table cellpadding="5">
 							<tr>
 								<td><input type="file" name="file" id="file-upload"></td>
 								<td><input type="checkbox" id="enable-encryption" /></td>
-								<td><input type="hidden" id="parent-file-id" value="${parentFileId }"></td>
+								<td><input type="hidden" id="parent-file-id"
+									value="${parentFileId }"></td>
 								<td><input type="hidden" id="dept-id" value="${deptId }"></td>
 								<td><label for="ency">&nbsp;&nbsp;Encrypt file</label></td>
 								<td><input disabled="disabled" type="password"
 									name="encrypt" id="password-field"></td>
-								<td><input type="submit" name="Upload" value="Upload"
-									 /></td>
+								<td><input type="submit" name="Upload" value="Upload" /></td>
 							</tr>
 						</table>
 
@@ -161,7 +162,12 @@ body {
 									<td>${sharedByName}</td>
 									<td>${item.modTime}</td>
 									<td>${item.type}</td>
-									<td>${item.lock}</td>
+									<td><c:choose>
+											<c:when test="${item.lock}">
+												<img height="25px" width="25px"
+													src="resources/icons/lock.jpg" />
+											</c:when>
+										</c:choose></td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -180,7 +186,7 @@ body {
 		</footer>
 
 	</div>
-	<script type="text/javascript" 
-                  src="<c:url value="/resources/js/dashboard.js" />"></script>
+	<script type="text/javascript"
+		src="<c:url value="/resources/js/dashboard.js" />"></script>
 </body>
 </html>
