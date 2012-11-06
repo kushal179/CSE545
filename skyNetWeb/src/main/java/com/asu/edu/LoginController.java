@@ -51,7 +51,7 @@ public class LoginController {
 		if (securityDAO.isLoggedIn()) {
 			//this will be executed when logged in user clicks on Home tab in the header
 			if(session.getAttribute(CommonConstants.USER)!=null){
-				return "redirect:/SharedByDocument?folderId=-1";
+				return "redirect:/Dashboard?deptId=-1&folderId=-1";
 			}
 			UserVO userVO = securityDAO.getUserDetails(SecurityContextHolder
 					.getContext().getAuthentication());

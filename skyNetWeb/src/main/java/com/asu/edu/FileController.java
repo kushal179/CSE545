@@ -25,18 +25,25 @@ import com.asu.edu.base.dao.intrf.FileDAOImplInterface;
 import com.asu.edu.base.vo.FileVO;
 import com.asu.edu.base.vo.UserVO;
 import com.asu.edu.constants.CommonConstants;
+import com.asu.edu.security.EncryptDecrypt;
 
 @Controller
-public class FileController  {
+public class FileController {
 
 	@Autowired
 	private FileDAOImplInterface fileDAO = null;
-
+	EncryptDecrypt util = new EncryptDecrypt();
+	
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public String upload(HttpServletRequest request,@RequestParam("dept-id") int deptId,@RequestParam("parent-file-id") int parentId,
+	public String upload(HttpServletRequest request,
+			@RequestParam("dept-id") String dept_Id,
+			@RequestParam("parent-file-id") String parent_Id,
 			HttpServletResponse response, HttpSession session) {
+		
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		MultipartFile multipartFile = multipartRequest.getFile("file");
+		int deptId = Integer.parseInt(util.decrypt(dept_Id));
+		int parentId = Integer.parseInt(util.decrypt(parent_Id));
 		FileVO fileVO = new FileVO();
 		fileVO.setFileName(multipartFile.getOriginalFilename());
 		fileVO.setContentType(multipartFile.getContentType());
@@ -44,28 +51,28 @@ public class FileController  {
 				.getId());
 		try {
 			fileVO.setDeptId(deptId);
-			
+
 			fileVO.setParentId(parentId);
 			String path = fileDAO.getParentFilePath(parentId);
 			path = path + "/" + multipartFile.getOriginalFilename();
 			fileVO.setPath(path);
-			if(fileDAO.saveFile(fileVO))
-			{
-			FileOutputStream  f = new FileOutputStream (path);
-			f.write(multipartFile.getBytes());
-			f.close();
+			if (fileDAO.saveFile(fileVO)) {
+				FileOutputStream f = new FileOutputStream(path);
+				f.write(multipartFile.getBytes());
+				f.close();
 			}
-			} catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-			}
+		}
 
-		return "documentManagement";
+		return "redirect:/Dashboard?deptId="+deptId+"&folderId="+parentId;
 	}
 
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
 	public void download(HttpServletRequest request,
-			HttpServletResponse response) {
-		FileVO fileVO = (FileVO) fileDAO.getFile(request);
+			HttpServletResponse response,@RequestParam("id") String Id) {
+		int id = Integer.parseInt(util.decrypt(Id));
+		FileVO fileVO = (FileVO) fileDAO.getFile(id);
 		response.setContentType(fileVO.getContentType());
 		response.setHeader("Content-Disposition", "attachment;filename="
 				+ fileVO.getFileName());
@@ -89,5 +96,23 @@ public class FileController  {
 			e.printStackTrace();
 		}
 
+	}
+	
+	@RequestMapping(value = "/checkout", method = RequestMethod.POST)
+	private String checkOut(@RequestParam("id") String Id,
+			@RequestParam("dept-id") String dept_Id,
+			@RequestParam("parent-file-id") String parent_Id, HttpSession session) {
+			int id  = Integer.parseInt(util.decrypt(Id));
+			int deptId = Integer.parseInt(util.decrypt(dept_Id));
+			int parentId = Integer.parseInt(util.decrypt(parent_Id));
+			Object[] param = new Object[1];
+			param[0]=id;
+			//Authorization for			
+			fileDAO.lock(param);
+			
+		
+		return "redirect:/Dashboard?deptId="+deptId+"&folderId="+parentId;
+		
+		
 	}
 }

@@ -37,16 +37,11 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		return null;
 	}
 
-	public FileVO getFile(HttpServletRequest request) {
+	public FileVO getFile(int id) {
 		calledFunction = "getFile";
 		String sql = SQLConstants.GET_FILE_FOR_DOWNLOAD;
 		Object[] params = new Object[1];
-		try {
-			params[0] = ServletRequestUtils.getRequiredIntParameter(request,
-					"id");
-		} catch (ServletRequestBindingException e) {
-			e.printStackTrace();
-		}
+			params[0] = id;
 		FileVO vo = (FileVO) getRowByCriteria(sql, params);
 
 		return vo;
@@ -75,6 +70,19 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		String sql = SQLConstants.SAVE_FILE;
 		return preparedStatementUpdate(sql, param, true) > 0;
 
+	}
+	
+	public boolean lock(Object[] param){
+		String sql = SQLConstants.LOCK_FILE;
+		return preparedStatementUpdate(sql, param, true) > 0;
+	}
+	
+	public boolean lockAuthorization(Object[] param){
+		
+		
+		return false;
+		
+		
 	}
 
 }
