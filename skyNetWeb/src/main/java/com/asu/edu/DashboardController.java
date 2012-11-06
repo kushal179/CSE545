@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.asu.edu.base.dao.intrf.DashboardDAOImplInterface;
 import com.asu.edu.base.vo.DepartmentVO;
 import com.asu.edu.base.vo.FileVO;
+import com.asu.edu.base.vo.ShareVO;
 import com.asu.edu.base.vo.UserVO;
 import com.asu.edu.cache.MasterCache;
 
@@ -83,12 +84,16 @@ public class DashboardController {
 				break;
 			}
 
-			updateHyperlinks(files);
+			if (files != null) {
+				updateHyperlinks(files);
+			}
 
 			model.put("files", files);
 			model.put("deptId", deptId);
 			model.put("deptDesc", dept.getDeptDesc());
 			model.put("parentFileId", folderId);
+			model.put("shareVO", new ShareVO());
+			model.put("approvedUsers", new ArrayList<UserVO>());
 
 			return "documentManagement";
 		}
@@ -99,8 +104,8 @@ public class DashboardController {
 	private void updateHyperlinks(ArrayList<FileVO> files) {
 		for (FileVO fileVO : files) {
 			if (fileVO.isDir())
-				fileVO.setHyperlink("Dashboard?deptId="
-						+ fileVO.getDeptId() + "&folderId=" + fileVO.getId());
+				fileVO.setHyperlink("Dashboard?deptId=" + fileVO.getDeptId()
+						+ "&folderId=" + fileVO.getId());
 			else
 				fileVO.setHyperlink("download?id=" + fileVO.getId());
 		}

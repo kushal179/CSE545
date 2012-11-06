@@ -8,6 +8,7 @@
 <html lang="en">
 <head>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <meta charset="utf-8">
 <title>Document Management</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,9 +28,13 @@ body {
 	padding: 9px 0;
 }
 </style>
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="<c:url value="/resources/bootstrap/js/bootstrap-modal.js" />"></script>
 </head>
 
-<body>
+<body onload="bodyload()">
 
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="navbar-inner">
@@ -61,16 +66,16 @@ body {
 						<li class="nav-header">Departments</li>
 						<%
 							ArrayList<Integer> depts = ((UserVO) session.getAttribute("userVO"))
-																									.getDepartments();
-																							Map<Integer, DepartmentVO> deptMap = MasterCache.getDepartmentMap();
-																							for (Integer departmentId : depts) {
-																								String deptDesc = deptMap.get(departmentId).getDeptDesc();
-																								request.setAttribute("departDesc", deptDesc);
-																								request.setAttribute("departId", departmentId);
-																								if(departmentId == request.getAttribute("deptId"))
-																									request.setAttribute("liClass","active");
-																								else
-																									request.setAttribute("liClass","");
+									.getDepartments();
+							Map<Integer, DepartmentVO> deptMap = MasterCache.getDepartmentMap();
+							for (Integer departmentId : depts) {
+								String deptDesc = deptMap.get(departmentId).getDeptDesc();
+								request.setAttribute("departDesc", deptDesc);
+								request.setAttribute("departId", departmentId);
+								if (departmentId == request.getAttribute("deptId"))
+									request.setAttribute("liClass", "active");
+								else
+									request.setAttribute("liClass", "");
 						%>
 						<li class="${liClass }"><a
 							href="Dashboard/?deptId=${departId}&folderId=-1">${departDesc}</a></li>
@@ -93,50 +98,75 @@ body {
 						</p>
 					</div>
 				</noscript>
-				<div class="hero-unittitle">
-					<h3>${deptDesc}</h3>
+				<div class="hero-unittitle" id="headerbar"
+					onclick="onheaderBarClicked();">
+					<table>
+						<tr>
+							<td width="70%">
+								<h3>${deptDesc}</h3>
+							</td>
+							<td>
+								<button class="btn-link" type="button">
+									<i class="icon-file"></i>Upload New File
+								</button>
+							</td>
+							<td>
+								<button class="btn-link" type="button">
+									<i class="icon-folder-close"></i>New Folder
+								</button>
+							</td>
+						</tr>
+					</table>
 				</div>
 
-				<div class="hero-unitops">
-					SalarySchedule.pdf
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<button class="btn-link" type="button">
-						<i class="icon-search icon-download"></i>Read
-					</button>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<button class="btn-link" type="button" id="upload-button">
-						<i class="icon-search icon-upload"></i>Update
-					</button>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<button class="btn-link" type="button">
-						<i class="icon-search icon-lock"></i>Check-Out
-					</button>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<button class="btn-link" type="button">
-						<i class="icon-search icon-share"></i>Share
-					</button>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<button class="btn-link" type="button">
-						<i class="icon-search icon-remove"></i>Delete
-					</button>
+				<div class="hero-unitops" id="selectItem">Select Item</div>
+
+				<div class="hero-unitops" id="itemSelected">
+					<table>
+						<tr>
+							<td width="50%"><label id="itemname"></label></td>
+							<td width="10%">
+								<button class="btn-link" type="button">
+									<i class="icon-download"></i>Read
+								</button>
+							</td>
+							<td width="10%">
+								<button class="btn-link" type="button" id="upload-button">
+									<i class="icon-upload"></i>Update
+								</button>
+							</td>
+							<td width="10%">
+								<button class="btn-link" type="button">
+									<i class="icon-lock"></i>Check-Out
+								</button>
+							</td>
+							<td width="10%"><a href="#shareModal" class="btn-link"
+								data-toggle="modal"><i class="icon-share"></i>Share</a></td>
+							<td width="10%">
+								<button class="btn-link" type="button">
+									<i class="icon-remove"></i>Delete
+								</button>
+							</td>
+						</tr>
+					</table>
 				</div>
 
 				<div id="upload-bar" class="hero-unitops" style="display: none;">
-					<form id="upload-submit" action="upload" method="post" enctype="multipart/form-data">
+					<form id="upload-submit" action="upload" method="post"
+						enctype="multipart/form-data">
 
 						<table cellpadding="5">
 							<tr>
 								<td><input type="file" name="file" id="file-upload"></td>
 								<td><input type="checkbox" id="enable-encryption" /></td>
-								<td><input type="hidden" id="parent-file-id" name="parent-file-id" value="${parentFileId }"></td>
-								<td><input type="hidden" id="dept-id" name="dept-id" value="${deptId }"></td>
+								<td><input type="hidden" id="parent-file-id"
+									name="parent-file-id" value="${parentFileId }"></td>
+								<td><input type="hidden" id="dept-id" name="dept-id"
+									value="${deptId }"></td>
 								<td><label for="ency">&nbsp;&nbsp;Encrypt file</label></td>
 								<td><input disabled="disabled" type="password"
 									name="encrypt" id="password-field"></td>
-								<td><input type="submit" name="Upload" value="Upload"
-									 /></td>
+								<td><input type="submit" name="Upload" value="Upload" /></td>
 							</tr>
 						</table>
 
@@ -156,7 +186,7 @@ body {
 						</thead>
 						<tbody>
 							<c:forEach var="item" items="${files}">
-								<tr onclick="selectFileRow(this);">
+								<tr onclick="onItemselected(this);">
 									<td width="40px"><img height="30px" width="30px"
 										src="${item.iconFile}"></td>
 									<td><a href="${item.hyperlink }">${item.fileName}</a></td>
@@ -170,18 +200,78 @@ body {
 					<table class="table">
 					</table>
 				</div>
+
 			</div>
 		</div>
+
+		<form:form action="shareComponent" modelAttribute="shareVO">
+			<!-- Modal -->
+			<div id="shareModal" class="modal hide fade" tabindex="-1"
+				role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true"></button>
+					<h3 id="myModalLabel">Share Item</h3>
+				</div>
+				<div class="modal-body">
+					<table>
+						<tr>
+							<td align="right">From User:</td>
+							<td style="padding-left: 20px;"><label id="userName">${sessionScope["userVO"].userName}</label></td>
+							<td style="display: none;"><form:input id="fromUser"
+									path="fromUser" /></td>
+						</tr>
+						<tr>
+							<td align="right">To User:</td>
+							<td style="padding-left: 20px;"><form:select id="toUser"
+									path="toUser">
+									<c:forEach var="item" items="${approvedUsers}">
+										<form:option value="${item.id}" label="${item.userName}" />
+									</c:forEach>
+								</form:select></td>
+						</tr>
+						<tr>
+							<td width="40%" align="right">Permissions:</td>
+							<td>
+								<table>
+									<tr>
+										<td style="padding-left: 20px;"><form:checkbox
+												path="permissions" id="read" value="read" /></td>
+										<td style="padding-left: 10px; padding-top: 5px;"><label>Read</label></td>
+									</tr>
+									<tr>
+										<td style="padding-left: 20px;"><form:checkbox
+												path="permissions" id="update" value="update" /></td>
+										<td style="padding-left: 10px; padding-top: 5px;"><label>Update</label></td>
+									</tr>
+									<tr>
+										<td style="padding-left: 20px;"><form:checkbox
+												path="permissions" id="lock" value="lock" /></td>
+										<td style="padding-left: 10px; padding-top: 5px;"><label>CheckIn-CheckOut</label></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<form action="shareComponent" method="post">
+						<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+						<button class="btn btn-primary">Share</button>
+					</form>
+				</div>
+			</div>
+		</form:form>
 
 		<br /> <br />
 		<hr>
 
 		<footer>
-			<p>© SkyNet - Company 2012</p>
+			<p>Â© SkyNet - Company 2012</p>
 		</footer>
 
 	</div>
-	<script type="text/javascript" 
-                  src="<c:url value="/resources/js/dashboard.js" />"></script>
+	<script type="text/javascript"
+		src="<c:url value="/resources/js/dashboard.js" />"></script>
 </body>
 </html>
