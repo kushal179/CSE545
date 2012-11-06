@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.asu.edu.base.dao.intrf.SecurityDAOImplInterface;
 import com.asu.edu.base.vo.UserVO;
+import com.asu.edu.cache.MasterCache;
 import com.asu.edu.constants.CommonConstants;
 
 @Controller
@@ -32,6 +33,10 @@ public class LoginController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String dispatcher(Model model, HttpSession session) {
 		if (securityDAO.isLoggedIn()) {
+			//this will be executed when logged in user clicks on Home tab in the header
+			if(session.getAttribute(CommonConstants.USER)!=null){
+				return "redirect:/SharedByDocument?folderId=-1";
+			}
 			UserVO userVO = securityDAO.getUserDetails(SecurityContextHolder
 					.getContext().getAuthentication());
 			if (userVO != null) {
@@ -41,7 +46,12 @@ public class LoginController {
 				 */
 				session.setAttribute(CommonConstants.USER, userVO);
 				if (userVO.getIsApproved() == 1)
-					return "redirect:/Dashboard?deptId=-1&folderId=-1";
+				{
+					if(!MasterCache.getRoleMap().get(userVO.getRoleId()).equals(CommonConstants.ROLE_GUEST_USR))
+						return "redirect:/Dashboard?deptId=-1&folderId=-1";
+					else
+						return "redirect:/SharedByDocument?folderId=-1";
+				}
 				else
 					return "redirect:/temp";
 			}
@@ -56,6 +66,12 @@ public class LoginController {
 		logger.info("Welcome login! screen");
 		System.out.println("At Login page:" + securityDAO.isLoggedIn());
 		return "login";
+	}
+	@RequestMapping(value = "/temp", method = RequestMethod.GET)
+	public String temp(Locale locale, Model model) {
+		logger.info("You are temporary User");
+		System.out.println("At Login page:" + securityDAO.isLoggedIn());
+		return "temp";
 	}
 
 	@RequestMapping(value = "/loginfailed", method = RequestMethod.GET)

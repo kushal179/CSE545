@@ -15,6 +15,7 @@
 		<intercept-url pattern="/logout" filters="none" />
 		<intercept-url pattern="/loginfailed" filters="none" />
 		<intercept-url pattern="/admin*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/Dashboard*" access="ROLE_DEPARTMENT_MGR,ROLE_REGULAR_EMP,ROLE_CORPORATE_MGR" />
 		<intercept-url pattern="/*" access="IS_AUTHENTICATED_FULLY"/>
 		<form-login login-page="/login" default-target-url="/"
 			authentication-failure-url="/loginfailed"   />
