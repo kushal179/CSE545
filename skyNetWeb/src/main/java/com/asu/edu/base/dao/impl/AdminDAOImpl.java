@@ -1,9 +1,15 @@
 package com.asu.edu.base.dao.impl;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -15,6 +21,7 @@ import com.asu.edu.base.dao.BaseDAO;
 import com.asu.edu.base.vo.PendingUsersVO;
 import com.asu.edu.base.vo.RegisterationVO;
 import com.asu.edu.base.vo.LogFilesVO;
+import com.asu.edu.constants.CommonConstants;
 import com.asu.edu.constants.SQLConstants;
 
 public class AdminDAOImpl extends BaseDAO implements AdminDAOImplInterface {
@@ -58,12 +65,37 @@ public class AdminDAOImpl extends BaseDAO implements AdminDAOImplInterface {
 	@Override
 	public ArrayList<LogFilesVO> getLogFiles() {
 		calledFunction = "getLogFiles";
-		Object[] param = new Object[1];
+
+/*		Object[] param = new Object[1];
 		param[0] = 1;
 		String sql = SQLConstants.LOG_FILES;
 		ArrayList<LogFilesVO> result = (ArrayList<LogFilesVO>) this
 				.getListByCriteria(sql, param);
 		return result;
+*/
+		String path = CommonConstants.LOG_FILES_PATH;
+		ArrayList<LogFilesVO> files = new ArrayList<LogFilesVO>();
+		File folder = new File(path);
+		File[] listOfFiles = folder.listFiles();
+
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				LogFilesVO logFileVO = new LogFilesVO();
+				logFileVO.setPathName(listOfFiles[i].getName());
+				Long timeSinceEpoch = listOfFiles[i].lastModified();
+				Calendar cal = new GregorianCalendar();
+				cal.setTimeInMillis(timeSinceEpoch);
+
+				DateFormat dateFormat = new SimpleDateFormat(
+						"yyyy/MM/dd HH:mm:ss");
+				String modifieddate = dateFormat.format(cal.getTime());
+				logFileVO.setModifiedDate(modifieddate);
+				logFileVO.setHyperLink("downloadlogfile?logfilename="
+						+ listOfFiles[i].getName());
+				files.add(logFileVO);
+			}
+		}
+		return files;
 	}
 
 	@Override
@@ -168,16 +200,17 @@ public class AdminDAOImpl extends BaseDAO implements AdminDAOImplInterface {
 		String sql = SQLConstants.USER_DEPTS;
 		ArrayList<Map<Integer, String>> result = (ArrayList<Map<Integer, String>>) this
 				.getListByCriteria(sql, param);
-
-		ArrayList<Integer> deptIds = new ArrayList<Integer>();
-		ArrayList<String> deptNames = new ArrayList<String>();
-		for (Map<Integer, String> dept : result) {
-			for (Map.Entry<Integer, String> m : dept.entrySet()) {
-				deptIds.add(m.getKey());
-				deptNames.add(m.getValue());
+		if (result != null) {
+			ArrayList<Integer> deptIds = new ArrayList<Integer>();
+			ArrayList<String> deptNames = new ArrayList<String>();
+			for (Map<Integer, String> dept : result) {
+				for (Map.Entry<Integer, String> m : dept.entrySet()) {
+					deptIds.add(m.getKey());
+					deptNames.add(m.getValue());
+				}
 			}
+			vo.setDeptIds(deptIds);
+			vo.setDeptNames(deptNames);
 		}
-		vo.setDeptIds(deptIds);
-		vo.setDeptNames(deptNames);
 	}
 }

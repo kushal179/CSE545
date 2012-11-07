@@ -105,6 +105,35 @@ public class FileController {
 
 	}
 
+	@RequestMapping(value = "/downloadlogfile", method = RequestMethod.GET)
+	public void downloadlogfile(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam("logfilename") String fileName) {
+		response.setContentType(null);
+		response.setHeader("Content-Disposition", "attachment;filename="
+				+ fileName);
+		File file = new File(CommonConstants.LOG_FILES_PATH + "/" + fileName);
+		FileInputStream fileIn;
+		ServletOutputStream out;
+		try {
+			fileIn = new FileInputStream(file);
+			out = response.getOutputStream();
+			byte[] outputByte = new byte[4096];
+			while (fileIn.read(outputByte, 0, 4096) != -1) {
+				out.write(outputByte, 0, 4096);
+			}
+
+			fileIn.close();
+			out.flush();
+			out.close();
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	@RequestMapping(value = "/checkout", method = RequestMethod.POST)
 	private String checkOut(@RequestParam("id") String Id,
 			@RequestParam("dept-id") String dept_Id,

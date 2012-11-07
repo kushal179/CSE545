@@ -70,7 +70,7 @@
           </div>
           
           <div class="hero-unitops" id="actionbar">
-          	Select Files
+          	Download Files
           </div>
           <div class="row-fluid">
           <table class="table table-hover"  id="contentsTable">
@@ -84,10 +84,10 @@
               <tbody id="contentsTableBody">
               <c:set var="count" value="0" scope="page" />
               <c:forEach var="item" items="${logfiles}"> 
-              	  <tr onclick="selectLogFilesRow(this);">
+              	  <tr>
               	  <c:set var="count" value="${count + 1}" scope="page"/>  
                   <td>${count}</td>
-                  <td>${item.pathName}</td>
+                  <td><a href="${item.hyperLink}">${item.pathName}</a></td>
                   <td>${item.modifiedDate}</td>
                 </tr>
               </c:forEach>

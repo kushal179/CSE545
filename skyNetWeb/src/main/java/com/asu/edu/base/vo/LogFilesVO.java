@@ -3,7 +3,14 @@ package com.asu.edu.base.vo;
 public class LogFilesVO {
 	private String pathName;
 	private String modifiedDate;
+	private String hyperLink;
 	
+	public String getHyperLink() {
+		return hyperLink;
+	}
+	public void setHyperLink(String hyperLink) {
+		this.hyperLink = hyperLink;
+	}
 	public String getPathName() {
 		return pathName;
 	}
