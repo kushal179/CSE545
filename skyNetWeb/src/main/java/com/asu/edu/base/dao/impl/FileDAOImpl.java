@@ -42,11 +42,24 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		if(calledFunction == "selectItem"){
 			return rs.getInt("file_id");
 		}
+		
+		if(calledFunction =="fileOwnerShipAuthorization"){
+			return true;
+		}
+		if(calledFunction =="sharingAccessAuthorization"){
+			return true;
+		}
+		if(calledFunction=="findDeptIdByDoc"){
+			return rs.getInt("DEPT_ID");
+		}
+		if(calledFunction=="isLock"){
+			return true;
+		}
 
 		return null;
 	}
 
-	public FileVO getFile(int id) {
+	public FileVO getFile(long id) {
 		calledFunction = "getFile";
 		String sql = SQLConstants.GET_FILE_FOR_DOWNLOAD;
 		Object[] params = new Object[1];
@@ -85,13 +98,49 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		String sql = SQLConstants.LOCK_FILE;
 		return preparedStatementUpdate(sql, param, true) > 0;
 	}
+	public boolean unLock(Object[] param){
+		String sql = SQLConstants.UNLOCK_FILE;
+		return preparedStatementUpdate(sql, param, true) > 0;
+	}
+	public boolean delete(Object[] param){
+		String sql = SQLConstants.DELETE;
+		return preparedStatementUpdate(sql, param, true) > 0;
+	}
+	public boolean deleteDir(Object[] param){
+		String sql = SQLConstants.DELETE_DIR;
+		return preparedStatementUpdate(sql, param, true) > 0;
+	}
+	public boolean isLock(Object[] param){
+		boolean isFiledLock = false;
+		calledFunction = "isLock";
+		String sql = SQLConstants.IS_FILE_LOCK;
+		isFiledLock =(Boolean)getRowByCriteria(sql, param, true);
+		return isFiledLock;
+	}
 	
-	public boolean lockAuthorization(Object[] param){
+	public boolean fileOwnerShipAuthorization(Object[] param){
+		boolean isFileOwner = false;
+		calledFunction = "fileOwnerShipAuthorization";
+		String sql = SQLConstants.CHECKING_FILE_OWNERSHIP;
+		isFileOwner = (Boolean)getRowByCriteria(sql, param);
 		
+		return isFileOwner;
+	}
+	
+	public boolean hasAccessAuthorization(Object[] param,String sql){
+		boolean hasAccess = false;
+		calledFunction = "sharingAccessAuthorization";
+		hasAccess = (Boolean)getRowByCriteria(sql, param);
 		
-		return false;
+		return hasAccess;
 		
-		
+	}
+	
+	public int findDeptIdByDoc(Object[] param){
+		calledFunction = "findDeptIdByDoc";
+		String sql = SQLConstants.CHECKING_DOC_DEPT;
+		int deptId = (Integer)getRowByCriteria(sql, param);
+		return deptId;
 	}
 
 	@Override

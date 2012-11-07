@@ -156,5 +156,10 @@ public class EncryptDecrypt {
 		}
 
 	}
+	public static void main(String[] arg){
+		EncryptDecrypt crypt = new EncryptDecrypt();
+		System.out.println(crypt.encrypt("22"));
+		
+	}
 
 }

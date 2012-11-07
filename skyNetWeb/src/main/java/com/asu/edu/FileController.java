@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletOutputStream;
@@ -32,12 +33,17 @@ import com.asu.edu.base.vo.ShareVO;
 import com.asu.edu.base.vo.UserVO;
 import com.asu.edu.constants.CommonConstants;
 import com.asu.edu.security.EncryptDecrypt;
+import com.asu.edu.util.Authorization;
 
 @Controller
 public class FileController {
 
 	@Autowired
 	private FileDAOImplInterface fileDAO = null;
+
+	@Autowired
+	private Authorization auth = null;
+
 	EncryptDecrypt util = new EncryptDecrypt();
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
@@ -72,13 +78,13 @@ public class FileController {
 			e.printStackTrace();
 		}
 
-		return "redirect:/Dashboard?deptId=" + deptId + "&folderId=" + parentId;
+		return "redirect:/Dashboard?deptId=-1&folderId=-1";
 	}
 
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
 	public void download(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("id") String Id) {
-		int id = Integer.parseInt(util.decrypt(Id));
+		long id = Long.parseLong(util.decrypt(Id));
 		FileVO fileVO = (FileVO) fileDAO.getFile(id);
 		response.setContentType(fileVO.getContentType());
 		response.setHeader("Content-Disposition", "attachment;filename="
@@ -134,22 +140,99 @@ public class FileController {
 
 	}
 
-	@RequestMapping(value = "/checkout", method = RequestMethod.POST)
-	private String checkOut(@RequestParam("id") String Id,
-			@RequestParam("dept-id") String dept_Id,
+	@RequestMapping(value = "/lock", method = RequestMethod.POST)
+	private String checkOut(@RequestParam("id") String file_Id,
 
+	@RequestParam("dept-id") String dept_Id,
 			@RequestParam("parent-file-id") String parent_Id,
 			HttpSession session) {
-		int id = Integer.parseInt(util.decrypt(Id));
-		// int deptId = Integer.parseInt(util.decrypt(dept_Id));
-		int deptId = Integer.parseInt(dept_Id);
-		int parentId = Integer.parseInt(util.decrypt(parent_Id));
-		Object[] param = new Object[1];
-		param[0] = id;
-		// Authorization for
-		fileDAO.lock(param);
+		EncryptDecrypt crypt = new EncryptDecrypt();
+		HashMap<String, String> param = new HashMap<String, String>();
+		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
+		param.put(CommonConstants.REQ_PARAM_DEPTID, dept_Id);
+		param.put(CommonConstants.REQ_PARAM_PARENTID, parent_Id);
 
-		return "redirect:/Dashboard?deptId=" + deptId + "&folderId=" + parentId;
+		if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
+
+			Object[] sqlParam = new Object[1];
+			sqlParam[0] = Long.parseLong(crypt.decrypt(file_Id));
+			if (!fileDAO.isLock(sqlParam))
+				fileDAO.lock(sqlParam);
+			else
+				return "redirect:/error-page?error=File already locked";
+		} else {
+			return "redirect:/error-page?error=Not Authorized";
+		}
+
+		return "redirect:/Dashboard?deptId=-1&folderId=-1";
+
+	}
+
+	@RequestMapping(value = "/unlock", method = RequestMethod.POST)
+	private String checkIn(@RequestParam("id") String file_Id,
+			@RequestParam("dept-id") String dept_Id,
+			@RequestParam("parent-file-id") String parent_Id,
+			HttpSession session) {
+		EncryptDecrypt crypt = new EncryptDecrypt();
+		HashMap<String, String> param = new HashMap<String, String>();
+		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
+		param.put(CommonConstants.REQ_PARAM_DEPTID, dept_Id);
+		param.put(CommonConstants.REQ_PARAM_PARENTID, parent_Id);
+
+		if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
+
+			Object[] sqlParam = new Object[1];
+			sqlParam[0] = Long.parseLong(crypt.decrypt(file_Id));
+			if (fileDAO.unLock(sqlParam))
+				;
+			else
+				return "redirect:/error-page?error=File Could not be unlocked";
+		} else {
+			return "redirect:/error-page?error=Not Authorized";
+		}
+
+		return "redirect:/Dashboard?deptId=-1&folderId=-1";
+
+	}
+
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	private String delete(@RequestParam("id") String file_Id,
+			@RequestParam("dept-id") String dept_Id,
+			@RequestParam("parent-file-id") String parent_Id,
+			HttpSession session) {
+		EncryptDecrypt crypt = new EncryptDecrypt();
+		HashMap<String, String> param = new HashMap<String, String>();
+		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
+		param.put(CommonConstants.REQ_PARAM_DEPTID, dept_Id);
+		param.put(CommonConstants.REQ_PARAM_PARENTID, parent_Id);
+
+		if (auth.isAuthorize(CommonConstants.DELETE, session, param)) {
+			long Idfile = Long.parseLong(crypt.decrypt(file_Id));
+			Object[] sqlParam = new Object[1];
+			sqlParam[0] = Idfile;
+			if (!fileDAO.isLock(sqlParam)) {
+				FileVO vo = (FileVO) fileDAO.getFile(Idfile);
+				String path = vo.getPath();
+				File f1 = new File(path);
+				boolean isDir = f1.isDirectory();
+				if (f1.delete()) {
+					if (isDir) {
+						sqlParam = new Object[2];
+						sqlParam[0] = Idfile;
+						sqlParam[1] = path + "%";
+						fileDAO.deleteDir(sqlParam);
+					} else
+						fileDAO.delete(sqlParam);
+				} else
+					return "redirect:/error-page?error=File Could not be deleted";
+			} else {
+				return "redirect:/error-page?error=File Could not be deleted since locked";
+			}
+		} else {
+			return "redirect:/error-page?error=Not Authorized";
+		}
+
+		return "redirect:/Dashboard?deptId=-1&folderId=-1";
 
 	}
 
@@ -163,6 +246,6 @@ public class FileController {
 				.shareItem(shareVO, ((UserVO) (session
 						.getAttribute(CommonConstants.USER))).getId());
 
-		return "redirect:/Dashboard?deptId=" + deptId + "&folderId=-1";
+		return "redirect:/Dashboard?deptId=-1&folderId=-1";
 	}
 }

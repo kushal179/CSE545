@@ -42,5 +42,9 @@
 	<bean id="fileDAO" class="com.asu.edu.base.dao.impl.FileDAOImpl">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
+	
+	<bean id="auth" class="com.asu.edu.util.Authorization">
+		<property name="fileDAO" ref="fileDAO"></property>
+	</bean>
 
 </beans>

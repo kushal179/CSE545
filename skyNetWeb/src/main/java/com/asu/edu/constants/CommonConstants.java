@@ -9,5 +9,21 @@ public interface CommonConstants {
 	public static final String ROLE_GUEST_USR = "ROLE_GUEST_USR";
 	public static final String ROLE_CORPORATE_MGR = "ROLE_CORPORATE_MGR";
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
+
 	public static final String LOG_FILES_PATH = "/home/ubuntu/dockloud/outlogs";
+
+	public static final int ROLE_DEPARTMENT_MGR_ID = 4;
+	public static final int ROLE_REGULAR_EMP_ID = 3;
+	public static final int ROLE_GUEST_USR_ID = 2;
+	public static final int ROLE_CORPORATE_MGR_ID = 5;
+	public static final int ROLE_ADMIN_ID = 1;
+
+	public static final String CHECKIN_OUT = "checkin_out";
+	public static final String FILE_UPDATE = "file_update";
+	public static final String DELETE = "delete";
+
+	public static final String REQ_PARAM_FILE_ID = "fileId";
+	public static final String REQ_PARAM_DEPTID = "deptId";
+	public static final String REQ_PARAM_PARENTID = "parentId";
+
 }

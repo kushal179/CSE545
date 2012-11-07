@@ -1,7 +1,7 @@
 package com.asu.edu.constants;
 
 public interface SQLConstants {
-	
+
 	public static final String USER_LOGIN = "select * from user where USER_NAME=? AND PASSWORD=?";
 	public static final String USER_ROLE = "SELECT U.USER_NAME, R.DESC FROM user U, roles R WHERE U.ROLE_ID = R.ID AND U.USER_NAME = ?";
 	public static final String USER_DEPT = "select dept_id from user_dept where user_id=?";
@@ -31,8 +31,19 @@ public interface SQLConstants {
 	public static final String GET_FILE_PATH = "select path from files where file_id=?";
 
 	public static final String SAVE_FILE = "insert into files(path,owner_id,dept_id,parent_id,file_name,creation_time,type,mod_time) values(?,?,?,?,?,?,?,?)";
-	
-	public static final String LOCK_FILE = "update files set lock = 1 where file_id=?";
+
+	public static final String LOCK_FILE = "update files f set f.lock = 1 where file_id=?";
+	public static final String UNLOCK_FILE = "update files f set f.lock = 0 where file_id=?";
+	public static final String DELETE = "delete from files f where f.file_id=? and f.lock=0";
+	public static final String DELETE_DIR = "delete from files f where f.file_id=? and f.lock=0 and f.path like ?";
+
+	public static final String IS_FILE_LOCK = "select * from files f where f.lock=1 and instr((select path from files f where f.file_id=?),f.path)";
+
+	public static final String CHECKING_FILE_OWNERSHIP = "select * from files where owner_id=? and file_id=?";
+
+	public static final String CHECKING_SHARING_RIGHTS = "select * from sharing where user_id_to=? and file_id=? and %=1";
+
+	public static final String CHECKING_DOC_DEPT = "select dept_id from files where file_id=?";
 
 	// Used by Bharath
 	public static final String APPROVE_USER = "UPDATE user SET IS_APPROVED = ? WHERE ID = ?;";
