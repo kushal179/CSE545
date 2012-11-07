@@ -43,6 +43,15 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 	private static final String GET_DEPTARTMENTS = "getdeptartments";
 
 	private static final String AUTHENTICATE = "authenticate";
+	private static final String GET_LOGIN_ATTEMPTS = "loginattempts";
+	private boolean isCaptchaEnabled = false;
+	public boolean isCaptchaEnabled() {
+		return isCaptchaEnabled;
+	}
+	public void setCaptchaEnabled(boolean isCaptchaEnabled) {
+		this.isCaptchaEnabled = isCaptchaEnabled;
+	}
+	
 
 	@Autowired
 	private ShaPasswordEncoder passwordEncoder;
@@ -70,6 +79,9 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 		}
 		if(calledFunction==GET_USER_DEPARTMENTS){
 			return rs.getInt("DEPT_ID");
+		}
+		if(calledFunction==GET_LOGIN_ATTEMPTS){
+			return rs.getInt("LOGIN_ATTEMPTS");
 		}
 		if(calledFunction==USER_ROLE)
 		{
@@ -118,6 +130,12 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 		if(userVO!=null)
 		{
 			System.out.println(userVO.getUserName());
+			Object[] updateParam = new Object[2];
+			updateParam[0] = 0;
+			updateParam[1] = auth.getName();
+			String sql = SQLConstants.UPDATE_LOGIN_ATTEMPTS;
+			this.preparedStatementUpdate(sql, updateParam, true);
+			setCaptchaEnabled(false);
 			if(userVO.getUserName().equals(auth.getPrincipal()))
 			{
 				calledFunction = USER_ROLE;
@@ -128,8 +146,25 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 				authoritites.add((new GrantedAuthorityImpl(role)));
 				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(auth.getName(), auth.getCredentials(), authoritites);
 				return token;
+			}			
+		}
+		else
+		{
+			calledFunction = GET_LOGIN_ATTEMPTS;
+			Object[] param = new Object[1];
+			param[0] = auth.getName();
+			int loginAttempts = (Integer) this.getRowByCriteria(SQLConstants.LOGIN_ATTEMPTS,param);
+			System.out.println(loginAttempts);
+			if(loginAttempts == 2)
+			{
+				//EnableCaptcha
+				setCaptchaEnabled(true);
 			}
-			
+			Object[] updateParam = new Object[2];
+			updateParam[0] = ++loginAttempts;
+			updateParam[1] = auth.getName();
+			String sql = SQLConstants.UPDATE_LOGIN_ATTEMPTS;
+			this.preparedStatementUpdate(sql, updateParam, true);
 		}
 		throw new BadCredentialsException("Username/Password does not match for ");
 	}

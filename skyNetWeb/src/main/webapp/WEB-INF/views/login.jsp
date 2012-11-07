@@ -1,5 +1,6 @@
 <html lang="en"><head>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="captcha" uri="/WEB-INF/tlds/captcha.tld"%>
     <meta charset="utf-8">
     <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -76,6 +77,17 @@
 		<tr>
 			<td></td>
 			<td>
+				<div align="left">
+				<c:set var="isEnabled" value="${isEnabled}"/>
+				<c:choose>		
+				<c:when test="${isEnabled}">
+					<captcha:captcha themeName="white"
+					publickey="6LdIMtgSAAAAAHEwm2t3BSD4GBsFMKBNko6LBOH6"
+					privatekey="6LdIMtgSAAAAALIW_Ec3pU6m0OUBV2BMLnNOYCVD" />
+					<br /> <font color="red"><form:errors path="captcha" /></font> <br /> 
+				</c:when>
+				</c:choose>
+				</div>
 				<div align="left">
 				<c:if test="${not empty error}">
 					<div class="errorblock">
