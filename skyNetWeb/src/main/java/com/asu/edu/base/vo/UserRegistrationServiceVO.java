@@ -42,18 +42,17 @@ public class UserRegistrationServiceVO {
 
 	public void uponSuccessfulRegistration() {
 
-		SimpleMailMessage[] mailMessageArray = new SimpleMailMessage[userEmailIds
-				.size()];
+		SimpleMailMessage[] mailMessageArray = new SimpleMailMessage[userEmailIds.size()];
 		Iterator<String> iterator = userEmailIds.iterator();
 		for (int index = 0; iterator.hasNext(); index++) {
 
-			int length = 9;
+			int length = 14;
 			char[] text = new char[length];
 			Random rand = new Random();
 			Random rng = new Random();
 
 			for (int i = 0; i < length; i++) {
-				String characters = "!0123456789abcdefghijklmnopqrstuvwxyz";
+				String characters = "!567_@#$%&*89a0bd12efghirstuopqcxyvwj34klmnz";
 
 				text[i] = characters.charAt(rng.nextInt(characters.length()));
 			}
@@ -70,7 +69,7 @@ public class UserRegistrationServiceVO {
 			message.setSubject("Password Reset");
 			// message.setText("The user '" + toAddress +
 			// "' is successfully registered");
-			message.setText("Your new password has been reset.\nYour new password is " + stringPwd+ "\n");
+			message.setText("Your new password has been reset .\n\nYour new password is " + stringPwd+ "\n");
 			mailMessageArray[index] = message;
 		}
 

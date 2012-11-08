@@ -28,6 +28,28 @@
 		}
     </style>
     
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+ <script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
+
+
+<style type="text/css">
+* {  }
+
+label.error { float: none; color: red; padding-left: .5em; vertical-align: top; }
+p { clear: both; }
+.submit { margin-left: 12em; }
+em { font-weight: bold; padding-right: 1em; vertical-align: top; }
+</style>
+
+
+ <script>
+  $(document).ready(function(){
+    $("#login").validate();
+  });
+  </script>
+    
+    
+    
   </head>
 
   <body>
@@ -58,7 +80,7 @@
 		<tr style="height:250px"><td style="width:450px;background-color:#333333" valign="top" align="center"><br>
 		<table border="0" cellpadding="10" cellspacing="10"><tbody><tr>
 		<td>
-		<form name='f' action="<c:url value='j_spring_security_check' />"method='POST'>
+		<form name='f' id="login" action="<c:url value='j_spring_security_check' />"method='POST'>
 		<table border="0" cellpadding="3" cellspacing="3">
 		<tbody>
 		<tr>
@@ -68,11 +90,11 @@
 		</tr>
 		<tr>
 			<td style="color:white">Username:</td>
-			<td><input name="j_username" type="text" ></td>
+			<td><input name="j_username" type="text" class="required"></td>
 		</tr>
 		<tr>
 			<td style="color:white">Password:</td>
-			<td><input name="j_password" type="password"></td>
+			<td><input name="j_password" type="password" class="required"></td>
 		</tr>	
 		<tr>
 			<td></td>

@@ -133,7 +133,7 @@ public class LoginController {
 				// set new Password for the user
 				securityDAO.setPasswordForUser(currentUser.getUserName(),
 						newPassword);
-				return "login";
+				return "redirect:/login";
 
 			} else {
 				// Give error message that oldPassword is wrong
@@ -192,7 +192,7 @@ public class LoginController {
 			userRegistrationService.uponSuccessfulRegistration();
 			String strPasswd = userRegistrationService.getPassword();
 			securityDAO.setPasswordForUser(userName, strPasswd);
-			return "login";
+			return "redirect:/login";
 		}
 
 	}

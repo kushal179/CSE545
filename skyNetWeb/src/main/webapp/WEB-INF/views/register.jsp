@@ -9,6 +9,28 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+ <script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
+
+
+<style type="text/css">
+* {  }
+
+label.error { float: right; color: red; padding-left: .5em; vertical-align: top; }
+p { clear: both; }
+.submit { margin-left: 12em; }
+em { font-weight: bold; padding-right: 1em; vertical-align: top; }
+</style>
+
+
+ <script>
+  $(document).ready(function(){
+    $("#register").validate();
+  });
+  </script>
+
+
 <!-- Le styles -->
 <link href="<c:url value="/resources/bootstrap/css/bootstrap.css" />"
 	rel="stylesheet">
@@ -67,27 +89,27 @@ body {
 														</tr>
 														<tr>
 															<td style="color: white">First Name</td>
-															<td><form:input path="firstName" /><br /> <font
+															<td><form:input path="firstName" class="required" /><br /> <font
 																color="red"><form:errors path="firstName" /></font></td>
 														</tr>
 														<tr>
 															<td style="color: white">Last Name</td>
-															<td><form:input path="lastName" /><br /> <font
+															<td><form:input path="lastName" class="required"/><br /> <font
 																color="red"><form:errors path="lastName" /></font></td>
 														</tr>
 														<tr>
 															<td style="color: white">Email</td>
-															<td><form:input path="email" /><br /> <font
+															<td><form:input path="email" class="required"/><br /> <font
 																color="red"><form:errors path="email" /></font></td>
 														</tr>
 														<tr>
 															<td style="color: white">Username</td>
-															<td><form:input path="userName" /><br /> <font
+															<td><form:input path="userName" class="required"/><br /> <font
 																color="red"><form:errors path="userName" /></font></td>
 														</tr>
 														<tr>
 															<td style="color: white">Password</td>
-															<td><form:password path="password" /> <br /> <font
+															<td><form:password path="password" class="required"/> <br /> <font
 																color="red"><form:errors path="password" /></font></td>
 														</tr>
 														<%-- <tr>
@@ -108,9 +130,10 @@ body {
 																<table>
 																	<c:forEach var="item" items="${deptList}">
 																		<tr>
-																			<td><form:checkbox path="departments"
-																					id="role_${item.id}" value="${item.id}" /></td>
 																			<td style="padding-left: 20px; padding-top: 5px;"><label style="color: white">${item.deptName}</label></td>
+																			<td style="padding-left: 20px; padding-top: 5px;"><form:checkbox path="departments"
+																					id="role_${item.id}" value="${item.id}" class="required"/></td>
+																			
 																		</tr>
 																	</c:forEach>
 																</table> 
