@@ -11,15 +11,18 @@ import com.asu.edu.base.dao.BaseDAO;
 import com.asu.edu.base.dao.intrf.DashboardDAOImplInterface;
 import com.asu.edu.base.vo.DepartmentVO;
 import com.asu.edu.base.vo.FileVO;
+import com.asu.edu.base.vo.FileVersionVO;
 import com.asu.edu.base.vo.UserVO;
 import com.asu.edu.constants.SQLConstants;
-import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public class DashboardDAOImpl extends BaseDAO implements
 		DashboardDAOImplInterface {
 
 	private static final String GET_FILES = "getRegularEmployeeFiles";
-	private static final String GET_SHARED_FILES = "getSharedFiles";
+	private static final String GET_SHARED_BY_FILES = "getSharedByFiles";
+	private static final String GET_SHARED_TO_FILES = "getSharedToFiles";
+	private static final String GET_SHARED_TO_USER_NAME = "getSharedToSharerName";
+	private static final String GET_SHARED_BY_USER_NAME = "getSharedByShareeName";
 	String calledFunction;
 
 	@Autowired
@@ -84,8 +87,62 @@ public class DashboardDAOImpl extends BaseDAO implements
 	@Override
 	public ArrayList<FileVO> getSharedByDocuments(UserVO userVO, long folderId) {
 
-		String sql = "select * from sharing s inner join files f inner join user u on s.file_id = f.file_id and f.owner_id = u.id where s.user_id_by = ?";
-		calledFunction = GET_SHARED_FILES;
+		String sql = "select * from sharing s inner join files f inner join user u on s.file_id = f.file_id and f.owner_id = u.id where s.user_id_by = ? ";
+		calledFunction = GET_SHARED_BY_FILES;
+
+		Object[] params;
+		if (folderId == -1) {
+			params = new Object[1];
+			params[0] = userVO.getId();
+		} else {
+			sql += " and f.parent_id = ? ";
+
+			params = new Object[2];
+			params[0] = userVO.getId();
+			params[1] = folderId;
+		}
+
+		sql += " order by s.user_id_to asc";
+
+		/*
+		 * Write code to find out Name of the user who has shared it from
+		 * user_id_by
+		 */
+
+		ArrayList<FileVO> files = (ArrayList<FileVO>) getListByCriteria(sql,
+				params);
+
+		calledFunction = GET_SHARED_BY_USER_NAME;
+
+		sql = "select first_name, last_name from user where id in ( ";
+
+		params = new Object[files.size()];
+		for (int i = 0; i < files.size(); i++) {
+			FileVO fileVO = files.get(i);
+			sql += " ? ";
+			if (i < files.size() - 1)
+				sql += " , ";
+			params[i] = fileVO.getSharedToId();
+		}
+
+		sql += " ) order by id asc";
+
+		ArrayList<String> userNames = (ArrayList<String>) getListByCriteria(
+				sql, params);
+
+		for (int i = 0; i < files.size(); i++) {
+			files.get(i).setSharedToName(userNames.get(i));
+		}
+
+		return files;
+	}
+
+	@Override
+	public ArrayList<FileVO> getSharedToDocuments(UserVO userVO, long folderId) {
+
+		String sql = "select * from sharing s inner join files f inner join user u on s.file_id = f.file_id and f.owner_id = u.id where s.user_id_to = ? ";
+
+		calledFunction = GET_SHARED_TO_FILES;
 
 		Object[] params;
 		if (folderId == -1) {
@@ -99,23 +156,36 @@ public class DashboardDAOImpl extends BaseDAO implements
 			params[1] = folderId;
 		}
 
+		sql += " order by s.user_id_by asc";
+
+		/*
+		 * Write code to find out Name of the user to whom it is shared
+		 */
+
 		ArrayList<FileVO> files = (ArrayList<FileVO>) getListByCriteria(sql,
 				params);
 
-		return files;
-	}
+		calledFunction = GET_SHARED_TO_USER_NAME;
 
-	@Override
-	public ArrayList<FileVO> getSharedToDocuments(UserVO userVO,
-			DepartmentVO departmentVO, long folderId) {
+		sql = "select first_name, last_name from user where id in ( ";
 
-		String sql = "select * from sharing s inner join files f on s.file_id = f.file_id where s.shared_to = ? and f.parent_id = ?";
+		params = new Object[files.size()];
+		for (int i = 0; i < files.size(); i++) {
+			FileVO fileVO = files.get(i);
+			sql += "?";
+			if (i < files.size() - 1)
+				sql += " , ";
+			params[i] = fileVO.getSharedById();
+		}
 
-		Object[] params = new Object[2];
-		params[0] = userVO.getId();
-		params[1] = folderId;
-		ArrayList<FileVO> files = (ArrayList<FileVO>) getListByCriteria(sql,
-				params);
+		sql += " ) order by id asc";
+
+		ArrayList<String> userNames = (ArrayList<String>) getListByCriteria(
+				sql, params);
+
+		for (int i = 0; i < files.size(); i++) {
+			files.get(i).setSharedByName(userNames.get(i));
+		}
 
 		return files;
 	}
@@ -149,8 +219,7 @@ public class DashboardDAOImpl extends BaseDAO implements
 			fileVO.setLock(rs.getBoolean("LOCK"));
 			fileVO.setDir(rs.getBoolean("IS_DIR"));
 			return fileVO;
-			
-		} else if (calledFunction == GET_SHARED_FILES) {
+		} else if (calledFunction == GET_SHARED_BY_FILES) {
 			FileVO fileVO = new FileVO();
 			fileVO.setId(rs.getLong("FILE_ID"));
 			fileVO.setFileName(rs.getString("FILE_NAME"));
@@ -162,15 +231,34 @@ public class DashboardDAOImpl extends BaseDAO implements
 			fileVO.setCreateTime(rs.getDate("CREATION_TIME").toString());
 			fileVO.setLock(rs.getBoolean("LOCK"));
 			fileVO.setDir(rs.getBoolean("IS_DIR"));
-			fileVO.setSharedByName(rs.getString("first_name") + " "
-					+ rs.getString("last_name"));
+			fileVO.setSharedById(rs.getLong("USER_ID_BY"));
+			fileVO.setSharedToId(rs.getLong("USER_ID_TO"));
 			return fileVO;
-			
+		} else if (calledFunction == GET_SHARED_TO_FILES) {
+			FileVO fileVO = new FileVO();
+			fileVO.setId(rs.getLong("FILE_ID"));
+			fileVO.setFileName(rs.getString("FILE_NAME"));
+			fileVO.setPath(rs.getString("PATH"));
+			fileVO.setOwnerId(rs.getLong("OWNER_ID"));
+			fileVO.setParentId(rs.getLong("PARENT_ID"));
+			fileVO.setDeptId(rs.getInt("DEPT_ID"));
+			fileVO.setModTime(rs.getDate("MOD_TIME").toString());
+			fileVO.setCreateTime(rs.getDate("CREATION_TIME").toString());
+			fileVO.setLock(rs.getBoolean("LOCK"));
+			fileVO.setDir(rs.getBoolean("IS_DIR"));
+			fileVO.setSharedById(rs.getLong("USER_ID_BY"));
+			fileVO.setSharedToId(rs.getLong("USER_ID_TO"));
+			fileVO.setLockAllowed(rs.getBoolean("CHEECKIN_OUT"));
+			fileVO.setUpdateAllowed(rs.getBoolean("FILE_UPDATE"));
+			return fileVO;
 		} else if (calledFunction == "getapprovedNonAdminUsers") {
 			UserVO userVO=new UserVO();
 			userVO.setId(rs.getLong("id"));
 			userVO.setUserName(rs.getString("user_name"));
 			return userVO;
+		} else if (calledFunction == GET_SHARED_TO_USER_NAME
+				|| calledFunction == GET_SHARED_BY_USER_NAME) {
+			return rs.getString("FIRST_NAME") + " " + rs.getString("LAST_NAME");
 		}
 
 		return null;

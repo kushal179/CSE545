@@ -19,7 +19,8 @@
 <link href="<c:url value="/resources/bootstrap/css/bootstrap.css" />"
 	rel="stylesheet">
 <link href="<c:url value="/resources/favicon.ico" />" rel="icon" type="image/x-icon" />
-<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="/resources/jquery/jquery.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <style type="text/css">
 body {
 	padding-top: 60px;
@@ -30,8 +31,6 @@ body {
 	padding: 9px 0;
 }
 </style>
-<script type="text/javascript"
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript"
 	src="<c:url value="/resources/bootstrap/js/bootstrap-modal.js" />"></script>
 </head>
@@ -86,8 +85,8 @@ body {
 							}
 						%>
 						<li class="nav-header">Shared Documents</li>
-						<li><a href="#">With You</a></li>
-						<li><a href="#">By You</a></li>
+						<li><a href="SharedToYouDocuments?folderId=-1">With You</a></li>
+						<li><a href="SharedByYouDocuments?folderId=-1">By You</a></li>
 					</ul>
 				</div>
 			</div>
@@ -150,6 +149,11 @@ body {
 									<i class="icon-remove"></i>Delete
 								</button>
 							</td>
+							<td width="10%">
+								<button  class="btn-link" type="button" >
+									<i class="icon-time"></i><a id="version-button">Version</a>
+								</button> 
+							</td>
 						</tr>
 					</table>
 				</div>
@@ -192,7 +196,7 @@ body {
 						</thead>
 						<tbody>
 							<c:forEach var="item" items="${files}">
-								<tr onclick="onItemselected(this);">
+								<tr onclick="onDashboardItemselected(this);">
 									<td width="40px"><img height="30px" width="30px"
 										src="${item.iconFile}"></td>
 									<td><a href="${item.hyperlink }">${item.fileName}</a></td>
@@ -204,9 +208,10 @@ body {
 													src="resources/icons/lock.jpg" />
 											</c:when>
 										</c:choose></td>
-
-									<td>${item.lock}</td>
-									<td id="selectedfileid">${item.hashedId}</td>
+									<td style="display : none;" id="selectedfileid">${item.hashedId}</td>
+									<td style="display: none" id="update-perm">${item.updateAllowed}</td>
+									<td style="display: none" id="lock-perm">${item.lockAllowed}</td>
+									<td style="display: none" id="is-locked">${item.lock}</td>
 								</tr>
 							</c:forEach>
 						</tbody>

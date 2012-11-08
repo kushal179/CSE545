@@ -2,12 +2,12 @@ function bodyload() {
 	$("#itemSelected").hide();
 }
 
-function onItemselected(id) {
+function onDashboardItemselected(id) {
 	document.getElementById("itemname").innerText = id
 			.getElementsByTagName('td')[1].innerText;
 	document.getElementById("fileName").innerText = id
 			.getElementsByTagName('td')[1].innerText;
-	document.getElementById("itemId").value = id.getElementsByTagName('td')[6].innerText;
+	document.getElementById("itemId").value = id.getElementsByTagName('td')[5].innerText;
 
 	var table = document.getElementById("fileslist");
 	for ( var i = 0, row; row = table.rows[i]; i++) {
@@ -17,6 +17,29 @@ function onItemselected(id) {
 
 	$("#selectItem").hide();
 	$("#itemSelected").show();
+	var updateAllowed = id.getElementsByTagName('td')[6].innerText == "true";
+	
+	/*var lockAllowed = id.getElementsByTagName('td')[7].innerText == "true";
+	if (lockAllowed) {
+		$("#lock-button").show();
+		$("#update-button").hide();
+	} else{
+		$("#lock-button").show();
+		$("#update-button").show();
+	}*/
+	
+	var isLocked = id.getElementsByTagName('td')[8].innerText == "true";
+	/*if (isLocked) {
+		$("#lock-button").hide();
+	} else{
+		$("#update-button").show();
+	}*/
+
+	
+		
+
+	$("#version-button").attr("href",
+			"DocumentVersioning?fileId=" + $("#selectedfileid").text());
 }
 
 function onheaderBarClicked() {
@@ -31,6 +54,10 @@ function onheaderBarClicked() {
 
 $("#upload-button").click(function() {
 	$("#upload-bar").toggle("slow");
+});
+
+$("#version-button").click(function() {
+
 });
 
 $("#upload-submit").submit(function() {
@@ -58,7 +85,7 @@ $("#enable-encryption").change(function() {
 function ValidateFile(sFileName) {
 
 	var _validFileExtensions = [ ".jpg", ".jpeg", ".bmp", ".gif", ".png",
-			".doc", ".xls", ".docx", ".ppt", ".pptx", ".pdf" ];
+			".doc", ".xls", ".docx", ".ppt", ".pptx", ".pdf", ".txt", ".TXT" ];
 
 	if (sFileName != "") {
 		var blnValid = false;

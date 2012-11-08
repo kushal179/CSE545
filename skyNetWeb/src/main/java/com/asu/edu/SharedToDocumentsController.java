@@ -2,6 +2,7 @@ package com.asu.edu;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -23,64 +24,51 @@ import com.asu.edu.base.vo.DepartmentVO;
 import com.asu.edu.base.vo.FileVO;
 import com.asu.edu.base.vo.UserVO;
 import com.asu.edu.cache.MasterCache;
+import com.asu.edu.security.EncryptDecrypt;
 
 /**
  * Handles requests for the application home page.
  */
 @Controller
-@RequestMapping(value = "/SharedByYouDocuments")
-public class SharedByDocumentsController {
-
-	private static final int ROLE_CORPORATE_MANAGER = 5;
-
-	private static final int ROLE_DEPARTMENT_MANAGER = 4;
-
-	private static final int ROLE_REGULAR_EMP = 3;
+@RequestMapping(value = "/SharedToYouDocuments")
+public class SharedToDocumentsController {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(SharedByDocumentsController.class);
+			.getLogger(SharedToDocumentsController.class);
 
 	@Autowired
 	private DashboardDAOImplInterface dashboardDAO = null;
 
-	private Map<Integer, DepartmentVO> departmentMap;
+	private EncryptDecrypt encryptDecrypt;
 
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
 
-	public SharedByDocumentsController() {
-		departmentMap = MasterCache.getDepartmentMap();
+	public SharedToDocumentsController() {
+		encryptDecrypt = new EncryptDecrypt();
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String getDashBoardContents(
+	public String getSharedToYouContents(
 			@RequestParam("folderId") String folderId, HttpSession session,
 			Map model) {
 		logger.info("Dashboard screen");
 
 		UserVO user = (UserVO) session.getAttribute("userVO");
 		long parentId;
-		int departmentId;
 
 		if (user != null) {
-			/*
-			 * if (deptId.equals("-1")) departmentId =
-			 * user.getDepartments().get(0); else { byte[] decodedBytes =
-			 * Base64.decode(deptId.getBytes()); departmentId =
-			 * Integer.valueOf(new String(decodedBytes)); }
-			 */
 
 			if (folderId.equals("-1")) {
 				parentId = Long.parseLong(folderId);
 			} else {
-				byte[] decodedBytes = Base64.decode(folderId.getBytes());
-				parentId = Long.valueOf(new String(decodedBytes));
+				parentId = Long.valueOf(encryptDecrypt.decrypt(folderId));
 			}
 
 			ArrayList<FileVO> files = null;
 
-			files = dashboardDAO.getSharedByDocuments(user, parentId);
+			files = dashboardDAO.getSharedToDocuments(user, parentId);
 
 			if (files != null)
 				updateHyperlinks(files);
@@ -88,7 +76,7 @@ public class SharedByDocumentsController {
 			model.put("files", files);
 			model.put("parentFileId", parentId);
 
-			return "shared-by-documents";
+			return "shared-to-documents";
 		}
 
 		return "redirect:/login";
@@ -98,20 +86,31 @@ public class SharedByDocumentsController {
 
 		for (FileVO fileVO : files) {
 			byte[] encodedBytes = null;
+
+			String hashedId;
 			try {
-				encodedBytes = Base64.encode(String.valueOf(fileVO.getId())
-						.getBytes("UTF8"));
-				fileVO.setHashedId(new String(encodedBytes));
+				hashedId = URLEncoder.encode(
+						encryptDecrypt.encrypt(String.valueOf(fileVO.getId())),
+						"UTF-8");
+				fileVO.setHashedId(hashedId);
 			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
+			String hashedParentId;
 			try {
-				encodedBytes = Base64.encode(String.valueOf(
-						fileVO.getParentId()).getBytes("UTF8"));
-				fileVO.setHashedParentId(new String(encodedBytes));
+				hashedParentId = URLEncoder
+						.encode(encryptDecrypt.encrypt(String.valueOf(fileVO
+								.getParentId())), "UTF-8");
+				fileVO.setHashedParentId(hashedParentId);
 			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

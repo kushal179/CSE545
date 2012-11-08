@@ -6,6 +6,7 @@ import org.springframework.security.config.authentication.UserServiceBeanDefinit
 
 import com.asu.edu.base.vo.DepartmentVO;
 import com.asu.edu.base.vo.FileVO;
+import com.asu.edu.base.vo.FileVersionVO;
 import com.asu.edu.base.vo.UserVO;
 
 public interface DashboardDAOImplInterface {
@@ -21,9 +22,8 @@ public interface DashboardDAOImplInterface {
 
 	public ArrayList<FileVO> getSharedByDocuments(UserVO userVO, long folderId);
 
-	public ArrayList<FileVO> getSharedToDocuments(UserVO userVO,
-			DepartmentVO departmentVO, long folderId);
-	
 	public ArrayList<UserVO> getapprovedNonAdminUsers(long userid);
 
+	public ArrayList<FileVO> getSharedToDocuments(UserVO userVO, long folderId);
+	
 }

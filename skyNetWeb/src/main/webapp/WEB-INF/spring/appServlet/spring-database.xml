@@ -47,4 +47,8 @@
 		<property name="fileDAO" ref="fileDAO"></property>
 	</bean>
 
+	<bean id="documentVersioningDAO" class="com.asu.edu.base.dao.impl.DocumentVersioningDAOImpl">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
 </beans>

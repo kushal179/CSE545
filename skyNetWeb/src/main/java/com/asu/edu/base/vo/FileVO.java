@@ -21,9 +21,13 @@ public class FileVO {
 	private String iconFile;
 	private String hyperlink;
 	private String contentType;
+	private long sharedById;
+	private long sharedToId;
 	private String sharedByName;
 	private String sharedToName;
-
+	private boolean updateAllowed;
+	private boolean lockAllowed;
+	
 	public void setId(long l) {
 		this.id = l;
 	}
@@ -199,6 +203,38 @@ public class FileVO {
 
 	public void setSharedByName(String sharedByName) {
 		this.sharedByName = sharedByName;
+	}
+
+	public long getSharedById() {
+		return sharedById;
+	}
+
+	public void setSharedById(long sharedById) {
+		this.sharedById = sharedById;
+	}
+
+	public long getSharedToId() {
+		return sharedToId;
+	}
+
+	public void setSharedToId(long sharedToId) {
+		this.sharedToId = sharedToId;
+	}
+
+	public boolean isLockAllowed() {
+		return lockAllowed;
+	}
+
+	public void setLockAllowed(boolean lockAllowed) {
+		this.lockAllowed = lockAllowed;
+	}
+
+	public boolean isUpdateAllowed() {
+		return updateAllowed;
+	}
+
+	public void setUpdateAllowed(boolean updateAllowed) {
+		this.updateAllowed = updateAllowed;
 	}
 
 }
