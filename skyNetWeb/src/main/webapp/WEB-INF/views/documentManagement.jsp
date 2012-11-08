@@ -19,7 +19,6 @@
 <link href="<c:url value="/resources/bootstrap/css/bootstrap.css" />"
 	rel="stylesheet">
 <link href="<c:url value="/resources/favicon.ico" />" rel="icon" type="image/x-icon" />
-<script src="<c:url value="/resources/jquery/jquery.js"/>"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <style type="text/css">
 body {
@@ -51,7 +50,7 @@ body {
 					<ul class="nav">
 						<li class="active"><a href="">Home</a></li> 
 						<li><a href="#about">About</a></li>
-						<li><a href="changePassword"></a></li>
+						<li><a href="changePassword">Change Password</a></li>
 						<li><a href="<c:url value="/j_spring_security_logout" />">Logout</a></li>
 					</ul>
 				</div>
@@ -294,7 +293,7 @@ body {
 		<hr>
 
 		<footer>
-			<p>Â© SkyNet - Company 2012</p>
+			<p>© SkyNet - Company 2012</p>
 		</footer>
 
 	</div>
