@@ -76,23 +76,28 @@ public class AdminDAOImpl extends BaseDAO implements AdminDAOImplInterface {
 		String path = CommonConstants.LOG_FILES_PATH;
 		ArrayList<LogFilesVO> files = new ArrayList<LogFilesVO>();
 		File folder = new File(path);
-		File[] listOfFiles = folder.listFiles();
+		if(folder != null)
+		{
+			File[] listOfFiles = folder.listFiles();
+			if(listOfFiles != null)
+			{
+				for (int i = 0; i < listOfFiles.length; i++) {
+					if (listOfFiles[i].isFile()) {
+						LogFilesVO logFileVO = new LogFilesVO();
+						logFileVO.setPathName(listOfFiles[i].getName());
+						Long timeSinceEpoch = listOfFiles[i].lastModified();
+						Calendar cal = new GregorianCalendar();
+						cal.setTimeInMillis(timeSinceEpoch);
 
-		for (int i = 0; i < listOfFiles.length; i++) {
-			if (listOfFiles[i].isFile()) {
-				LogFilesVO logFileVO = new LogFilesVO();
-				logFileVO.setPathName(listOfFiles[i].getName());
-				Long timeSinceEpoch = listOfFiles[i].lastModified();
-				Calendar cal = new GregorianCalendar();
-				cal.setTimeInMillis(timeSinceEpoch);
-
-				DateFormat dateFormat = new SimpleDateFormat(
-						"yyyy/MM/dd HH:mm:ss");
-				String modifieddate = dateFormat.format(cal.getTime());
-				logFileVO.setModifiedDate(modifieddate);
-				logFileVO.setHyperLink("downloadlogfile?logfilename="
-						+ listOfFiles[i].getName());
-				files.add(logFileVO);
+						DateFormat dateFormat = new SimpleDateFormat(
+								"yyyy/MM/dd HH:mm:ss");
+						String modifieddate = dateFormat.format(cal.getTime());
+						logFileVO.setModifiedDate(modifieddate);
+						logFileVO.setHyperLink("downloadlogfile?logfilename="
+								+ listOfFiles[i].getName());
+						files.add(logFileVO);
+					}
+				}
 			}
 		}
 		return files;

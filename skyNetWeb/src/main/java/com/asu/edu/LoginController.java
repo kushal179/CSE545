@@ -10,6 +10,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 import com.asu.edu.base.dao.intrf.SecurityDAOImplInterface;
 
@@ -29,8 +31,8 @@ import com.asu.edu.base.vo.UserRegistrationServiceVO;
 import com.asu.edu.base.vo.UserVO;
 import com.asu.edu.cache.MasterCache;
 import com.asu.edu.constants.CommonConstants;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+
 
 @Controller
 public class LoginController {
@@ -49,6 +51,7 @@ public class LoginController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String dispatcher(Model model, HttpSession session) {
 		if (securityDAO.isLoggedIn()) {
+			securityDAO.unlockUser();
 			//this will be executed when logged in user clicks on Home tab in the header
 			if(session.getAttribute(CommonConstants.USER)!=null){
 				return "redirect:/Dashboard?deptId=-1&folderId=-1";

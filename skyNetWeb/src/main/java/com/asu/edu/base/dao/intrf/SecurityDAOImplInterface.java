@@ -12,4 +12,6 @@ public interface SecurityDAOImplInterface {
 	public void setPasswordForUser(String userName, String passwd);	
 	public boolean isValidPassword(String userName, String password);
 	public boolean isCaptchaEnabled();
+	public void setCaptchaEnabled(boolean b);
+	public void unlockUser();
 }

@@ -129,13 +129,6 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 		
 		if(userVO!=null)
 		{
-			System.out.println(userVO.getUserName());
-			Object[] updateParam = new Object[2];
-			updateParam[0] = 0;
-			updateParam[1] = auth.getName();
-			String sql = SQLConstants.UPDATE_LOGIN_ATTEMPTS;
-			this.preparedStatementUpdate(sql, updateParam, true);
-			setCaptchaEnabled(false);
 			if(userVO.getUserName().equals(auth.getPrincipal()))
 			{
 				calledFunction = USER_ROLE;
@@ -154,8 +147,7 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 			Object[] param = new Object[1];
 			param[0] = auth.getName();
 			int loginAttempts = (Integer) this.getRowByCriteria(SQLConstants.LOGIN_ATTEMPTS,param);
-			System.out.println(loginAttempts);
-			if(loginAttempts == 2)
+			if(loginAttempts >= 2)
 			{
 				//EnableCaptcha
 				setCaptchaEnabled(true);
@@ -226,4 +218,17 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 		preparedStatementUpdate(sql, param,true);
 		
 	}
+	public void unlockUser()
+	{
+		Object[] updateParam = new Object[2];
+		updateParam[0] = 0;
+		UserVO userVO = getUserDetails(SecurityContextHolder.getContext().getAuthentication());
+		if (userVO != null) 
+		{
+			updateParam[1] = userVO.getUserName();
+			String sql = SQLConstants.UPDATE_LOGIN_ATTEMPTS;
+			this.preparedStatementUpdate(sql, updateParam, true);
+			setCaptchaEnabled(false);	
+		}
+	}	
 }

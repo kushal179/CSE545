@@ -21,8 +21,30 @@
 		<form-login login-page="/login" default-target-url="/"
 			authentication-failure-url="/loginfailed"   />
 		<logout logout-success-url="/logout" />
-	</http>
-	
+		<custom-filter ref="captchaCaptureFilter" before="FORM_LOGIN_FILTER"/>
+ <custom-filter ref="captchaVerifierFilter" after="FORM_LOGIN_FILTER"/>
+	<!--  	<custom-filter ref="captchaVerifierFilter" after="FORM_LOGIN_FILTER"/>-->
+ </http> 
+<!-- For verifying CAPTCHA fields -->
+ 
+<!-- Private key is assigned by the reCATPCHA service -->
+ 
+ <!-- <beans:bean id="captchaVerifierFilter" class="com.asu.edu.base.vo.CaptchaFilterVO"/>-->
+	<!-- For capturing CAPTCHA fields -->
+ <beans:bean id="captchaCaptureFilter" class="com.asu.edu.base.vo.CaptchaCaptureFilter" />
+  
+ <!-- For verifying CAPTCHA fields -->
+ <!-- Private key is assigned by the reCATPCHA service -->
+ <beans:bean id="captchaVerifierFilter" class="com.asu.edu.base.vo.CaptchaVerifierFilter">
+  <beans:property name="useProxy" value="false"></beans:property>
+  <beans:property name="proxyPort" value=""></beans:property>
+  <beans:property name="proxyHost" value=""></beans:property>
+ <beans:property name="captchaCaptureFilter" ref="captchaCaptureFilter"></beans:property>
+ 
+ <beans:property name="privateKey" value="6LdIMtgSAAAAALIW_Ec3pU6m0OUBV2BMLnNOYCVD"></beans:property>
+ <beans:property name="failureUrl" value="/loginfailed"></beans:property>
+ </beans:bean>
+    
 	<authentication-manager>
 		<authentication-provider ref="securityDAO" >
 		</authentication-provider>
