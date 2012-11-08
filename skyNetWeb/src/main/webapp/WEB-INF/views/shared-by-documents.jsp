@@ -16,6 +16,7 @@
 <!-- Le styles -->
 <link href="<c:url value="/resources/bootstrap/css/bootstrap.css" />"
 	rel="stylesheet">
+<script src="<c:url value="/resources/jquery/jquery.js"/>"></script>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <style type="text/css">
 body {

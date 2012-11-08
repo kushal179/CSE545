@@ -19,7 +19,7 @@
 <link href="<c:url value="/resources/bootstrap/css/bootstrap.css" />"
 	rel="stylesheet">
 <link href="<c:url value="/resources/favicon.ico" />" rel="icon" type="image/x-icon" />
-<script src="/resources/jquery/jquery.js"></script>
+<script src="<c:url value="/resources/jquery/jquery.js"/>"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <style type="text/css">
 body {
