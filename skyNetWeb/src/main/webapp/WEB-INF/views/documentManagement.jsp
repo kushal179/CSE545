@@ -126,7 +126,7 @@ body {
 				<div class="hero-unitops" id="itemSelected">
 					<table>
 						<tr>
-							<td width="45%"><label id="itemname"></label></td>
+							<td width="37%"><label id="itemname"></label></td>
 							<td width="10%">
 								<button class="btn-link" type="button">
 									<i class="icon-download"></i>Read
@@ -149,7 +149,7 @@ body {
 									<i class="icon-remove"></i>Delete
 								</button>
 							</td>
-							<td width="10%">
+							<td width="18%">
 								<button  class="btn-link" type="button" >
 									<i class="icon-time"></i><a id="version-button">Version</a>
 								</button> 
@@ -276,8 +276,6 @@ body {
 							</td>
 						</tr>
 						<tr>
-							<td><input type="hidden" id="parent-file-id"
-								name="parent-file-id" value="${parentFileId }"></td>
 							<td><input type="hidden" id="dept-id" name="dept-id"
 								value="${deptId }"></td>
 						</tr>

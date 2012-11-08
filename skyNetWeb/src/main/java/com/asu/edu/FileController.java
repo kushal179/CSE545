@@ -250,7 +250,7 @@ public class FileController {
 	@RequestMapping(value = "/shareComponent", method = RequestMethod.POST)
 	public String shareItem(@ModelAttribute("shareVO") ShareVO shareVO,
 			@RequestParam("dept-id") int deptId,
-			@RequestParam("parent-file-id") int parentId, BindingResult result,
+			BindingResult result,
 			ServletRequest servletRequest, Map<String, Object> model,
 			HttpSession session) {
 		boolean shareresult = fileDAO
