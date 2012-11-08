@@ -193,10 +193,11 @@ public class DashboardDAOImpl extends BaseDAO implements
 	public ArrayList<UserVO> getapprovedNonAdminUsers(long userid) {
 		calledFunction = "getapprovedNonAdminUsers";
 		String sql = SQLConstants.SHARE_TO_USERS;
-		Object[] params = new Object[3];
+		Object[] params = new Object[4];
 		params[0] = 1;
 		params[1] = 1;
-		params[2] = userid;
+		params[2] = 0;
+		params[3] = userid;
 		ArrayList<UserVO> users = (ArrayList<UserVO>) getListByCriteria(sql,
 				params);
 

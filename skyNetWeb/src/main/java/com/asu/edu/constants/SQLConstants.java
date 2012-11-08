@@ -63,7 +63,7 @@ public interface SQLConstants {
 	public static final String DELETE_USER_DEPTS = "delete from user_dept WHERE user_id = ?;";
 
 	// In share dailog populate approved, non admin and not current user
-	public static final String SHARE_TO_USERS = "select u.user_name, u.id from user u where u.role_id <> ? and u.is_approved = ? and u.id <> ?;";
+	public static final String SHARE_TO_USERS = "select u.user_name, u.id from user u where u.role_id <> ? and u.is_approved = ? and u.deactivate = ? and u.id <> ?;";
 
 	public static final String GET_EMAIL_ID = "select email from user where user_name=?;";
 
