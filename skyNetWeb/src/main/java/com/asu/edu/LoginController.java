@@ -60,16 +60,19 @@ public class LoginController {
 				 * this is the only place where user details will be generated
 				 * and stored in the session
 				 */
-				session.setAttribute(CommonConstants.USER, userVO);
 				if (userVO.getIsApproved() == 1)
 				{
+					session.setAttribute(CommonConstants.USER, userVO);
 					if(!MasterCache.getRoleMap().get(userVO.getRoleId()).equals(CommonConstants.ROLE_GUEST_USR))
 						return "redirect:/Dashboard?deptId=-1&folderId=-1";
-					else
+					else{
 						return "redirect:/SharedByDocument?folderId=-1";
+					}
 				}
-				else
+				else{
+					session.invalidate();
 					return "redirect:/temp";
+				}
 			}
 
 		}

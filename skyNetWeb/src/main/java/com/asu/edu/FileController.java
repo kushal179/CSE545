@@ -83,9 +83,15 @@ public class FileController {
 
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
 	public void download(HttpServletRequest request,
-			HttpServletResponse response, @RequestParam("id") String Id) {
-		long id = Long.parseLong(util.decrypt(Id));
+			HttpServletResponse response, @RequestParam("id") String file_Id,HttpSession session) {
+		long id = Long.parseLong(util.decrypt(file_Id));
+		HashMap<String, String> param = new HashMap<String, String>();
+		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
+
+		if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
 		FileVO fileVO = (FileVO) fileDAO.getFile(id);
+		if(fileVO!=null)
+		{
 		response.setContentType(fileVO.getContentType());
 		response.setHeader("Content-Disposition", "attachment;filename="
 				+ fileVO.getFileName());
@@ -108,9 +114,17 @@ public class FileController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		}
+		else{
+			System.out.println("File does not exist");
+		}
+		}
+		else{
+			System.out.println("Not Authorized");
+		}
 
 	}
-
+	
 	@RequestMapping(value = "/downloadlogfile", method = RequestMethod.GET)
 	public void downloadlogfile(HttpServletRequest request,
 			HttpServletResponse response,
@@ -146,7 +160,6 @@ public class FileController {
 	@RequestParam("dept-id") String dept_Id,
 			@RequestParam("parent-file-id") String parent_Id,
 			HttpSession session) {
-		EncryptDecrypt crypt = new EncryptDecrypt();
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
 		param.put(CommonConstants.REQ_PARAM_DEPTID, dept_Id);
@@ -155,7 +168,7 @@ public class FileController {
 		if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
 
 			Object[] sqlParam = new Object[1];
-			sqlParam[0] = Long.parseLong(crypt.decrypt(file_Id));
+			sqlParam[0] = Long.parseLong(util.decrypt(file_Id));
 			if (!fileDAO.isLock(sqlParam))
 				fileDAO.lock(sqlParam);
 			else
@@ -173,7 +186,6 @@ public class FileController {
 			@RequestParam("dept-id") String dept_Id,
 			@RequestParam("parent-file-id") String parent_Id,
 			HttpSession session) {
-		EncryptDecrypt crypt = new EncryptDecrypt();
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
 		param.put(CommonConstants.REQ_PARAM_DEPTID, dept_Id);
@@ -182,7 +194,7 @@ public class FileController {
 		if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
 
 			Object[] sqlParam = new Object[1];
-			sqlParam[0] = Long.parseLong(crypt.decrypt(file_Id));
+			sqlParam[0] = Long.parseLong(util.decrypt(file_Id));
 			if (fileDAO.unLock(sqlParam))
 				;
 			else
@@ -200,14 +212,13 @@ public class FileController {
 			@RequestParam("dept-id") String dept_Id,
 			@RequestParam("parent-file-id") String parent_Id,
 			HttpSession session) {
-		EncryptDecrypt crypt = new EncryptDecrypt();
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
 		param.put(CommonConstants.REQ_PARAM_DEPTID, dept_Id);
 		param.put(CommonConstants.REQ_PARAM_PARENTID, parent_Id);
 
 		if (auth.isAuthorize(CommonConstants.DELETE, session, param)) {
-			long Idfile = Long.parseLong(crypt.decrypt(file_Id));
+			long Idfile = Long.parseLong(util.decrypt(file_Id));
 			Object[] sqlParam = new Object[1];
 			sqlParam[0] = Idfile;
 			if (!fileDAO.isLock(sqlParam)) {
