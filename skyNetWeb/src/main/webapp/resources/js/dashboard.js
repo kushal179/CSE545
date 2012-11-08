@@ -3,11 +3,13 @@ function bodyload() {
 }
 
 function onDashboardItemselected(id) {
-	document.getElementById("itemname").innerText = id
-			.getElementsByTagName('td')[1].innerText;
-	document.getElementById("fileName").innerText = id
-			.getElementsByTagName('td')[1].innerText;
-	document.getElementById("itemId").value = id.getElementsByTagName('td')[5].innerText;
+	document.getElementById("itemname").innerHTML = id
+			.getElementsByTagName('td')[1].innerHTML;
+	document.getElementById("fileName").innerHTML = id
+			.getElementsByTagName('td')[1].innerHTML;
+	
+	var fileId = id.getElementsByTagName('td')[5].innerHTML;
+	document.getElementById("itemId").value = fileId;
 
 	var table = document.getElementById("fileslist");
 	for ( var i = 0, row; row = table.rows[i]; i++) {
@@ -15,31 +17,41 @@ function onDashboardItemselected(id) {
 	}
 	id.style.backgroundColor = '#E2E6A8';
 
+	$("#lock-file-id").val(fileId);
+	$("#unlock-file-id").val(fileId);
+	$("#delete-file-id").val(fileId);
+	$("#version-file-id").val(fileId);
+	
 	$("#selectItem").hide();
 	$("#itemSelected").show();
-	var updateAllowed = id.getElementsByTagName('td')[6].innerText == "true";
+	var updateAllowed = id.getElementsByTagName('td')[6].innerHTML == "true";
 	
-	/*var lockAllowed = id.getElementsByTagName('td')[7].innerText == "true";
+	if(updateAllowed){
+		$("update-file-id").val(fileId);
+	} else {
+		$("#update-button").hide();
+		$("file-id").val('0');
+	}
+	
+	var lockAllowed = id.getElementsByTagName('td')[7].innerHTML == "true";
 	if (lockAllowed) {
 		$("#lock-button").show();
 		$("#update-button").hide();
 	} else{
 		$("#lock-button").show();
 		$("#update-button").show();
-	}*/
+	}
 	
-	var isLocked = id.getElementsByTagName('td')[8].innerText == "true";
+	var isLocked = id.getElementsByTagName('td')[8].innerHTML == "true";
 	/*if (isLocked) {
 		$("#lock-button").hide();
 	} else{
 		$("#update-button").show();
 	}*/
-
-	
 		
 
-	$("#version-button").attr("href",
-			"DocumentVersioning?fileId=" + $("#selectedfileid").text());
+	/*$("#version-button").attr("href",
+			"DocumentVersioning?fileId=" + $("#selectedfileid").text());*/
 }
 
 function onheaderBarClicked() {
@@ -48,16 +60,13 @@ function onheaderBarClicked() {
 		row.style.backgroundColor = '#ffffff';
 	}
 	$("#itemSelected").hide();
-	$("#upload-bar").hide();
+	//$("#upload-bar").hide();
 	$("#selectItem").show();
 }
 
+
 $("#upload-button").click(function() {
-	$("#upload-bar").toggle("slow");
-});
-
-$("#version-button").click(function() {
-
+	$("#upload-bar").show();
 });
 
 $("#upload-submit").submit(function() {
@@ -73,14 +82,6 @@ $("#enable-encryption").change(function() {
 	}
 });
 
-/*
- * function getGETParam(paramName){ var prmstr =
- * window.location.search.substr(1); var prmarr = prmstr.split ("&"); var params =
- * {};
- * 
- * for ( var i = 0; i < prmarr.length; i++) { var tmparr = prmarr[i].split("=");
- * if(tmparr[0]===paramName) return tmparr[1]; } return null; }
- */
 
 function ValidateFile(sFileName) {
 

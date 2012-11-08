@@ -1,20 +1,16 @@
 package com.asu.edu;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.codec.Base64;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -141,13 +137,8 @@ public class DashboardController {
 
 			String hashedId;
 			try {
-				hashedId = URLEncoder.encode(
-						encryptDecrypt.encrypt(String.valueOf(fileVO.getId())),
-						"UTF-8");
+				hashedId = encryptDecrypt.encrypt(String.valueOf(fileVO.getId()));
 				fileVO.setHashedId(hashedId);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (SecurityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -168,20 +159,26 @@ public class DashboardController {
 			}
 
 			if (fileVO.isDir())
-				fileVO.setHyperlink("Dashboard?deptId=" + fileVO.getDeptId()
-						+ "&folderId=" + fileVO.getHashedId());
+				try {
+					fileVO.setHyperlink("Dashboard?deptId=" + fileVO.getDeptId()
+							+ "&folderId=" + URLEncoder
+							.encode(fileVO.getHashedId(), "UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			else
 				fileVO.setHyperlink("download?id=" + fileVO.getHashedId());
 		}
 
 	}
 
-	@ExceptionHandler(Exception.class)
+	/*@ExceptionHandler(Exception.class)
 	public String handleIOException(Exception ex, HttpServletRequest request) {
 
 		System.out.println("in exceptopn handler");
 		return "error-page";
-	}
+	}*/
 
 	static {
 

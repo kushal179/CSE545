@@ -2,6 +2,7 @@ package com.asu.edu;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -23,6 +24,7 @@ import com.asu.edu.base.vo.DepartmentVO;
 import com.asu.edu.base.vo.FileVO;
 import com.asu.edu.base.vo.UserVO;
 import com.asu.edu.cache.MasterCache;
+import com.asu.edu.security.EncryptDecrypt;
 
 /**
  * Handles requests for the application home page.
@@ -43,6 +45,8 @@ public class SharedByDocumentsController {
 	@Autowired
 	private DashboardDAOImplInterface dashboardDAO = null;
 
+	private EncryptDecrypt encryptDecrypt;
+	
 	private Map<Integer, DepartmentVO> departmentMap;
 
 	/**
@@ -51,6 +55,7 @@ public class SharedByDocumentsController {
 
 	public SharedByDocumentsController() {
 		departmentMap = MasterCache.getDepartmentMap();
+		encryptDecrypt = new EncryptDecrypt();
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -64,12 +69,6 @@ public class SharedByDocumentsController {
 		int departmentId;
 
 		if (user != null) {
-			/*
-			 * if (deptId.equals("-1")) departmentId =
-			 * user.getDepartments().get(0); else { byte[] decodedBytes =
-			 * Base64.decode(deptId.getBytes()); departmentId =
-			 * Integer.valueOf(new String(decodedBytes)); }
-			 */
 
 			if (folderId.equals("-1")) {
 				parentId = Long.parseLong(folderId);
@@ -98,27 +97,40 @@ public class SharedByDocumentsController {
 
 		for (FileVO fileVO : files) {
 			byte[] encodedBytes = null;
+
+			String hashedId;
 			try {
-				encodedBytes = Base64.encode(String.valueOf(fileVO.getId())
-						.getBytes("UTF8"));
-				fileVO.setHashedId(new String(encodedBytes));
-			} catch (UnsupportedEncodingException e) {
+				hashedId = encryptDecrypt
+						.encrypt(String.valueOf(fileVO.getId()));
+				fileVO.setHashedId(hashedId);
+			} catch (SecurityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
+			String hashedParentId;
 			try {
-				encodedBytes = Base64.encode(String.valueOf(
-						fileVO.getParentId()).getBytes("UTF8"));
-				fileVO.setHashedParentId(new String(encodedBytes));
+				hashedParentId = URLEncoder
+						.encode(encryptDecrypt.encrypt(String.valueOf(fileVO
+								.getParentId())), "UTF-8");
+				fileVO.setHashedParentId(hashedParentId);
 			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 			if (fileVO.isDir())
-				fileVO.setHyperlink("Dashboard?deptId=" + fileVO.getDeptId()
-						+ "&folderId=" + fileVO.getHashedId());
+				try {
+					fileVO.setHyperlink("Dashboard?deptId="
+							+ fileVO.getDeptId() + "&folderId="
+							+ URLEncoder.encode(fileVO.getHashedId(), "UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			else
 				fileVO.setHyperlink("download?id=" + fileVO.getHashedId());
 		}

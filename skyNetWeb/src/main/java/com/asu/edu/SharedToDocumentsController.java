@@ -89,13 +89,9 @@ public class SharedToDocumentsController {
 
 			String hashedId;
 			try {
-				hashedId = URLEncoder.encode(
-						encryptDecrypt.encrypt(String.valueOf(fileVO.getId())),
-						"UTF-8");
+				hashedId = encryptDecrypt
+						.encrypt(String.valueOf(fileVO.getId()));
 				fileVO.setHashedId(hashedId);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (SecurityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -116,8 +112,14 @@ public class SharedToDocumentsController {
 			}
 
 			if (fileVO.isDir())
-				fileVO.setHyperlink("Dashboard?deptId=" + fileVO.getDeptId()
-						+ "&folderId=" + fileVO.getHashedId());
+				try {
+					fileVO.setHyperlink("Dashboard?deptId="
+							+ fileVO.getDeptId() + "&folderId="
+							+ URLEncoder.encode(fileVO.getHashedId(), "UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			else
 				fileVO.setHyperlink("download?id=" + fileVO.getHashedId());
 		}

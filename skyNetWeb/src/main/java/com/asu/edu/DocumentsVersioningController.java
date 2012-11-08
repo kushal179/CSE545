@@ -27,7 +27,7 @@ import com.asu.edu.security.EncryptDecrypt;
  * Handles requests for the application home page.
  */
 @Controller
-@RequestMapping(value = "/DocumentVersioning")
+@RequestMapping(value = "/versions")
 public class DocumentsVersioningController {
 
 	private static final Logger logger = LoggerFactory
@@ -46,8 +46,8 @@ public class DocumentsVersioningController {
 		encryptDecrypt = new EncryptDecrypt();
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String getDashBoardContents(@RequestParam("fileId") String fileId,
+	@RequestMapping(method = RequestMethod.POST)
+	public String getDashBoardContents(@RequestParam("file-id") String fileId,
 			HttpSession session, Map model) {
 		logger.info("Dashboard screen");
 
@@ -64,7 +64,6 @@ public class DocumentsVersioningController {
 					file = encryptDecrypt.decrypt(fileId);
 					decryptedFileId = Long.valueOf(file);
 				} catch (SecurityException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

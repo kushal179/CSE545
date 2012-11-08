@@ -114,8 +114,9 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		boolean isFiledLock = false;
 		calledFunction = "isLock";
 		String sql = SQLConstants.IS_FILE_LOCK;
-		isFiledLock =(Boolean)getRowByCriteria(sql, param, true);
-		return isFiledLock;
+		if(getRowByCriteria(sql, param, true) == null)
+			return false;
+		return true;
 	}
 	
 	public boolean fileOwnerShipAuthorization(Object[] param){

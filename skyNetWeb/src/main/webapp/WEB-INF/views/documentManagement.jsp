@@ -20,6 +20,7 @@
 	rel="stylesheet">
 <link href="<c:url value="/resources/favicon.ico" />" rel="icon" type="image/x-icon" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
 <style type="text/css">
 body {
 	padding-top: 60px;
@@ -48,7 +49,7 @@ body {
 						${sessionScope["userVO"].firstName}
 						${sessionScope["userVO"].lastName}</p>
 					<ul class="nav">
-						<li class="active"><a href="">Home</a></li> 
+						<li class="active"><a href="">Home</a></li>
 						<li><a href="#about">About</a></li>
 						<li><a href="changePassword">Change Password</a></li>
 						<li><a href="<c:url value="/j_spring_security_logout" />">Logout</a></li>
@@ -106,11 +107,10 @@ body {
 							<td width="70%">
 								<h3>${deptDesc}</h3>
 							</td>
-							<td>
-								<button class="btn-link" type="button">
-									<i class="icon-file"></i>Upload New File
-								</button>
-							</td>
+							<td><a href="#upload-bar" class="btn-link"
+								data-toggle="modal" id="upload-button"> <i class="icon-file"></i>Upload
+									New File
+							</a></td>
 							<td>
 								<button class="btn-link" type="button">
 									<i class="icon-folder-close"></i>New Folder
@@ -125,61 +125,129 @@ body {
 				<div class="hero-unitops" id="itemSelected">
 					<table>
 						<tr>
-							<td width="37%"><label id="itemname"></label></td>
-							<td width="10%">
-								<button class="btn-link" type="button">
-									<i class="icon-download"></i>Read
-								</button>
+							<td width="30%"><label id="itemname"></label></td>
+							<td width="10%" style="padding-top: 15px">
+								<form>
+									<a href="#update-bar" class="btn-link" data-toggle="modal">
+										<i class="icon-upload"></i>Update
+									</a>
+								</form>
 							</td>
-							<td width="10%">
-								<button class="btn-link" type="button" id="upload-button">
-									<i class="icon-upload"></i>Update
-								</button>
+							<td width="15%" style="padding-top: 15px">
+								<form action="lock" valign="middle" method="post">
+									<input id="lock-file-id" name="file-id" type="hidden">
+									<i class="icon-lock"></i><input type="submit" value="Lock"
+										class="btn-link" />
+								</form>
 							</td>
-							<td width="15%">
-								<button class="btn-link" type="button">
-									<i class="icon-lock"></i>Check-Out
-								</button>
+							<td width="15%" style="padding-top: 15px">
+								<form action="unlock" method="POST">
+									<input id="unlock-file-id" name="file-id" type="hidden">
+									<i class="icon-lock"></i><input type="submit" value="Unlock"
+										class="btn-link" />
+								</form>
 							</td>
-							<td width="10%"><a href="#shareModal" class="btn-link"
-								data-toggle="modal"><i class="icon-share"></i>Share</a></td>
-							<td width="10%">
-								<button class="btn-link" type="button">
-									<i class="icon-remove"></i>Delete
-								</button>
+							<td width="10%" style="padding-top: 15px">
+								<form>
+									<a href="#shareModal" class="btn-link" data-toggle="modal"><i
+										class="icon-share"></i>Share</a>
+								</form>
 							</td>
-							<td width="18%">
-								<button  class="btn-link" type="button" >
-									<i class="icon-time"></i><a id="version-button">Version</a>
-								</button> 
+							<td width="10%" style="padding-top: 15px">
+								<form action="delete" method="post">
+									<input id="delete-file-id" name="file-id" type="hidden">
+									<i class="icon-remove"></i><input type="submit" value="Delete"
+										class="btn-link" />
+								</form>
+							</td>
+
+							<td width="10%" style="padding-top: 15px">
+								<form action="versions" method="post">
+									<input id="version-file-id" name="file-id" type="hidden">
+									<i class="icon-time"></i><input type="submit" value="Versions"
+										class="btn-link" />
+								</form>
 							</td>
 						</tr>
 					</table>
 				</div>
 
-				<div id="upload-bar" class="hero-unitops" style="display: none;">
+				<div class="modal hide fade" role="dialog"
+					aria-labelledby="shareModalLabel" aria-hidden="true"
+					id="update-bar" style="display: none;" onshow="alert('shown');">
 
-					<form id="upload-submit" action="upload" method="post"
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true"></button>
+						<h3 id="myModalLabel">Update file</h3>
+					</div>
+
+					<form id="update-form" action="upload" method="post"
 						enctype="multipart/form-data">
+						<div class="modal-body">
 
-						<table>
-							<tr>
-								<td><input type="file" name="file" id="file-upload"></td>
-								<td><input type="checkbox" id="enable-encryption" /></td>
-								<td><input type="hidden" id="parent-file-id"
-									name="parent-file-id" value="${parentFileId }"></td>
-								<td><input type="hidden" id="dept-id" name="dept-id"
-									value="${deptId }"></td>
-
-								<td><input type="hidden" id="dept-id" value="${deptId }"></td>
-								<td><label for="ency">&nbsp;&nbsp;Encrypt file</label></td>
-								<td><input disabled="disabled" type="password"
-									name="encrypt" id="password-field"></td>
-								<td><input type="submit" name="Upload" value="Upload" /></td>
-							</tr>
-						</table>
-
+							<input type="file" name="file" id="file-upload"><br>
+							<table>
+								<tr>
+									<td><input type="checkbox" id="enable-encryption" /></td>
+									<td><label>Encrypt file</label></td>
+								</tr>
+								<tr><td>&nbsp;</td></tr>
+								<tr>
+									<td><label for="password-field">Password : </label></td>
+									<td><input disabled="disabled" type="password"
+										name="encrypt" id="password-field" /> </td>
+								</tr>
+							</table>
+							<input type="hidden" id="update-file-id" name="file-id"/> 
+							<input type="hidden" id="dept-id" name="dept-id" value="${deptId }" /> 
+							<input type="hidden" id="parent-file-id" name="parent-file-id" value="${parentFileId }">
+						</div>
+					
+					<div class="modal-footer">
+						<input class="btn btn-primary" type="submit" name="Update"
+							value="Update" />
+						<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+					</div>
 					</form>
+				</div>
+
+				<div class="modal hide fade" role="dialog"
+					aria-labelledby="shareModalLabel" aria-hidden="true"
+					id="upload-bar" style="display: none;">
+
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true"></button>
+						<h3 id="myModalLabel">Upload new file</h3>
+					</div>
+
+					<form id="upload-form" action="upload" method="post"
+						enctype="multipart/form-data">
+						<div class="modal-body">
+							<input type="file" name="file" id="file-upload"><br>
+							<table>
+								<tr>
+									<td><input type="checkbox" id="enable-encryption" /></td>
+									<td><label>Encrypt file</label></td>
+								</tr>
+								<tr><td>&nbsp;</td></tr>
+								<tr>
+									<td><label for="password-field">Password : </label></td>
+									<td><input disabled="disabled" type="password"
+										name="encrypt" id="password-field" /> </td>
+								</tr>
+							</table>
+							<input type="hidden" id="file-id" name="file-id"/> 
+							<input type="hidden" id="dept-id" name="dept-id" value="${deptId }" /> 
+							<input type="hidden" id="parent-file-id" name="parent-file-id" value="${parentFileId }">
+						</div>
+					</form>
+					<div class="modal-footer">
+						<input class="btn btn-primary" type="submit" name="Upload"
+							value="Upload" />
+						<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+					</div>
 				</div>
 
 				<div class="row-fluid">
@@ -207,7 +275,7 @@ body {
 													src="resources/icons/lock.jpg" />
 											</c:when>
 										</c:choose></td>
-									<td style="display : none;" id="selectedfileid">${item.hashedId}</td>
+									<td style="display: none;" id="selectedfileid">${item.hashedId}</td>
 									<td style="display: none" id="update-perm">${item.updateAllowed}</td>
 									<td style="display: none" id="lock-perm">${item.lockAllowed}</td>
 									<td style="display: none" id="is-locked">${item.lock}</td>
@@ -282,8 +350,8 @@ body {
 				</div>
 				<div class="modal-footer">
 					<form action="shareComponent" method="post">
-						<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 						<button class="btn btn-primary">Share</button>
+						<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 					</form>
 				</div>
 			</div>
