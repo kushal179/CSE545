@@ -32,7 +32,7 @@ body {
 	src="<c:url value="/resources/js/commonprj.js" />"></script>
 </head>
 
-<body>
+<body onload="adminBodyLoad()">
 
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="navbar-inner">
@@ -64,8 +64,7 @@ body {
 						<li class="nav-header">Requests</li>
 						<li class="active" id="pending"><a href="admin">Pending</a></li>
 						<li class="nav-header">Users</li>
-						<li id="copMgr"><a href="admin-copMgr">Corporate
-								Level</a></li>
+						<li id="copMgr"><a href="admin-copMgr">Corporate Level</a></li>
 						<li id="deptMgr"><a href="admin-deptMgr">Department
 								Managers</a></li>
 						<li id="regEmp"><a href="admin-regularEmp">Regular
@@ -78,11 +77,41 @@ body {
 			</div>
 
 			<div class="span9">
-				<div class="hero-unittitle">
+				<div class="hero-unittitle" id="headerbar"
+					onclick="onheaderBarClicked();">
 					<h3>Pending Requests</h3>
 				</div>
 
-				<div class="hero-unitops" id="actionbar">Select users</div>
+				<div class="hero-unitops" id="selectItem">Select User</div>
+
+				<div class="hero-unitops" id="itemSelected">
+					<table>
+						<tr>
+							<td width="55%"><label id="itemname"></label></td>
+							<td width="15%">
+							<td>
+								<form action="admin/approve" method="post">
+									<button id="approvebtn" class="btn-link" name="userid"
+										type="submit">
+										<i class="icon-ok"></i>Approve
+									</button>
+								</form>
+							</td>
+							<td width="15%">
+							<td>
+								<form action="admin/reject" method="post">
+									<button id="rejectbtn" class="btn-link" name="userid"
+										type="submit">
+										<i class="icon-remove"></i>Reject
+									</button>
+								</form>
+							</td>
+							<td width="15%" style="vertical-align: top;"><a href="#modifyModal" class="btn-link"
+								data-toggle="modal" onClick=modifySelected()><i
+									class="icon-search icon-edit"></i>Modify</a></td>
+						</tr>
+					</table>
+				</div>
 
 				<div class="row-fluid">
 					<table class="table table-hover" id="contentsTable">
@@ -97,7 +126,7 @@ body {
 						<tbody id="contentsTableBody">
 							<c:set var="count" value="0" scope="page" />
 							<c:forEach var="item" items="${pendingUsers}">
-								<tr onclick="selectUsersRow(this);">
+								<tr onclick="selectPendingUsersRow(this);">
 									<c:set var="count" value="${count + 1}" scope="page" />
 									<td>${count}</td>
 									<td>${item.userName}</td>
@@ -175,7 +204,7 @@ body {
 				<div class="modal-footer">
 					<form action="admin/modifynapprove" method="post">
 						<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-						<button class="btn btn-primary">Approve</button>
+						<button class="btn btn-primary">Save</button>
 					</form>
 				</div>
 			</div>

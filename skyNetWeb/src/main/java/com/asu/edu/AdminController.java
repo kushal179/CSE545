@@ -31,19 +31,20 @@ import com.asu.edu.cache.MasterCache;
  */
 @Controller
 public class AdminController {
-	
-	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(AdminController.class);
 
 	@Autowired
 	private AdminDAOImplInterface adminDAO = null;
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	
-	
+
 	private static ArrayList<DepartmentVO> deptArray;
 	private static ArrayList<RoleVO> rolesArray;
-	
+	private String selecteUserRole;
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin", method = RequestMethod.GET)
 	public String pendingRequests(Locale locale, Map model) {
@@ -53,60 +54,72 @@ public class AdminController {
 		model.put("roleList", rolesArray);
 		model.put("pendingUsers", adminDAO.getPendingUsers());
 		model.put("modifiedUserVO", new PendingUsersVO());
-		
+
 		return "admin";
 	}
-	
+
 	@RequestMapping(value = "/admin/approve", method = RequestMethod.POST)
-	public String pendingUsersApprove(Locale locale, Map model, @RequestParam("userid") String userId) {
+	public String pendingUsersApprove(Locale locale, Map model,
+			@RequestParam("userid") String userId) {
 		logger.info("Admin Approve user request");
 		// Approve user
 		adminDAO.approveUser(userId);
 		return "redirect:/admin";
-	}	
-	
+	}
+
 	@RequestMapping(value = "/admin/reject", method = RequestMethod.POST)
-	public String pendingUserReject(Locale locale, Map model, @RequestParam("userid") String userId) {
+	public String pendingUserReject(Locale locale, Map model,
+			@RequestParam("userid") String userId) {
 		logger.info("Admin Reject user request");
 		// Reject user
 		adminDAO.rejectUser(userId);
 		return "redirect:/admin";
-	}	
-	
+	}
+
 	@RequestMapping(value = "/admin/modify", method = RequestMethod.POST)
-	public String pendingUserModify(Locale locale, Map model, @RequestParam("userid") String userId) {
+	public String pendingUserModify(Locale locale, Map model,
+			@RequestParam("userid") String userId) {
 		logger.info("Admin Modify user request");
 		// Modify user
 		return "redirect:/admin";
 	}
+
 	@RequestMapping(value = "/admin-regularEmp", method = RequestMethod.GET)
 	public String admin_regularEmp(Locale locale, Map model, Model attr) {
 		logger.info("Admin screen");
-		attr.addAttribute("role_id","regEmp");
+		selecteUserRole = "regularEmp";
+		attr.addAttribute("role_id", "regEmp");
 		model.put("users", adminDAO.getUsersByRole(3));
 		return "admin-user";
 	}
+
 	@RequestMapping(value = "/admin-deptMgr", method = RequestMethod.GET)
 	public String admin_deptMgr(Locale locale, Map model, Model attr) {
 		logger.info("Admin screen");
-		attr.addAttribute("role_id","deptMgr");
+		selecteUserRole = "deptMgr";
+		attr.addAttribute("role_id", "deptMgr");
 		model.put("users", adminDAO.getUsersByRole(2));
 		return "admin-user";
 	}
+
 	@RequestMapping(value = "/admin-copMgr", method = RequestMethod.GET)
 	public String admin_corporateMgr(Locale locale, Map model, Model attr) {
 		logger.info("Admin screen");
-		attr.addAttribute("role_id","copMgr");
+		selecteUserRole = "copMgr";
+		attr.addAttribute("role_id", "copMgr");
 		model.put("users", adminDAO.getUsersByRole(4));
 		return "admin-user";
 	}
+
 	@RequestMapping(value = "/admin-guest", method = RequestMethod.GET)
 	public String admin_guestUser(Locale locale, Map model, Model attr) {
 		logger.info("Admin screen");
-		attr.addAttribute("role_id","guestUsr");
+		selecteUserRole = "guest";
+		attr.addAttribute("role_id", "guestUsr");
 		model.put("users", adminDAO.getUsersByRole(5));
 		return "admin-user";
 	}
+
 	@RequestMapping(value = "/admin-logs", method = RequestMethod.GET)
 	public String admin_logs(Locale locale, Map model) {
 		logger.info("Admin screen");
@@ -115,33 +128,45 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/admin/modifynapprove", method = RequestMethod.POST)
-	public String modifyAndApprove(@ModelAttribute("modifiedUserVO") PendingUsersVO modifiedUserVO, BindingResult result, ServletRequest servletRequest, Map<String, Object> model) {
+	public String modifyAndApprove(
+			@ModelAttribute("modifiedUserVO") PendingUsersVO modifiedUserVO,
+			BindingResult result, ServletRequest servletRequest,
+			Map<String, Object> model) {
 		logger.info("Admin Modify user request");
 		// Modify user
 		adminDAO.modifyUser(modifiedUserVO);
 		return "redirect:/admin";
 	}
 
+	@RequestMapping(value = "admin/users/remove", method = RequestMethod.POST)
+	public String removeUsers(Locale locale, Map model,
+			@RequestParam("userid") String userId) {
+		logger.info("Remove users request from admin");
+		// Modify user
+		adminDAO.deactivateUser(userId);
+		return "redirect:/admin-" + selecteUserRole;
+	}
+
 	private void initArrays() {
 		if (deptArray == null) {
 			deptArray = new ArrayList<DepartmentVO>();
-			Map deptMap =  MasterCache.getDepartmentMap();
+			Map deptMap = MasterCache.getDepartmentMap();
 			Iterator it = deptMap.entrySet().iterator();
 			Map.Entry pairs;
 			while (it.hasNext()) {
-		        pairs = (Map.Entry)it.next();
-		        deptArray.add((DepartmentVO)pairs.getValue());
-		    }
+				pairs = (Map.Entry) it.next();
+				deptArray.add((DepartmentVO) pairs.getValue());
+			}
 		}
 		if (rolesArray == null) {
 			rolesArray = new ArrayList<RoleVO>();
-			Map rolesMap =  MasterCache.getRoleMap();
+			Map rolesMap = MasterCache.getRoleMap();
 			Iterator it = rolesMap.entrySet().iterator();
 			Map.Entry pairs;
 			while (it.hasNext()) {
-		        pairs = (Map.Entry)it.next();
-		        rolesArray.add((RoleVO)pairs.getValue());
-		    }
+				pairs = (Map.Entry) it.next();
+				rolesArray.add((RoleVO) pairs.getValue());
+			}
 		}
 	}
 }

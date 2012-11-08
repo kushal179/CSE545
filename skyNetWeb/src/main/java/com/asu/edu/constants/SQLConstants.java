@@ -10,7 +10,7 @@ public interface SQLConstants {
 
 	public static final String USER_DEPTS = "select d.id, d.name from user_dept ud, department d where ud.dept_id = d.id AND ud.user_id = ?;";
 
-	public static final String USERS_BY_ROLE = "select U.user_name, D.name from dockloud.user U, dockloud.department D, dockloud.user_dept U_D, dockloud.roles R where U.id=U_D.user_id and D.id=U_D.dept_id and R.id=U.role_id AND R.id = ?;";
+	public static final String USERS_BY_ROLE = "select u.user_name, u.id from dockloud.user u where is_approved = ? and deactivate = ? and role_id= ?;";
 
 	public static final String LOG_FILES = "SELECT L.path, DATE_FORMAT(L.timestamp, '%d/%m/%Y') AS timestamp FROM dockloud.logs L WHERE ?";
 
@@ -51,6 +51,8 @@ public interface SQLConstants {
 
 	// Used by Bharath
 	public static final String APPROVE_USER = "UPDATE user SET IS_APPROVED = ? WHERE ID = ?;";
+	
+	public static final String DEACTIVATE_USER = "update user set deactivate = ? where id = ?;";
 
 	public static final String MODIFY_USER_ROLE = "update user set role_id = ? where id = ?;";
 

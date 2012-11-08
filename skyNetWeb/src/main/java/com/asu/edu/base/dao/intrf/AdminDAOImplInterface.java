@@ -15,6 +15,8 @@ public interface AdminDAOImplInterface {
 		
 		public void modifyUser(PendingUsersVO user);
 		
-		public ArrayList<RegisterationVO> getUsersByRole(int role_id);
+		public ArrayList<PendingUsersVO> getUsersByRole(int role_id);
 		public ArrayList<LogFilesVO> getLogFiles();
+		
+		public void deactivateUser(String userId);
 }

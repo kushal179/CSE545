@@ -49,15 +49,23 @@ public class AdminDAOImpl extends BaseDAO implements AdminDAOImplInterface {
 	}
 
 	@Override
-	public ArrayList<RegisterationVO> getUsersByRole(int role_id) {
+	public ArrayList<PendingUsersVO> getUsersByRole(int role_id) {
 		calledFunction = "getUsersByRole";
 		Integer roleId = role_id;
-		Object[] param = new Object[1];
-		param[0] = roleId;
+		Object[] param = new Object[3];
+		param[0] = 1;
+		param[1] = 0;
+		param[2] = roleId;
 		String sql = SQLConstants.USERS_BY_ROLE;
-		ArrayList<RegisterationVO> result = (ArrayList<RegisterationVO>) this
+		ArrayList<PendingUsersVO> result = (ArrayList<PendingUsersVO>) this
 				.getListByCriteria(sql, param);
 
+		if (result != null) {
+			for (PendingUsersVO userVo : result) {
+				updateWithDepts(userVo);
+			}
+		}
+		
 		return result;
 	}
 
@@ -177,9 +185,10 @@ public class AdminDAOImpl extends BaseDAO implements AdminDAOImplInterface {
 			return vo;
 		} else if (calledFunction == "getUsersByRole") {
 			System.out.println("inside to data object - getUsersByRole");
-			RegisterationVO vo = new RegisterationVO();
+			PendingUsersVO vo = new PendingUsersVO();
 			vo.setUserName(rs.getString("USER_NAME"));
-			vo.setDepartment(rs.getString("NAME"));
+			vo.setUserId(rs.getInt("ID"));
+
 			return vo;
 		} else if (calledFunction == "getLogFiles") {
 			System.out.println("inside to data object - getLogFiles");
@@ -217,5 +226,19 @@ public class AdminDAOImpl extends BaseDAO implements AdminDAOImplInterface {
 			vo.setDeptIds(deptIds);
 			vo.setDeptNames(deptNames);
 		}
+	}
+
+	@Override
+	public void deactivateUser(String userId) {
+		calledFunction = "deactivateUser";
+		Integer id = Integer.parseInt(userId);
+		Integer deactivate = 1;
+		Object[] param = new Object[2];
+		param[0] = deactivate;
+		param[1] = userId;
+		String sql = SQLConstants.DEACTIVATE_USER;
+		this.preparedStatementUpdate(sql, param, true);
+		
+		
 	}
 }
