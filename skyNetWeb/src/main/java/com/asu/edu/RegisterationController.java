@@ -85,10 +85,14 @@ public class RegisterationController {
 					int no_of_depts = depts.size();
 					if(no_of_depts > 1)
 					{
+						model.put("deptList", deptArray);
+						model.put("roleList", rolesArray);
 						return "register";
 					}
 					if(role_id == 2 && no_of_depts != 0)
 					{
+						model.put("deptList", deptArray);
+						model.put("roleList", rolesArray);
 						return "register";
 					}
 				}
