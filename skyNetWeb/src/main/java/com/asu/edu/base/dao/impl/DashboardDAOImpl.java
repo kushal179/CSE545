@@ -43,7 +43,7 @@ public class DashboardDAOImpl extends BaseDAO implements
 		params[1] = folderId;
 		ArrayList<FileVO> files = (ArrayList<FileVO>) getListByCriteria(sql,
 				params);
-		
+
 		return files;
 	}
 
@@ -107,32 +107,22 @@ public class DashboardDAOImpl extends BaseDAO implements
 			params[1] = folderId;
 		}
 
-		sql += " order by s.user_id_to asc";
-
 		ArrayList<FileVO> files = (ArrayList<FileVO>) getListByCriteria(sql,
 				params);
 
 		if (files != null) {
-			calledFunction = GET_SHARED_BY_USER_NAME;
-
-			sql = "select first_name, last_name from user where id in ( ";
-
-			params = new Object[files.size()];
 			for (int i = 0; i < files.size(); i++) {
 				FileVO fileVO = files.get(i);
-				sql += " ? ";
-				if (i < files.size() - 1)
-					sql += " , ";
-				params[i] = fileVO.getSharedToId();
-			}
+				calledFunction = GET_SHARED_BY_USER_NAME;
 
-			sql += " ) order by id asc";
+				sql = "select first_name, last_name from user where id = ?";
 
-			ArrayList<String> userNames = (ArrayList<String>) getListByCriteria(
-					sql, params);
+				params = new Object[1];
+				params[0] = fileVO.getSharedToId();
 
-			for (int i = 0; i < files.size(); i++) {
-				files.get(i).setSharedToName(userNames.get(i));
+				String userName = (String) getRowByCriteria(sql, params);
+
+				fileVO.setSharedToName(userName);
 			}
 		}
 		return files;
@@ -165,26 +155,18 @@ public class DashboardDAOImpl extends BaseDAO implements
 				params);
 
 		if (files != null) {
-			calledFunction = GET_SHARED_TO_USER_NAME;
-
-			sql = "select first_name, last_name from user where id in ( ";
-
-			params = new Object[files.size()];
 			for (int i = 0; i < files.size(); i++) {
 				FileVO fileVO = files.get(i);
-				sql += "?";
-				if (i < files.size() - 1)
-					sql += " , ";
-				params[i] = fileVO.getSharedById();
-			}
+				calledFunction = GET_SHARED_TO_USER_NAME;
 
-			sql += " ) order by id asc";
+				sql = "select first_name, last_name from user where id = ?";
 
-			ArrayList<String> userNames = (ArrayList<String>) getListByCriteria(
-					sql, params);
+				params = new Object[1];
+				params[0] = fileVO.getSharedToId();
 
-			for (int i = 0; i < files.size(); i++) {
-				files.get(i).setSharedByName(userNames.get(i));
+				String userName = (String) getRowByCriteria(sql, params);
+
+				fileVO.setSharedToName(userName);
 			}
 		}
 
@@ -221,7 +203,7 @@ public class DashboardDAOImpl extends BaseDAO implements
 			fileVO.setLock(rs.getBoolean("LOCK"));
 			fileVO.setDir(rs.getBoolean("IS_DIR"));
 			fileVO.setLockAllowed(rs.getBoolean("LOCK_ALLOWED"));
-			if(fileVO.isLockAllowed() && fileVO.getLock())
+			if (fileVO.isLockAllowed() && fileVO.getLock())
 				fileVO.setUpdateAllowed(true);
 			else
 				fileVO.setUpdateAllowed(false);
@@ -257,7 +239,7 @@ public class DashboardDAOImpl extends BaseDAO implements
 			fileVO.setSharedToId(rs.getLong("USER_ID_TO"));
 			fileVO.setUpdateAllowed(rs.getBoolean("FILE_UPDATE"));
 			fileVO.setLockAllowed(rs.getBoolean("LOCK_ALLOWED"));
-			if(fileVO.isLockAllowed() && fileVO.getLock())
+			if (fileVO.isLockAllowed() && fileVO.getLock())
 				fileVO.setUpdateAllowed(true);
 			else
 				fileVO.setUpdateAllowed(false);
