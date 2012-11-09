@@ -66,7 +66,7 @@ public class SharedByDocumentsController {
 		encryptDecrypt = new EncryptDecrypt();
 	}
 
-	@RequestMapping(value = "/SharedByYouDocuments",method = RequestMethod.GET)
+	@RequestMapping(value = "/SharedByYouDocuments", method = RequestMethod.GET)
 	public String getDashBoardContents(
 			@RequestParam("folderId") String folderId, HttpSession session,
 			Map model) {
@@ -156,9 +156,18 @@ public class SharedByDocumentsController {
 	public String unshareItem(@RequestParam("fileid") String fileid,
 			@RequestParam("userIdTo") String userIdTo, HttpSession session,
 			Map model) {
-		boolean unshareReult = fileDAO
-				.unshareItem(fileid, ((UserVO) (session
-						.getAttribute(CommonConstants.USER))).getId(), Long.parseLong(userIdTo));
+
+		Object[] sqlParam = new Object[1];
+		EncryptDecrypt util = new EncryptDecrypt();
+		sqlParam[0] = Long.parseLong(util.decrypt(fileid));
+		if (!fileDAO.isLock(sqlParam)) {
+			boolean unshareReult = fileDAO.unshareItem(fileid,
+					((UserVO) (session.getAttribute(CommonConstants.USER)))
+							.getId(), Long.parseLong(userIdTo));
+		}
+		else {
+			return "redirect:/error-page?error=File already locked";
+		}
 
 		return "redirect:/SharedByYouDocuments?folderId=-1";
 	}
