@@ -108,29 +108,37 @@ public class RegisterationController {
 	}
 
 	private void initArrays() {
-		if (deptArray == null) {
-			deptArray = new ArrayList<DepartmentVO>();
-			Map deptMap =  MasterCache.getDepartmentMap();
-			Iterator it = deptMap.entrySet().iterator();
-			Map.Entry pairs;
-			while (it.hasNext()) {
-		        pairs = (Map.Entry)it.next();
-		        deptArray.add((DepartmentVO)pairs.getValue());
-		    }
-		}
+		try
+		{
+			if (deptArray == null) {
+				deptArray = new ArrayList<DepartmentVO>();
+				Map deptMap =  MasterCache.getDepartmentMap();
+				System.out.println("dept MAP " + deptMap);
+				Iterator it = deptMap.entrySet().iterator();
+				Map.Entry pairs;
+				while (it.hasNext()) {
+					pairs = (Map.Entry)it.next();
+					deptArray.add((DepartmentVO)pairs.getValue());
+				}
+			}
 
-		if (rolesArray == null) {
-			rolesArray = new ArrayList<RoleVO>();
-			Map rolesMap =  MasterCache.getRoleMap();
-			Iterator it = rolesMap.entrySet().iterator();
-			Map.Entry pairs;
-			while (it.hasNext()) {
-		        pairs = (Map.Entry)it.next();
-		        RoleVO roleVO = (RoleVO)pairs.getValue();
-		        if(roleVO.getId() == 1)
-		        	continue;
-		        rolesArray.add((RoleVO)pairs.getValue());
-		    }
+			if (rolesArray == null) {
+				rolesArray = new ArrayList<RoleVO>();
+				Map rolesMap =  MasterCache.getRoleMap();
+				Iterator it = rolesMap.entrySet().iterator();
+				Map.Entry pairs;
+				while (it.hasNext()) {
+					pairs = (Map.Entry)it.next();
+					RoleVO roleVO = (RoleVO)pairs.getValue();
+					if(roleVO.getId() == 1)
+						continue;
+					rolesArray.add((RoleVO)pairs.getValue());
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.getStackTrace();
 		}
 
 	}
