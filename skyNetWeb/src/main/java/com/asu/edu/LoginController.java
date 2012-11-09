@@ -73,7 +73,6 @@ public class LoginController {
 					}
 				}
 				else{
-					session.invalidate();
 					return "redirect:/temp";
 				}
 			}

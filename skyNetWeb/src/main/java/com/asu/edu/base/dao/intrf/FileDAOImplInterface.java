@@ -28,5 +28,9 @@ public interface FileDAOImplInterface {
 	public boolean delete(Object[] param);
 	
 	public boolean deleteDir(Object[] param);
+	
+	public int deptByParent(int parentId);
+	
+	public boolean saveFolder(FileVO fileVO);
 
 }

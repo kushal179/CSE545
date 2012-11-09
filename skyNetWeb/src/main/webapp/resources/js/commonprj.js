@@ -1,80 +1,31 @@
 var selectedUser;
-
-// *********************
-// admin-user specific
-function loadbody(roleid) {
-	var obj = document.getElementById(roleid);
-	obj.setAttribute("class", "active");
-
-	$("#itemSelected").hide();
-}
-
-function selectApprovedUsersRow(id) {
-	selectedApprovedUser = id;
-	document.getElementById("itemname").innerHTML = id
-			.getElementsByTagName('td')[1].innerHTML;
-	document.getElementById("removebtn").value = id.getElementsByTagName('td')[2].innerHTML;
-
-	var table = document.getElementById("contentsTable");
-	for ( var i = 0, row; row = table.rows[i]; i++) {
-		row.style.backgroundColor = '#ffffff';
-	}
-	id.style.backgroundColor = '#E2E6A8';
-
-	$("#selectItem").hide();
-	$("#itemSelected").show();
-}
-
-// *************************
-function onheaderBarClicked() {
-	var table = document.getElementById("contentsTable");
-	for ( var i = 0, row; row = table.rows[i]; i++) {
-		row.style.backgroundColor = '#ffffff';
-	}
-	$("#itemSelected").hide();
-	$("#selectItem").show();
-}
-
-function onDashboardItemselected(id) {
-	$("#selectItem").hide();
-	$("#itemSelected").show();
-}
-
-// ****************************
-// admin specific
-
-function adminBodyLoad(){
-	$("#itemSelected").hide();	
-}
-
-function selectPendingUsersRow(id) {
+function selectUsersRow(id) {
 	selectedUser = id;
-
-	selectedApprovedUser = id;
-	document.getElementById("itemname").innerHTML = id
-			.getElementsByTagName('td')[1].innerHTML;
-	document.getElementById("approvebtn").value = id.getElementsByTagName('td')[2].innerHTML;
-	document.getElementById("rejectbtn").value = id.getElementsByTagName('td')[2].innerHTML;
+	var actionbar = document.getElementById("actionbar");
+	actionbar.innerHTML = '<table><tr><td width = "55%" style="vertical-align: top;">'
+			+ id.getElementsByTagName('td')[1].innerText
+			+ '</td><td width = "15%"><form action="admin/approve" method = "post"><button class="btn-link" name="userid" type="submit" value='
+			+ id.getElementsByTagName('td')[2].innerText
+			+ '><i class="icon-search icon-ok"></i>Approve</button></form></td><td width = "15%"><form action="admin/reject" method = "post"><button class="btn-link" name="userid" type="submit" value='
+			+ id.getElementsByTagName('td')[2].innerText
+			+ '><i class="icon-search icon-remove"></i>Reject</button></form></td><td width = "15%" style="vertical-align: top;"><a href="#modifyModal" class="btn-link" data-toggle="modal" onClick = modifySelected()><i class="icon-search icon-edit"></i>Modify</a></td></tr></table>';
 
 	var table = document.getElementById("contentsTable");
 	for ( var i = 0, row; row = table.rows[i]; i++) {
 		row.style.backgroundColor = '#ffffff';
 	}
 	id.style.backgroundColor = '#E2E6A8';
-	
-	$("#selectItem").hide();
-	$("#itemSelected").show();
 }
 
 function modifySelected() {
-	var userName = selectedUser.getElementsByTagName('td')[1].innerHTML;
-	var userId = selectedUser.getElementsByTagName('td')[2].innerHTML;
+	var userName = selectedUser.getElementsByTagName('td')[1].innerText;
+	var userId = selectedUser.getElementsByTagName('td')[2].innerText;
 	document.getElementById("userId").value = userId;
-	var deptsStr = selectedUser.getElementsByTagName('td')[5].innerHTML;
-	var roleId = selectedUser.getElementsByTagName('td')[6].innerHTML;
-	var origdeptList = selectedUser.getElementsByTagName('td')[7].innerHTML;
+	var deptsStr = selectedUser.getElementsByTagName('td')[5].innerText;
+	var roleId = selectedUser.getElementsByTagName('td')[6].innerText;
+	var origdeptList = selectedUser.getElementsByTagName('td')[7].innerText;
 
-	document.getElementById("userName").innerHTML = userName;
+	document.getElementById("userName").innerText = userName;
 	var roleSelectTag = document.getElementById("role");
 	roleSelectTag.options[roleId - 1].selected = "1";
 
@@ -131,19 +82,13 @@ function trimRight(str) {
 	}
 }
 
-function selectLogFilesRow(id) {
+function selectLogFilesRow(id){
 	var actionbar = document.getElementById("actionbar");
 
-	actionbar.innerHTML = '<table><tr><td width = "55%">'
-			+ id.getElementsByTagName('td')[1].innerText
-			+ '</td><td width = "15%"><form action="admin/download" method = "post"><button class="btn-link" name="fileName" type="submit" value='
-			+ id.getElementsByTagName('td')[1].innerText
-			+ '>Download</button></form></td><td width = "15%"><form action="admin/upload" method = "get"><button class="btn-link" name="fileName" type="submit"'
-			+ '>Upload</button></form></td></tr></table>';
+	actionbar.innerHTML =  '<table><tr><td width = "55%">'+id.getElementsByTagName('td')[1].innerText+'</td><td width = "15%"><form action="admin/download" method = "post"><button class="btn-link" name="fileName" type="submit" value=' + id.getElementsByTagName('td')[1].innerText+ '>Download</button></form></td><td width = "15%"><form action="admin/upload" method = "get"><button class="btn-link" name="fileName" type="submit"'+ '>Upload</button></form></td></tr></table>';
 	var table = document.getElementById("contentsTable");
-	for ( var i = 0, row; row = table.rows[i]; i++) {
+	for (var i = 0, row; row = table.rows[i]; i++) {
 		row.style.backgroundColor = '#ffffff';
 	}
 	id.style.backgroundColor = '#E2E6A8';
-}
-// ****************************
+} 

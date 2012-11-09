@@ -58,6 +58,7 @@
 		<table border="0" cellpadding="10" cellspacing="10"><tbody><tr>
 		<td><br/>
 		<div align="left" style="font-size:22px;color:#ffffff">
+		<%session.invalidate(); %>
 		Your account has not been approved.
 		Please contact the administrator
 		</div>

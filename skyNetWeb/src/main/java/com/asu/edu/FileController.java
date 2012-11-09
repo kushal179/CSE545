@@ -17,8 +17,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.ServletRequestBindingException;
-import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +26,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.asu.edu.base.dao.intrf.FileDAOImplInterface;
 import com.asu.edu.base.vo.FileVO;
-import com.asu.edu.base.vo.PendingUsersVO;
 import com.asu.edu.base.vo.ShareVO;
 import com.asu.edu.base.vo.UserVO;
 import com.asu.edu.constants.CommonConstants;
@@ -48,14 +45,13 @@ public class FileController {
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public String upload(HttpServletRequest request,
-			@RequestParam("dept-id") String dept_Id,
 			@RequestParam("parent-file-id") String parent_Id,
 			HttpServletResponse response, HttpSession session) {
 
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		MultipartFile multipartFile = multipartRequest.getFile("file");
 		// int deptId = Integer.parseInt(util.decrypt(dept_Id));
-		int deptId = Integer.parseInt(dept_Id);
+
 		int parentId = Integer.parseInt(util.decrypt(parent_Id));
 		FileVO fileVO = new FileVO();
 		fileVO.setFileName(multipartFile.getOriginalFilename());
@@ -63,17 +59,28 @@ public class FileController {
 		fileVO.setOwnerId(((UserVO) session.getAttribute(CommonConstants.USER))
 				.getId());
 		try {
-			fileVO.setDeptId(deptId);
+			fileVO.setDeptId(fileDAO.deptByParent(parentId));
 
 			fileVO.setParentId(parentId);
 			String path = fileDAO.getParentFilePath(parentId);
-			path = path + "/" + multipartFile.getOriginalFilename();
-			fileVO.setPath(path);
-			if (fileDAO.saveFile(fileVO)) {
-				FileOutputStream f = new FileOutputStream(path);
-				f.write(multipartFile.getBytes());
-				f.close();
-			}
+			if (path != null) {
+				path = path + "/" + multipartFile.getOriginalFilename();
+				fileVO.setPath(path);
+				File file = new File(path);
+				if (file.isFile()) {
+					if (!file.exists()) {
+						if (fileDAO.saveFile(fileVO)) {
+							FileOutputStream f = new FileOutputStream(file);
+							f.write(multipartFile.getBytes());
+							f.close();
+						}
+					} else
+						return "redirect:/error-page?error=File already exists";
+				} else {
+					return "redirect:/error-page?error=Resource is of type folder. Please upload a file";
+				}
+			} else
+				return "redirect:/error-page?error=parent Folder not found";
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -81,50 +88,82 @@ public class FileController {
 		return "redirect:/Dashboard?deptId=-1&folderId=-1";
 	}
 
+	@RequestMapping(value = "/makeNewFolder", method = RequestMethod.POST)
+	public String makeNewFolder(HttpSession session,
+			@RequestParam("parent-file-id") String parent_Id,
+			@RequestParam("folder-name") String folderName,
+			HttpServletResponse response) {
+		int parentId = Integer.parseInt(util.decrypt(parent_Id));
+		FileVO fileVO = new FileVO();
+		fileVO.setFileName(folderName);
+		fileVO.setOwnerId(((UserVO) session.getAttribute(CommonConstants.USER))
+				.getId());
+
+		fileVO.setDeptId(fileDAO.deptByParent(parentId));
+		fileVO.setParentId(parentId);
+		String path = fileDAO.getParentFilePath(parentId);
+		if (path != null) {
+			path = path + "/" + folderName;
+			fileVO.setPath(path);
+			File f = new File(path);
+			if (f.isDirectory()) {
+				if (!f.exists()) {
+					if (fileDAO.saveFolder(fileVO)) {
+						f.mkdir();
+					}
+				} else
+					return "redirect:/error-page?error=Folder already exists";
+			} else
+				return "redirect:/error-page?error=Resource is of type file. Please upload directory";
+		} else {
+			return "redirect:/error-page?error=parent Folder not found";
+		}
+
+		return "redirect:/Dashboard?deptId=-1&folderId=-1";
+	}
+
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
 	public void download(HttpServletRequest request,
-			HttpServletResponse response, @RequestParam("id") String file_Id,HttpSession session) {
+			HttpServletResponse response,
+			@RequestParam("file-id") String file_Id, HttpSession session) {
 		long id = Long.parseLong(util.decrypt(file_Id));
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
 
 		if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
-		FileVO fileVO = (FileVO) fileDAO.getFile(id);
-		if(fileVO!=null)
-		{
-		response.setContentType(fileVO.getContentType());
-		response.setHeader("Content-Disposition", "attachment;filename="
-				+ fileVO.getFileName());
-		File file = new File(fileVO.getPath());
-		FileInputStream fileIn;
-		ServletOutputStream out;
-		try {
-			fileIn = new FileInputStream(file);
-			out = response.getOutputStream();
-			byte[] outputByte = new byte[4096];
-			while (fileIn.read(outputByte, 0, 4096) != -1) {
-				out.write(outputByte, 0, 4096);
-			}
+			FileVO fileVO = (FileVO) fileDAO.getFile(id);
+			if (fileVO != null) {
+				response.setContentType(fileVO.getContentType());
+				response.setHeader("Content-Disposition",
+						"attachment;filename=" + fileVO.getFileName());
+				File file = new File(fileVO.getPath());
+				FileInputStream fileIn;
+				ServletOutputStream out;
+				try {
+					fileIn = new FileInputStream(file);
+					out = response.getOutputStream();
+					byte[] outputByte = new byte[4096];
+					while (fileIn.read(outputByte, 0, 4096) != -1) {
+						out.write(outputByte, 0, 4096);
+					}
 
-			fileIn.close();
-			out.flush();
-			out.close();
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		}
-		else{
-			System.out.println("File does not exist");
-		}
-		}
-		else{
+					fileIn.close();
+					out.flush();
+					out.close();
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				System.out.println("File does not exist");
+			}
+		} else {
 			System.out.println("Not Authorized");
 		}
 
 	}
-	
+
 	@RequestMapping(value = "/downloadlogfile", method = RequestMethod.GET)
 	public void downloadlogfile(HttpServletRequest request,
 			HttpServletResponse response,
@@ -155,20 +194,16 @@ public class FileController {
 	}
 
 	@RequestMapping(value = "/lock", method = RequestMethod.POST)
-	private String checkOut(@RequestParam("id") String file_Id,
-
-	@RequestParam("dept-id") String dept_Id,
-			@RequestParam("parent-file-id") String parent_Id,
+	private String checkOut(@RequestParam("file-id") String file_Id,
 			HttpSession session) {
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
-		param.put(CommonConstants.REQ_PARAM_DEPTID, dept_Id);
-		param.put(CommonConstants.REQ_PARAM_PARENTID, parent_Id);
 
 		if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
-
-			Object[] sqlParam = new Object[1];
-			sqlParam[0] = Long.parseLong(util.decrypt(file_Id));
+			Object[] sqlParam = new Object[2];
+			sqlParam[0] = ((UserVO) session.getAttribute(CommonConstants.USER))
+					.getId();
+			sqlParam[1] = Long.parseLong(util.decrypt(file_Id));
 			if (!fileDAO.isLock(sqlParam))
 				fileDAO.lock(sqlParam);
 			else
@@ -182,23 +217,21 @@ public class FileController {
 	}
 
 	@RequestMapping(value = "/unlock", method = RequestMethod.POST)
-	private String checkIn(@RequestParam("id") String file_Id,
-			@RequestParam("dept-id") String dept_Id,
-			@RequestParam("parent-file-id") String parent_Id,
+	private String checkIn(@RequestParam("file-id") String file_Id,
 			HttpSession session) {
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
-		param.put(CommonConstants.REQ_PARAM_DEPTID, dept_Id);
-		param.put(CommonConstants.REQ_PARAM_PARENTID, parent_Id);
 
 		if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
 
-			Object[] sqlParam = new Object[1];
-			sqlParam[0] = Long.parseLong(util.decrypt(file_Id));
+			Object[] sqlParam = new Object[2];
+			sqlParam[0] = ((UserVO) session.getAttribute(CommonConstants.USER))
+					.getId();
+			sqlParam[1] = Long.parseLong(util.decrypt(file_Id));
 			if (fileDAO.unLock(sqlParam))
 				;
 			else
-				return "redirect:/error-page?error=File Could not be unlocked";
+				return "redirect:/error-page?error=File Could not be unlocked since no record found or not the owner of lock";
 		} else {
 			return "redirect:/error-page?error=Not Authorized";
 		}
@@ -208,14 +241,10 @@ public class FileController {
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	private String delete(@RequestParam("id") String file_Id,
-			@RequestParam("dept-id") String dept_Id,
-			@RequestParam("parent-file-id") String parent_Id,
+	private String delete(@RequestParam("file-id") String file_Id,
 			HttpSession session) {
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
-		param.put(CommonConstants.REQ_PARAM_DEPTID, dept_Id);
-		param.put(CommonConstants.REQ_PARAM_PARENTID, parent_Id);
 
 		if (auth.isAuthorize(CommonConstants.DELETE, session, param)) {
 			long Idfile = Long.parseLong(util.decrypt(file_Id));
@@ -249,8 +278,7 @@ public class FileController {
 
 	@RequestMapping(value = "/shareComponent", method = RequestMethod.POST)
 	public String shareItem(@ModelAttribute("shareVO") ShareVO shareVO,
-			@RequestParam("dept-id") int deptId,
-			BindingResult result,
+			@RequestParam("dept-id") int deptId, BindingResult result,
 			ServletRequest servletRequest, Map<String, Object> model,
 			HttpSession session) {
 		boolean shareresult = fileDAO

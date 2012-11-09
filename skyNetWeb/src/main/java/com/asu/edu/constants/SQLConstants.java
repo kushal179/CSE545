@@ -2,8 +2,8 @@ package com.asu.edu.constants;
 
 public interface SQLConstants {
 
-	public static final String USER_LOGIN = "select * from user where USER_NAME=? AND PASSWORD=?";
-	public static final String USER_ROLE = "SELECT U.USER_NAME, R.DESC FROM user U, roles R WHERE U.ROLE_ID = R.ID AND U.USER_NAME = ?";
+	public static final String USER_LOGIN = "select * from user where USER_NAME=? AND PASSWORD=? and deactivate=0";
+	public static final String USER_ROLE = "SELECT U.USER_NAME, R.DESC FROM user U, roles R WHERE U.ROLE_ID = R.ID AND U.USER_NAME = ? and deactivate=0";
 	public static final String USER_DEPT = "select dept_id from user_dept where user_id=?";
 	public static final String GET_USER_ID = "select id from user where user_name=?";
 	public static final String ADD_DEPT_FOR_USER = "insert into user_dept values ";
@@ -35,9 +35,10 @@ public interface SQLConstants {
 	public static final String GET_FILE_PATH = "select path from files where file_id=?";
 
 	public static final String SAVE_FILE = "insert into files(path,owner_id,dept_id,parent_id,file_name,creation_time,type,mod_time) values(?,?,?,?,?,?,?,?)";
-
-	public static final String LOCK_FILE = "update files f set f.lock = 1 where file_id=?";
-	public static final String UNLOCK_FILE = "update files f set f.lock = 0 where file_id=?";
+	public static final String SAVE_FOLDER = "insert into files(path,owner_id,dept_id,parent_id,file_name,creation_time,mod_time,is_dir) values(?,?,?,?,?,?,?,1)";
+	public static final String DEPT_BY_PARENT = "select dept_id from files where parent_id=?";
+	public static final String LOCK_FILE = "update files f set f.lock = 1,f.locked_by=? where file_id=?";
+	public static final String UNLOCK_FILE = "update files f set f.lock = 0 where locked_by=? and file_id=?";
 	public static final String DELETE = "delete from files f where f.file_id=? and f.lock=0";
 	public static final String DELETE_DIR = "delete from files f where f.file_id=? and f.lock=0 and f.path like ?";
 
