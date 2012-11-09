@@ -103,13 +103,14 @@ public class FileController {
 			FileVO fileVO = (FileVO) fileDAO.getFile(id);
 			UserVO userVO = (UserVO) session.getAttribute(CommonConstants.USER);
 			if (fileVO != null) {
-				if (multipartFile.getOriginalFilename() == fileVO.getFileName()) {
+				if (multipartFile.getOriginalFilename().equals(
+						fileVO.getFileName())) {
 					String version = new java.sql.Timestamp(
 							new java.util.Date().getTime()).toString();
 					File f = new File(fileVO.getPath());
 					String path = fileVO.getPath().substring(0,
 							fileVO.getPath().lastIndexOf("/"));
-					String rename = path + f.getName() + "_" + version;
+					String rename = path + "/" + f.getName() + "_" + version;
 					File renameFile = new File(rename);
 					if (f.renameTo(renameFile)) {
 						Object[] parameters = new Object[3];
@@ -119,13 +120,14 @@ public class FileController {
 								new java.util.Date().getTime());
 						parameters[3] = userVO.getId();
 						if (fileDAO.version(parameters)) {
-								try {
-									FileOutputStream fos = new FileOutputStream(renameFile);
-									fos.write(multipartFile.getBytes());
-									fos.close();
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
+							try {
+								FileOutputStream fos = new FileOutputStream(
+										renameFile);
+								fos.write(multipartFile.getBytes());
+								fos.close();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 						} else {
 							renameFile.delete();
 							return "redirect:/error-page?error=Version could not be created for file updation. Please try again";
@@ -257,13 +259,15 @@ public class FileController {
 		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
 
 		if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
-			Object[] sqlParam = new Object[2];
-			sqlParam[0] = ((UserVO) session.getAttribute(CommonConstants.USER))
-					.getId();
-			sqlParam[1] = Long.parseLong(util.decrypt(file_Id));
-			if (!fileDAO.isLock(sqlParam))
+			Object[] sqlParam = new Object[1];
+			sqlParam[0] = Long.parseLong(util.decrypt(file_Id));
+			if (!fileDAO.isLock(sqlParam)) {
+				sqlParam = new Object[2];
+				sqlParam[0] = ((UserVO) session
+						.getAttribute(CommonConstants.USER)).getId();
+				sqlParam[1] = Long.parseLong(util.decrypt(file_Id));
 				fileDAO.lock(sqlParam);
-			else
+			} else
 				return "redirect:/error-page?error=File already locked";
 		} else {
 			return "redirect:/error-page?error=Not Authorized";
