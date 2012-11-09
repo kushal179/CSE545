@@ -50,7 +50,7 @@ public class AdminController {
 	public String pendingRequests(Locale locale, Map model) {
 		logger.info("Admin screen");
 		initArrays();
-		
+
 		model.put("deptList", deptArray);
 		model.put("roleList", rolesArray);
 		model.put("pendingUsers", adminDAO.getPendingUsers());
@@ -136,20 +136,19 @@ public class AdminController {
 		logger.info("Admin Modify user request");
 		// Modify user
 		int role_id = modifiedUserVO.getRoleId();
-		if(role_id != 5)
-		{
-			ArrayList<Integer> depts = modifiedUserVO.getDeptIds(); 
-			int no_of_depts = depts.size();
-			if(no_of_depts > 1)
-			{
-				return "admin";
+		if (role_id != 5) {
+			ArrayList<Integer> depts = modifiedUserVO.getDeptIds();
+			if (role_id == 2 && depts != null) {
+				return "redirect:/admin";
 			}
-			if(role_id == 2 && no_of_depts != 0)
-			{
-				return "admin";
+			if (role_id != 2) {
+				int no_of_depts = depts.size();
+				if (no_of_depts > 1) {
+					return "redirect:/admin";
+				}
 			}
 		}
-		
+
 		logger.info("Modification successful");
 		adminDAO.modifyUser(modifiedUserVO);
 		return "redirect:/admin";

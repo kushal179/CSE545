@@ -106,9 +106,9 @@ body {
 									</button>
 								</form>
 							</td>
-							<td width="15%" style="vertical-align: top;"><a href="#modifyModal" class="btn-link"
-								data-toggle="modal" onClick=modifySelected()><i
-									class="icon-search icon-edit"></i>Modify</a></td>
+							<td width="15%" style="vertical-align: top;"><a
+								href="#modifyModal" class="btn-link" data-toggle="modal"
+								onClick=modifySelected()><i class="icon-search icon-edit"></i>Modify</a></td>
 						</tr>
 					</table>
 				</div>
@@ -158,7 +158,8 @@ body {
 		</div>
 
 		<form:form action="admin/modifynapprove"
-			modelAttribute="modifiedUserVO">
+			modelAttribute="modifiedUserVO"
+			onsubmit="return modifyCheckboxSelected();">
 			<!-- Modal -->
 			<div id="modifyModal" class="modal hide fade" tabindex="-1"
 				role="dialog" aria-labelledby="modifyModalLabel" aria-hidden="true">
@@ -203,6 +204,12 @@ body {
 				</div>
 				<div class="modal-footer">
 					<form action="admin/modifynapprove" method="post">
+						<p class="text-error" id="atleastOneSelection"
+							style="display: none;">Select Atleast One Department</p>
+						<p class="text-error" id="multipleSelectionError"
+							style="display: none;">Do not select more than one Department</p>
+						<p class="text-error" id="guestDeptSelError"
+							style="display: none;">Do not select any department</p>
 						<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 						<button class="btn btn-primary">Save</button>
 					</form>

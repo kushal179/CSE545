@@ -43,8 +43,8 @@ function onDashboardItemselected(id) {
 // ****************************
 // admin specific
 
-function adminBodyLoad(){
-	$("#itemSelected").hide();	
+function adminBodyLoad() {
+	$("#itemSelected").hide();
 }
 
 function selectPendingUsersRow(id) {
@@ -61,7 +61,7 @@ function selectPendingUsersRow(id) {
 		row.style.backgroundColor = '#ffffff';
 	}
 	id.style.backgroundColor = '#E2E6A8';
-	
+
 	$("#selectItem").hide();
 	$("#itemSelected").show();
 }
@@ -146,4 +146,37 @@ function selectLogFilesRow(id) {
 	}
 	id.style.backgroundColor = '#E2E6A8';
 }
+
+function modifyCheckboxSelected() {
+	var count = 0;
+	for ( var i = 1; i <= 7; i++) {
+		var deptid = "#dept_" + i;
+		if ($(deptid)[0].checked == true) {
+			count++;
+		}
+	}
+	if (count == 0 && ($("#role").val() == 2)) {
+		return true;
+		
+	} else if (count == 0) {
+		$("#multipleSelectionError").hide();
+		$("#guestDeptSelError").hide();
+		$("#atleastOneSelection").show();
+		return false;
+
+	}else if(($("#role").val() == 2) && count>0){
+		$("#multipleSelectionError").hide();
+		$("#atleastOneSelection").hide();
+		$("#guestDeptSelError").show();
+		return false;
+	}
+	else if (count > 1 && ($("#role").val() < 5)) {
+		$("#atleastOneSelection").hide();
+		$("#guestDeptSelError").hide();
+		$("#multipleSelectionError").show();
+		return false;
+	}
+	return true;
+}
+
 // ****************************
