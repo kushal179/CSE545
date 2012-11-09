@@ -133,7 +133,18 @@ body {
 								<tr onclick="onSharedByItemselected(this);">
 									<td width="40px"><img height="30px" width="30px"
 										src="${item.iconFile}"></td>
-									<td><a href="${item.hyperlink }">${item.fileName}</a></td>
+									<td><c:choose>
+											<c:when test="${item.dir}">
+												<a href="${item.hyperlink }">${item.fileName}</a>
+											</c:when>
+											<c:otherwise>
+												<form action="download" method="post">
+													<input class="btn-link" type="hidden" name="file-id"
+														value="${item.hashedId}" /> <input type="submit"
+														value="${item.fileName}" class="btn-link">
+												</form>
+											</c:otherwise>
+										</c:choose></td>
 									<td>${item.sharedToName}</td>
 									<td>${item.modTime}</td>
 									<td>${item.type}</td>

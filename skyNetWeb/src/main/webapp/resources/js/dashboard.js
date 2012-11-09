@@ -75,7 +75,6 @@ function onSharedToItemselected(id) {
 			.getElementsByTagName('td')[1].innerHTML;*/
 
 	var fileId = id.getElementsByTagName('td')[5].innerHTML;
-	document.getElementById("itemId").value = fileId;
 
 	var table = document.getElementById("fileslist");
 	for ( var i = 0, row; row = table.rows[i]; i++) {

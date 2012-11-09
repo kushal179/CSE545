@@ -16,10 +16,10 @@
 <!-- Le styles -->
 <link href="<c:url value="/resources/bootstrap/css/bootstrap.css" />"
 	rel="stylesheet">
-	
+
 <script type="text/javascript"
 	src="<c:url value="/resources/jquery/jquery.js" />"></script>
-	
+
 
 <style type="text/css">
 body {
@@ -126,13 +126,6 @@ body {
 										class="btn-link" />
 								</form>
 							</td>
-							<td width="10%" style="padding-top: 15px" id="delete-button">
-								<form action="delete" method="post">
-									<input id="delete-file-id" name="file-id" type="hidden">
-									<i class="icon-remove"></i><input type="submit" value="Delete"
-										class="btn-link" />
-								</form>
-							</td>
 
 							<td width="10%" style="padding-top: 15px" id="version-button">
 								<form action="versions" method="post">
@@ -204,7 +197,20 @@ body {
 								<tr onclick="onSharedToItemselected(this);">
 									<td width="40px"><img height="30px" width="30px"
 										src="${item.iconFile}"></td>
-									<td><a href="${item.hyperlink }">${item.fileName}</a></td>
+									<td>
+										<c:choose>
+											<c:when test="${item.dir}">
+												<a href="${item.hyperlink }">${item.fileName}</a>
+											</c:when>
+											<c:otherwise>
+												<form action="download" method="post">
+													<input class="btn-link" type="hidden" name="file-id"
+														value="${item.hashedId}" /> <input type="submit"
+														value="${item.fileName}" class="btn-link">
+												</form>
+											</c:otherwise>
+										</c:choose>
+									</td>
 									<td>${item.modTime}</td>
 									<td>${item.type}</td>
 									<td><c:choose>

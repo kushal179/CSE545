@@ -22,10 +22,10 @@
 	type="image/x-icon" />
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-	
+
 <script type="text/javascript"
 	src="<c:url value="/resources/jquery/jquery.js" />"></script>
-	
+
 
 <style type="text/css">
 body {
@@ -313,13 +313,18 @@ body {
 								<tr onclick="onDashboardItemselected(this);">
 									<td width="40px"><img height="30px" width="30px"
 										src="${item.iconFile}"></td>
-									<td>
-										<form action="download" method="post">
-											<input class="btn-link" type="hidden" name="file-id"
-												value="${item.hashedId}" /> <input type="submit" value="${item.fileName}"
-												class="btn-link">
-										</form>
-									</td>
+									<td><c:choose>
+											<c:when test="${item.dir}">
+												<a href="${item.hyperlink }">${item.fileName}</a>
+											</c:when>
+											<c:otherwise>
+												<form action="download" method="post">
+													<input class="btn-link" type="hidden" name="file-id"
+														value="${item.hashedId}" /> <input type="submit"
+														value="${item.fileName}" class="btn-link">
+												</form>
+											</c:otherwise>
+										</c:choose></td>
 									<td>${item.modTime}</td>
 									<td>${item.type}</td>
 									<td><c:choose>
