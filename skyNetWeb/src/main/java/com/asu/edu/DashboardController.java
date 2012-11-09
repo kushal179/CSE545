@@ -76,13 +76,6 @@ public class DashboardController {
 				// HANDLE
 			}
 
-			/*
-			 * if (deptId.equals("-1")) departmentId =
-			 * user.getDepartments().get(0); else { byte[] decodedBytes =
-			 * Base64.decode(deptId.getBytes()); departmentId =
-			 * Integer.valueOf(new String(decodedBytes)); }
-			 */
-
 			if (deptId == -1)
 				departmentId = user.getDepartments().get(0);
 			else

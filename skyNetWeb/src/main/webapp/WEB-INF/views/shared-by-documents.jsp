@@ -30,7 +30,7 @@ body {
 </style>
 </head>
 
-<body>
+<body onload="bodyload()">
 
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="navbar-inner">
@@ -63,12 +63,12 @@ body {
 						<li class="nav-header">Departments</li>
 						<%
 							ArrayList<Integer> depts = ((UserVO) session.getAttribute("userVO"))
-																									.getDepartments();
-																							Map<Integer, DepartmentVO> deptMap = MasterCache.getDepartmentMap();
-																							for (Integer departmentId : depts) {
-																								String deptDesc = deptMap.get(departmentId).getDeptDesc();
-																								request.setAttribute("departDesc", deptDesc);
-																								request.setAttribute("departId", departmentId);
+									.getDepartments();
+							Map<Integer, DepartmentVO> deptMap = MasterCache.getDepartmentMap();
+							for (Integer departmentId : depts) {
+								String deptDesc = deptMap.get(departmentId).getDeptDesc();
+								request.setAttribute("departDesc", deptDesc);
+								request.setAttribute("departId", departmentId);
 						%>
 						<li class="liClass"><a
 							href="Dashboard?deptId=${departId}&folderId=-1">${departDesc}</a></li>
@@ -77,7 +77,8 @@ body {
 						%>
 						<li class="nav-header">Shared Documents</li>
 						<li><a href="SharedToYouDocuments?folderId=-1">With You</a></li>
-						<li "active"><a href="SharedByYouDocuments?folderId=-1">By You</a></li>
+						<li class="active"><a href="SharedByYouDocuments?folderId=-1">By
+								You</a></li>
 					</ul>
 				</div>
 			</div>
@@ -95,36 +96,23 @@ body {
 					<h3>Shared By You</h3>
 				</div>
 
-				<div class="hero-unitops">
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<button class="btn-link" type="button">
-						<i class="icon-search icon-share"></i>Unshare
-					</button>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					
-				</div>
+				<div class="hero-unitops" id="selectItem">Select Item</div>
 
-				<div id="upload-bar" class="hero-unitops" style="display: none;">
-					<form id="upload-submit" action="/upload" method="post"
-						enctype="multipart/form-data">
+				<div class="hero-unitops" id="itemSelected">
 
-						<table cellpadding="5">
-							<tr>
-								<td><input type="file" name="file" id="file-upload"></td>
-								<td><input type="checkbox" id="enable-encryption" /></td>
-								<td><input type="hidden" id="parent-file-id"
-									value="${parentFileId }"></td>
-								<td><input type="hidden" id="dept-id" value="${deptId }"></td>
-								<td><label for="ency">&nbsp;&nbsp;Encrypt file</label></td>
-								<td><input disabled="disabled" type="password"
-									name="encrypt" id="password-field"></td>
-								<td><input type="submit" name="Upload" value="Upload" /></td>
-							</tr>
-						</table>
+					<table>
+						<tr>
+							<td><label id="itemname"></label></td>
+							<td>
+								<form action="unshare" valign="middle" method="post" style="padding-top: 10px;padding-left: 250px;">
+									<input id="unshare-file-id" name="file-id" type="hidden">
+									<i class="icon-share"></i><input type="submit" value="Unshare"
+										class="btn-link" />
+								</form>
+							</td>
+						</tr>
+					</table>
 
-					</form>
 				</div>
 
 				<div class="row-fluid">
@@ -141,7 +129,7 @@ body {
 						</thead>
 						<tbody>
 							<c:forEach var="item" items="${files}">
-								<tr onclick="selectsharefFileRow(this);">
+								<tr onclick="selectSharedByFileRow(this);">
 									<td width="40px"><img height="30px" width="30px"
 										src="${item.iconFile}"></td>
 									<td><a href="${item.hyperlink }">${item.fileName}</a></td>

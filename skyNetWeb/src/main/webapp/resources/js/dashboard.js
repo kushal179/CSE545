@@ -7,7 +7,7 @@ function onDashboardItemselected(id) {
 			.getElementsByTagName('td')[1].innerHTML;
 	document.getElementById("fileName").innerHTML = id
 			.getElementsByTagName('td')[1].innerHTML;
-	
+
 	var fileId = id.getElementsByTagName('td')[5].innerHTML;
 	document.getElementById("itemId").value = fileId;
 
@@ -21,37 +21,114 @@ function onDashboardItemselected(id) {
 	$("#unlock-file-id").val(fileId);
 	$("#delete-file-id").val(fileId);
 	$("#version-file-id").val(fileId);
-	
+	$("#update-file-id").val(fileId);
+
 	$("#selectItem").hide();
 	$("#itemSelected").show();
-	var updateAllowed = id.getElementsByTagName('td')[6].innerHTML == "true";
-	
-	if(updateAllowed){
-		$("update-file-id").val(fileId);
-	} else {
-		$("#update-button").hide();
-		$("file-id").val('0');
-	}
-	
-	var lockAllowed = id.getElementsByTagName('td')[7].innerHTML == "true";
-	if (lockAllowed) {
-		$("#lock-button").show();
-		$("#update-button").hide();
-	} else{
-		$("#lock-button").show();
-		$("#update-button").show();
-	}
-	
-	var isLocked = id.getElementsByTagName('td')[8].innerHTML == "true";
-	/*if (isLocked) {
-		$("#lock-button").hide();
-	} else{
-		$("#update-button").show();
-	}*/
-		
 
-	/*$("#version-button").attr("href",
-			"DocumentVersioning?fileId=" + $("#selectedfileid").text());*/
+	var updateAllowed = id.getElementsByTagName('td')[6].innerHTML == "true";
+	var lockAllowed = id.getElementsByTagName('td')[7].innerHTML == "true";
+	var isLocked = id.getElementsByTagName('td')[8].innerHTML == "true";
+	var isDir = id.getElementsByTagName('td')[9].innerHTML == "true";
+
+	$("#update-button").hide();
+	$("#version-button").hide();
+	$("#lock-button").hide();
+	$("#unlock-button").hide();
+	$("#delete-button").hide();
+
+	if (!isDir) {
+		$("#version-button").show();
+
+		if (updateAllowed) {
+			$("#update-button").show();
+		}
+	}
+
+	if (lockAllowed) {
+		if (isLocked) {
+			$("#unlock-button").show();
+		} else {
+			$("#lock-button").show();
+			$("#delete-button").hide();
+		}
+
+	} else {
+		$("#lock-button").hide();
+	}
+
+}
+
+function onSharedToItemselected(id) {
+	document.getElementById("itemname").innerHTML = id
+			.getElementsByTagName('td')[1].innerHTML;
+	/*document.getElementById("fileName").innerHTML = id
+			.getElementsByTagName('td')[1].innerHTML;*/
+
+	var fileId = id.getElementsByTagName('td')[5].innerHTML;
+	document.getElementById("itemId").value = fileId;
+
+	var table = document.getElementById("fileslist");
+	for ( var i = 0, row; row = table.rows[i]; i++) {
+		row.style.backgroundColor = '#ffffff';
+	}
+	id.style.backgroundColor = '#E2E6A8';
+
+	$("#lock-file-id").val(fileId);
+	$("#unlock-file-id").val(fileId);
+	$("#version-file-id").val(fileId);
+	$("#update-file-id").val(fileId);
+
+	$("#selectItem").hide();
+	$("#itemSelected").show();
+
+	var updateAllowed = id.getElementsByTagName('td')[6].innerHTML == "true";
+	var lockAllowed = id.getElementsByTagName('td')[7].innerHTML == "true";
+	var isLocked = id.getElementsByTagName('td')[8].innerHTML == "true";
+	var isDir = id.getElementsByTagName('td')[9].innerHTML == "true";
+
+	$("#update-button").hide();
+	$("#version-button").hide();
+	$("#lock-button").hide();
+	$("#unlock-button").hide();
+
+	if (!isDir) {
+		$("#version-button").show();
+		if (updateAllowed) {
+			$("#update-button").show();
+		}
+	}
+
+	if (lockAllowed) {
+		if (isLocked) {
+			$("#unlock-button").show();
+			$("#delete-button").show();
+		} else {
+			$("#lock-button").show();
+		}
+	} else {
+		$("#lock-button").hide();
+	}
+
+}
+
+function selectSharedByFileRow(id) {
+	document.getElementById("itemname").innerHTML = id
+			.getElementsByTagName('td')[1].innerHTML;
+
+	var fileId = id.getElementsByTagName('td')[5].innerHTML;
+	document.getElementById("itemId").value = fileId;
+
+	var table = document.getElementById("fileslist");
+	for ( var i = 0, row; row = table.rows[i]; i++) {
+		row.style.backgroundColor = '#ffffff';
+	}
+	id.style.backgroundColor = '#E2E6A8';
+	
+	$("#unshare-file-id").val(fileId);
+
+	$("#selectItem").hide();
+	$("#itemSelected").show();
 }
 
 function onheaderBarClicked() {
@@ -60,10 +137,9 @@ function onheaderBarClicked() {
 		row.style.backgroundColor = '#ffffff';
 	}
 	$("#itemSelected").hide();
-	//$("#upload-bar").hide();
+	// $("#upload-bar").hide();
 	$("#selectItem").show();
 }
-
 
 $("#upload-button").click(function() {
 	$("#upload-bar").show();
@@ -81,7 +157,6 @@ $("#enable-encryption").change(function() {
 		$('#password-field').attr('disabled', true);
 	}
 });
-
 
 function ValidateFile(sFileName) {
 

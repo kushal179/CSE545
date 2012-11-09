@@ -43,6 +43,7 @@ public class DashboardDAOImpl extends BaseDAO implements
 		params[1] = folderId;
 		ArrayList<FileVO> files = (ArrayList<FileVO>) getListByCriteria(sql,
 				params);
+		
 		return files;
 	}
 
@@ -56,9 +57,11 @@ public class DashboardDAOImpl extends BaseDAO implements
 		calledFunction = GET_FILES;
 
 		String sql = SQLConstants.GET_DEPT_MANAGER_FILES;
-		Object[] params = new Object[2];
-		params[0] = departmentVO.getId();
-		params[1] = folderId;
+		Object[] params = new Object[4];
+		params[0] = userVO.getId();
+		params[1] = userVO.getId();
+		params[2] = departmentVO.getId();
+		params[3] = folderId;
 		ArrayList<FileVO> files = (ArrayList<FileVO>) getListByCriteria(sql,
 				params);
 
@@ -75,9 +78,11 @@ public class DashboardDAOImpl extends BaseDAO implements
 		calledFunction = GET_FILES;
 
 		String sql = SQLConstants.GET_CORPORATE_MANAGER_FILES;
-		Object[] params = new Object[2];
-		params[0] = departmentVO.getId();
-		params[1] = folderId;
+		Object[] params = new Object[4];
+		params[0] = userVO.getId();
+		params[1] = userVO.getId();
+		params[2] = departmentVO.getId();
+		params[3] = folderId;
 		ArrayList<FileVO> files = (ArrayList<FileVO>) getListByCriteria(sql,
 				params);
 
@@ -136,20 +141,22 @@ public class DashboardDAOImpl extends BaseDAO implements
 	@Override
 	public ArrayList<FileVO> getSharedToDocuments(UserVO userVO, long folderId) {
 
-		String sql = "select * from sharing s inner join files f inner join user u on s.file_id = f.file_id and f.owner_id = u.id where s.user_id_to = ? ";
+		String sql = "select *,(s.checkin_out=(1) AND (f.lock=(0) || f.locked_by = ?)) as lock_allowed from sharing s inner join files f inner join user u on s.file_id = f.file_id and f.owner_id = u.id where s.user_id_to = ? ";
 
 		calledFunction = GET_SHARED_TO_FILES;
 
 		Object[] params;
 		if (folderId == -1) {
-			params = new Object[1];
+			params = new Object[2];
 			params[0] = userVO.getId();
+			params[1] = userVO.getId();
 		} else {
 			sql += "and f.parent_id = ?";
 
-			params = new Object[2];
+			params = new Object[3];
 			params[0] = userVO.getId();
-			params[1] = folderId;
+			params[1] = userVO.getId();
+			params[2] = folderId;
 		}
 
 		sql += " order by s.user_id_by asc";
@@ -213,8 +220,11 @@ public class DashboardDAOImpl extends BaseDAO implements
 			fileVO.setCreateTime(rs.getDate("CREATION_TIME").toString());
 			fileVO.setLock(rs.getBoolean("LOCK"));
 			fileVO.setDir(rs.getBoolean("IS_DIR"));
-			fileVO.setLockAllowed(true);
-			fileVO.setUpdateAllowed(true);
+			fileVO.setLockAllowed(rs.getBoolean("LOCK_ALLOWED"));
+			if(fileVO.isLockAllowed() && fileVO.getLock())
+				fileVO.setUpdateAllowed(true);
+			else
+				fileVO.setUpdateAllowed(false);
 			return fileVO;
 		} else if (calledFunction == GET_SHARED_BY_FILES) {
 			FileVO fileVO = new FileVO();
@@ -245,8 +255,12 @@ public class DashboardDAOImpl extends BaseDAO implements
 			fileVO.setDir(rs.getBoolean("IS_DIR"));
 			fileVO.setSharedById(rs.getLong("USER_ID_BY"));
 			fileVO.setSharedToId(rs.getLong("USER_ID_TO"));
-			fileVO.setLockAllowed(rs.getBoolean("CHEECKIN_OUT"));
 			fileVO.setUpdateAllowed(rs.getBoolean("FILE_UPDATE"));
+			fileVO.setLockAllowed(rs.getBoolean("LOCK_ALLOWED"));
+			if(fileVO.isLockAllowed() && fileVO.getLock())
+				fileVO.setUpdateAllowed(true);
+			else
+				fileVO.setUpdateAllowed(false);
 			return fileVO;
 		} else if (calledFunction == "getapprovedNonAdminUsers") {
 			UserVO userVO = new UserVO();

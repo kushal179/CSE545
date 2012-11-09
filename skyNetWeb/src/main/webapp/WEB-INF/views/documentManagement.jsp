@@ -126,21 +126,21 @@ body {
 					<table>
 						<tr>
 							<td width="30%"><label id="itemname"></label></td>
-							<td width="10%" style="padding-top: 15px">
+							<td width="10%" style="padding-top: 15px" id="update-button">
 								<form>
 									<a href="#update-bar" class="btn-link" data-toggle="modal">
 										<i class="icon-upload"></i>Update
 									</a>
 								</form>
 							</td>
-							<td width="15%" style="padding-top: 15px">
+							<td width="15%" style="padding-top: 15px" id="lock-button">
 								<form action="lock" valign="middle" method="post">
 									<input id="lock-file-id" name="file-id" type="hidden">
 									<i class="icon-lock"></i><input type="submit" value="Lock"
 										class="btn-link" />
 								</form>
 							</td>
-							<td width="15%" style="padding-top: 15px">
+							<td width="15%" style="padding-top: 15px" id="unlock-button">
 								<form action="unlock" method="POST">
 									<input id="unlock-file-id" name="file-id" type="hidden">
 									<i class="icon-lock"></i><input type="submit" value="Unlock"
@@ -153,7 +153,7 @@ body {
 										class="icon-share"></i>Share</a>
 								</form>
 							</td>
-							<td width="10%" style="padding-top: 15px">
+							<td width="10%" style="padding-top: 15px" id="delete-button">
 								<form action="delete" method="post">
 									<input id="delete-file-id" name="file-id" type="hidden">
 									<i class="icon-remove"></i><input type="submit" value="Delete"
@@ -161,7 +161,7 @@ body {
 								</form>
 							</td>
 
-							<td width="10%" style="padding-top: 15px">
+							<td width="10%" style="padding-top: 15px" id="version-button">
 								<form action="versions" method="post">
 									<input id="version-file-id" name="file-id" type="hidden">
 									<i class="icon-time"></i><input type="submit" value="Versions"
@@ -238,7 +238,7 @@ body {
 										name="encrypt" id="password-field" /> </td>
 								</tr>
 							</table>
-							<input type="hidden" id="file-id" name="file-id"/> 
+							<input type="hidden" id="upload-file-id" name="file-id"/> 
 							<input type="hidden" id="dept-id" name="dept-id" value="${deptId }" /> 
 							<input type="hidden" id="parent-file-id" name="parent-file-id" value="${parentFileId }">
 						</div>
@@ -279,6 +279,7 @@ body {
 									<td style="display: none" id="update-perm">${item.updateAllowed}</td>
 									<td style="display: none" id="lock-perm">${item.lockAllowed}</td>
 									<td style="display: none" id="is-locked">${item.lock}</td>
+									<td style="display: none" id="is-dir">${item.dir}</td>
 								</tr>
 							</c:forEach>
 						</tbody>

@@ -17,7 +17,7 @@ public class FileVO {
 	private String password;
 	private long parentId;
 	private String hashedParentId;
-	private boolean isDir;
+	private boolean dir;
 	private String iconFile;
 	private String hyperlink;
 	private String contentType;
@@ -141,14 +141,6 @@ public class FileVO {
 		this.path = path;
 	}
 
-	public boolean isDir() {
-		return isDir;
-	}
-
-	public void setDir(boolean isDir) {
-		this.isDir = isDir;
-	}
-
 	public String getIconFile() {
 		return iconFile;
 	}
@@ -235,6 +227,14 @@ public class FileVO {
 
 	public void setUpdateAllowed(boolean updateAllowed) {
 		this.updateAllowed = updateAllowed;
+	}
+
+	public boolean isDir() {
+		return dir;
+	}
+
+	public void setDir(boolean dir) {
+		this.dir = dir;
 	}
 
 }
