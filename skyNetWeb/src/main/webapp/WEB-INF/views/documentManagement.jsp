@@ -368,7 +368,7 @@ body {
 								<table>
 									<tr>
 										<td style="padding-left: 20px;"><form:checkbox
-												path="permissions" id="read" value="1" /></td>
+												path="permissions" id="read" value="1" checked = "checked" disabled="true" /></td>
 										<td style="padding-left: 10px; padding-top: 5px;"><label>Read</label></td>
 									</tr>
 									<tr>
@@ -403,7 +403,7 @@ body {
 		<hr>
 
 		<footer>
-			<p>© SkyNet - Company 2012</p>
+			<p>ï¿½ SkyNet - Company 2012</p>
 		</footer>
 
 	</div>

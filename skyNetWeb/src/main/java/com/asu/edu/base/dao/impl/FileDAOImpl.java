@@ -55,7 +55,7 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		if (calledFunction == "isLock") {
 			return true;
 		}
-		if(calledFunction =="deptByParent"){
+		if (calledFunction == "deptByParent") {
 			return rs.getInt("DEPT_ID");
 		}
 
@@ -185,14 +185,15 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		EncryptDecrypt encryptDecrypt = new EncryptDecrypt();
 		Integer itemId = 0;
 		try {
-			itemId = Integer.parseInt(encryptDecrypt.decrypt(shareVO.getItemhashedId()));
+			itemId = Integer.parseInt(encryptDecrypt.decrypt(shareVO
+					.getItemhashedId()));
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		Object[] param = new Object[3];
 		param[0] = itemId;
 		param[1] = fromUserId;
@@ -207,22 +208,27 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 			param[0] = itemId;
 			param[1] = fromUserId;
 			param[2] = shareVO.getToUserId();
-			param[3] = param[4] = param[5] = 0;
+			param[4] = param[5] = 0;
 			ArrayList<Integer> permissionsList = shareVO.getPermissions();
-			for (int i = 0; i < permissionsList.size(); i++) {
-				param[2 + permissionsList.get(i)] = 1;
+			if (permissionsList != null) {
+				for (int i = 0; i < permissionsList.size(); i++) {
+					param[2 + permissionsList.get(i)] = 1;
+				}
 			}
+			param[3] = 1;
 			sql = SQLConstants.SHARE_INSERT_ITEM;
 		} else {
-			param[0] = param[1] = param[2] = 0;
+			param[1] = param[2] = 0;
 			param[3] = itemId;
 			param[4] = fromUserId;
 			param[5] = shareVO.getToUserId();
 			ArrayList<Integer> permissionsList = shareVO.getPermissions();
-			for (int i = 0; i < permissionsList.size(); i++) {
-				param[permissionsList.get(i) - 1] = 1;
+			if (permissionsList != null) {
+				for (int i = 0; i < permissionsList.size(); i++) {
+					param[permissionsList.get(i) - 1] = 1;
+				}
 			}
-
+			param[0] = 1;
 			sql = SQLConstants.SHARE_UPDATE_ITEM;
 		}
 		return preparedStatementUpdate(sql, param, true) > 0;
@@ -241,7 +247,7 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 
 		Object[] param = new Object[3];
 		param[0] = itemId;
