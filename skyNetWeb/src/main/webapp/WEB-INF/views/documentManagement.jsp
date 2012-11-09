@@ -176,7 +176,7 @@ body {
 				<div class="modal hide fade" role="dialog"
 					aria-labelledby="shareModalLabel" aria-hidden="true"
 					id="update-bar" style="display: none;" onshow="alert('shown');">
-					<form id="update-form" action="update" method="post" >
+					<form id="update-form" action="update" method="post" enctype="multipart/form-data">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal"
 								aria-hidden="true"></button>
@@ -218,13 +218,13 @@ body {
 				<div class="modal hide fade" role="dialog"
 					aria-labelledby="shareModalLabel" aria-hidden="true"
 					id="upload-bar" style="display: none;">
-					<form id="upload-form" action="upload" method="post">
+					<form id="upload-form" action="upload" method="post" enctype="multipart/form-data">
 						<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"
 							aria-hidden="true"></button>
 						<h3 id="myModalLabel">Upload new file</h3>
 					</div>
-						enctype="multipart/form-data">
+						
 						<div class="modal-body">
 							<input type="file" name="file" id="file-upload"><br>
 							<table>
