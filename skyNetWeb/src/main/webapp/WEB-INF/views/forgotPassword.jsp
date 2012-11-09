@@ -46,7 +46,7 @@ body {
 				<div class="nav-collapse collapse">
 					<ul class="nav">
 						<li><a href="#about">About</a></li>
-						<li class="active"><a href="#contact">Login</a></li>
+						<li class="active"><a href="login">Login</a></li>
 						<li><a href="register">Register</a></li>
 					</ul>
 				</div>
