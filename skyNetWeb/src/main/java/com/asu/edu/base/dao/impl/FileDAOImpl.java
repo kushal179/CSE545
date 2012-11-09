@@ -39,20 +39,20 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		if (calledFunction == "getParentFilePath") {
 			return rs.getString("PATH");
 		}
-		if(calledFunction == "selectItem"){
+		if (calledFunction == "selectItem") {
 			return rs.getInt("file_id");
 		}
-		
-		if(calledFunction =="fileOwnerShipAuthorization"){
+
+		if (calledFunction == "fileOwnerShipAuthorization") {
 			return true;
 		}
-		if(calledFunction =="sharingAccessAuthorization"){
+		if (calledFunction == "sharingAccessAuthorization") {
 			return true;
 		}
-		if(calledFunction=="findDeptIdByDoc"){
+		if (calledFunction == "findDeptIdByDoc") {
 			return rs.getInt("DEPT_ID");
 		}
-		if(calledFunction=="isLock"){
+		if (calledFunction == "isLock") {
 			return true;
 		}
 
@@ -63,7 +63,7 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		calledFunction = "getFile";
 		String sql = SQLConstants.GET_FILE_FOR_DOWNLOAD;
 		Object[] params = new Object[1];
-			params[0] = id;
+		params[0] = id;
 		FileVO vo = (FileVO) getRowByCriteria(sql, params);
 
 		return vo;
@@ -93,8 +93,8 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		return preparedStatementUpdate(sql, param, true) > 0;
 
 	}
-	
-	public boolean saveFolder(FileVO fileVO){
+
+	public boolean saveFolder(FileVO fileVO) {
 		Object[] param = new Object[7];
 		param[0] = fileVO.getPath();
 		param[1] = fileVO.getOwnerId();
@@ -106,78 +106,84 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		String sql = SQLConstants.SAVE_FILE;
 		return preparedStatementUpdate(sql, param, true) > 0;
 	}
-	
-	public boolean lock(Object[] param){
+
+	public boolean lock(Object[] param) {
 		String sql = SQLConstants.LOCK_FILE;
 		return preparedStatementUpdate(sql, param, true) > 0;
 	}
-	public int deptByParent(int parentId){
+
+	public int deptByParent(int parentId) {
 		calledFunction = "deptByParent";
 		Object[] param = new Object[1];
 		param[0] = parentId;
 		String sql = SQLConstants.DEPT_BY_PARENT;
 		Object id = getRowByCriteria(sql, param);
-		if(id==null)
+		if (id == null)
 			return 0;
 		else
-			return (Integer)id;
+			return (Integer) id;
 	}
-	public boolean unLock(Object[] param){
+
+	public boolean unLock(Object[] param) {
 		String sql = SQLConstants.UNLOCK_FILE;
 		return preparedStatementUpdate(sql, param, true) > 0;
 	}
-	public boolean delete(Object[] param){
+
+	public boolean delete(Object[] param) {
 		String sql = SQLConstants.DELETE;
 		return preparedStatementUpdate(sql, param, true) > 0;
 	}
-	public boolean deleteDir(Object[] param){
+
+	public boolean deleteDir(Object[] param) {
 		String sql = SQLConstants.DELETE_DIR;
 		return preparedStatementUpdate(sql, param, true) > 0;
 	}
-	public boolean isLock(Object[] param){
+
+	public boolean isLock(Object[] param) {
 		calledFunction = "isLock";
 		String sql = SQLConstants.IS_FILE_LOCK;
-		if(getRowByCriteria(sql, param)!=null)
+		if (getRowByCriteria(sql, param) != null)
 			return true;
 		else
 			return false;
 	}
-	
-	public boolean fileOwnerShipAuthorization(Object[] param){
+
+	public boolean fileOwnerShipAuthorization(Object[] param) {
 		calledFunction = "fileOwnerShipAuthorization";
 		String sql = SQLConstants.CHECKING_FILE_OWNERSHIP;
-		if(getRowByCriteria(sql, param)!=null)
+		if (getRowByCriteria(sql, param) != null)
 			return true;
 		else
 			return false;
 	}
-	
-	public boolean hasAccessAuthorization(Object[] param,String sql){
+
+	public boolean hasAccessAuthorization(Object[] param, String sql) {
 		calledFunction = "sharingAccessAuthorization";
-		if(getRowByCriteria(sql, param)!=null)
+		if (getRowByCriteria(sql, param) != null)
 			return true;
 		else
 			return false;
-		
+
 	}
-	
-	public int findDeptIdByDoc(Object[] param){
+
+	public int findDeptIdByDoc(Object[] param) {
 		calledFunction = "findDeptIdByDoc";
 		String sql = SQLConstants.CHECKING_DOC_DEPT;
 		Object deptId = getRowByCriteria(sql, param);
-		if(deptId==null)
+		if (deptId == null)
 			return 0;
 		else
-		return (Integer)deptId;
+			return (Integer) deptId;
 	}
 
 	@Override
 	public boolean shareItem(ShareVO shareVO, Long fromUserId) {
 		calledFunction = "selectItem";
 		EncryptDecrypt encryptDecrypt = new EncryptDecrypt();
-		Integer itemId = 0 ;
+		Integer itemId = 0;
 		try {
-			itemId = Integer.parseInt(encryptDecrypt.decrypt(URLDecoder.decode(shareVO.getItemhashedId(),"UTF-8")));
+			itemId = Integer.parseInt(encryptDecrypt.decrypt(URLDecoder.decode(
+					shareVO.getItemhashedId(), "UTF-8")));
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -194,12 +200,12 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		param[2] = shareVO.getToUserId();
 		String sql = SQLConstants.SHARE_SELECT_ITEM;
 		Integer fileid = (Integer) getRowByCriteria(sql, param);
-		
+
 		calledFunction = "shareItem";
 		param = new Object[6];
 
 		if (fileid == null) {
-			param[0] =  itemId;
+			param[0] = itemId;
 			param[1] = fromUserId;
 			param[2] = shareVO.getToUserId();
 			param[3] = param[4] = param[5] = 0;
@@ -207,7 +213,7 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 			for (int i = 0; i < permissionsList.size(); i++) {
 				param[2 + permissionsList.get(i)] = 1;
 			}
-			sql = SQLConstants.SHARE_INSERT_ITEM; 
+			sql = SQLConstants.SHARE_INSERT_ITEM;
 		} else {
 			param[0] = param[1] = param[2] = 0;
 			param[3] = itemId;
@@ -215,11 +221,11 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 			param[5] = shareVO.getToUserId();
 			ArrayList<Integer> permissionsList = shareVO.getPermissions();
 			for (int i = 0; i < permissionsList.size(); i++) {
-				param[permissionsList.get(i) -1] = 1;
+				param[permissionsList.get(i) - 1] = 1;
 			}
 
 			sql = SQLConstants.SHARE_UPDATE_ITEM;
 		}
 		return preparedStatementUpdate(sql, param, true) > 0;
-	}	
+	}
 }
