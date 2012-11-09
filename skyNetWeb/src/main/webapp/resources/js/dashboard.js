@@ -10,8 +10,8 @@ function sharedBybodyload() {
 function onDashboardItemselected(id) {
 	document.getElementById("itemname").innerHTML = id
 			.getElementsByTagName('td')[1].innerHTML;
-//	document.getElementById("fileName").innerHTML = id
-//			.getElementsByTagName('td')[1].innerHTML;
+	document.getElementById("fileName").innerHTML = id
+			.getElementsByTagName('td')[1].innerHTML;
 
 	var fileId = id.getElementsByTagName('td')[5].innerHTML;
 	document.getElementById("itemId").value = fileId;
