@@ -66,19 +66,21 @@ public class FileController {
 			if (path != null) {
 				path = path + "/" + multipartFile.getOriginalFilename();
 				fileVO.setPath(path);
+				System.out.println(path);
 				File file = new File(path);
-				if (file.isFile()) {
-					if (!file.exists()) {
-						if (fileDAO.saveFile(fileVO)) {
-							FileOutputStream f = new FileOutputStream(file);
-							f.write(multipartFile.getBytes());
-							f.close();
+				if (!file.exists()) {
+					FileOutputStream f = new FileOutputStream(file);
+					f.write(multipartFile.getBytes());
+					f.close();
+					if (file.isFile()) {
+						if (!fileDAO.saveFile(fileVO)) {
+							file.delete();
 						}
-					} else
-						return "redirect:/error-page?error=File already exists";
-				} else {
-					return "redirect:/error-page?error=Resource is of type folder. Please upload a file";
-				}
+					} else {
+						return "redirect:/error-page?error=Resource is of type folder. Please upload a file";
+					}
+				} else
+					return "redirect:/error-page?error=file already exists";
 			} else
 				return "redirect:/error-page?error=parent Folder not found";
 		} catch (IOException e) {

@@ -55,6 +55,9 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		if (calledFunction == "isLock") {
 			return true;
 		}
+		if(calledFunction =="deptByParent"){
+			return rs.getInt("DEPT_ID");
+		}
 
 		return null;
 	}
