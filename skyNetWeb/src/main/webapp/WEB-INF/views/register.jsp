@@ -11,12 +11,11 @@
 
 
 <script src="http://code.jquery.com/jquery-latest.js"></script>
-<script type="text/javascript"
-	src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
 
 <script type="text/javascript"
 	src="<c:url value="/resources/jquery/jquery.js" />"></script>
-
+<script type="text/javascript"
+	src="<c:url value="http://jzaefferer.github.com/jquery-validation/jquery.validate.js" />"></script>
 
 
 <style type="text/css">
