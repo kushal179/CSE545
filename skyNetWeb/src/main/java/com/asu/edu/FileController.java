@@ -108,15 +108,16 @@ public class FileController {
 			path = path + "/" + folderName;
 			fileVO.setPath(path);
 			File f = new File(path);
-			if (f.isDirectory()) {
-				if (!f.exists()) {
-					if (fileDAO.saveFolder(fileVO)) {
-						f.mkdir();
+			if (!f.exists()) {
+				f.mkdir();
+				if (f.isDirectory()) {
+					if (!fileDAO.saveFolder(fileVO)) {
+							f.delete();
 					}
 				} else
-					return "redirect:/error-page?error=Folder already exists";
+					return "redirect:/error-page?error=Resource is of type file. Please upload directory";
 			} else
-				return "redirect:/error-page?error=Resource is of type file. Please upload directory";
+				return "redirect:/error-page?error=Folder already exists";
 		} else {
 			return "redirect:/error-page?error=parent Folder not found";
 		}
