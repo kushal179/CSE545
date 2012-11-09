@@ -119,7 +119,7 @@ body {
 							</a></td>
 							<td><a href="#new-folder-bar" class="btn-link"
 								data-toggle="modal" id="create-folder-button"> <i
-									class="icon-folder"></i>New Folder
+									class="icon-folder-close"></i>New Folder
 							</a></td>
 						</tr>
 					</table>
