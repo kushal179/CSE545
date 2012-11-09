@@ -96,8 +96,7 @@ public class FileController {
 			@RequestParam("file-id") String file_Id) {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		MultipartFile multipartFile = multipartRequest.getFile("file");
-		UserVO userVO = (UserVO) session
-				.getAttribute(CommonConstants.USER);
+		UserVO userVO = (UserVO) session.getAttribute(CommonConstants.USER);
 		long id = Long.parseLong(util.decrypt(file_Id));
 		Object[] paramSQL = new Object[2];
 		paramSQL[0] = userVO.getId();
@@ -107,7 +106,7 @@ public class FileController {
 			param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
 			if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
 				FileVO fileVO = (FileVO) fileDAO.getFile(id);
-				
+
 				if (fileVO != null) {
 					if (multipartFile.getOriginalFilename().equals(
 							fileVO.getFileName())) {
@@ -229,6 +228,60 @@ public class FileController {
 			}
 		} else {
 			System.out.println("Not Authorized");
+		}
+
+	}
+
+	@RequestMapping(value = "/version", method = RequestMethod.POST)
+	public void version(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam("file-id") String file_Id,
+			@RequestParam("version-id") String versionId, HttpSession session) {
+
+		long id = Long.parseLong(util.decrypt(file_Id));
+		HashMap<String, String> param = new HashMap<String, String>();
+		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
+
+		if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
+			FileVO fileVO = (FileVO) fileDAO.getFile(id);
+			if (fileVO != null) {
+				response.setContentType(fileVO.getContentType());
+				response.setHeader("Content-Disposition",
+						"attachment;filename=" + fileVO.getFileName());
+				String path = fileVO.getPath() + "_" + versionId;
+				File file = new File(path);
+				FileInputStream fileIn;
+				ServletOutputStream out;
+				try {
+					fileIn = new FileInputStream(file);
+					out = response.getOutputStream();
+					byte[] outputByte = new byte[4096];
+					while (fileIn.read(outputByte, 0, 4096) != -1) {
+						out.write(outputByte, 0, 4096);
+					}
+
+					fileIn.close();
+					out.flush();
+					out.close();
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+			} else {
+				try {
+					response.sendRedirect("/error-page?error=No original file found");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			try {
+				response.sendRedirect("/error-page?error=Not authorize to download the version");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
