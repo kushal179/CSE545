@@ -6,7 +6,7 @@ public class FileVersionVO {
 
 	private long id;
 	private String hashedId;
-	private long versionId;
+	private String versionId;
 	private String hashedVersionId;
 	private String fileName;
 	private String path;
@@ -123,12 +123,12 @@ public class FileVersionVO {
 		this.type = type;
 	}
 
-	public long getVersionId() {
+	public String getVersionId() {
 		return versionId;
 	}
 
-	public void setVersionId(long versionId) {
-		this.versionId = versionId;
+	public void setVersionId(String string) {
+		this.versionId = string;
 	}
 
 	public String getHashedVersionId() {

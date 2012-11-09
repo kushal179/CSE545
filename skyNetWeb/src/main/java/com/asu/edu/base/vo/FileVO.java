@@ -27,6 +27,7 @@ public class FileVO {
 	private String sharedToName;
 	private boolean updateAllowed;
 	private boolean lockAllowed;
+	private boolean encrypted;
 	
 	public void setId(long l) {
 		this.id = l;
@@ -235,6 +236,14 @@ public class FileVO {
 
 	public void setDir(boolean dir) {
 		this.dir = dir;
+	}
+
+	public boolean isEncrypted() {
+		return encrypted;
+	}
+
+	public void setEncrypted(boolean encrypted) {
+		this.encrypted = encrypted;
 	}
 
 }

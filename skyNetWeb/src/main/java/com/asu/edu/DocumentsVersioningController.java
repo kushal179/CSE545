@@ -89,30 +89,21 @@ public class DocumentsVersioningController {
 		for (FileVersionVO fileVersionVO : files) {
 
 			try {
-				String hashedId = URLEncoder.encode(encryptDecrypt
-						.encrypt(String.valueOf(fileVersionVO.getId())),
-						"UTF-8");
+				String hashedId = encryptDecrypt
+						.encrypt(String.valueOf(fileVersionVO.getId()));
 				fileVersionVO.setHashedId(hashedId);
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			}
 
 			try {
-				String hashedVersionId = URLEncoder.encode(encryptDecrypt
-						.encrypt(String.valueOf(fileVersionVO.getVersionId())),
-						"UTF-8");
+				String hashedVersionId = encryptDecrypt
+						.encrypt(String.valueOf(fileVersionVO.getVersionId()));
 				fileVersionVO.setHashedVersionId(hashedVersionId);
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			}
 
-			fileVersionVO.setHyperlink("download?id="
-					+ fileVersionVO.getHashedId() + "&versionId="
-					+ fileVersionVO.getHashedVersionId());
 		}
 
 	}

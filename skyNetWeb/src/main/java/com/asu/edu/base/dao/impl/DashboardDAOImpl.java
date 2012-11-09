@@ -185,7 +185,6 @@ public class DashboardDAOImpl extends BaseDAO implements
 				params);
 
 		return users;
-
 	}
 
 	@Override
@@ -207,6 +206,11 @@ public class DashboardDAOImpl extends BaseDAO implements
 				fileVO.setUpdateAllowed(true);
 			else
 				fileVO.setUpdateAllowed(false);
+			String pass = rs.getString("PASSWORD");
+			if(pass == null || pass == "")
+				fileVO.setEncrypted(false);
+			else
+				fileVO.setEncrypted(true);
 			return fileVO;
 		} else if (calledFunction == GET_SHARED_BY_FILES) {
 			FileVO fileVO = new FileVO();
@@ -222,6 +226,11 @@ public class DashboardDAOImpl extends BaseDAO implements
 			fileVO.setDir(rs.getBoolean("IS_DIR"));
 			fileVO.setSharedById(rs.getLong("USER_ID_BY"));
 			fileVO.setSharedToId(rs.getLong("USER_ID_TO"));
+			String pass = rs.getString("PASSWORD");
+			if(pass == null || pass == "")
+				fileVO.setEncrypted(false);
+			else
+				fileVO.setEncrypted(true);
 			return fileVO;
 		} else if (calledFunction == GET_SHARED_TO_FILES) {
 			FileVO fileVO = new FileVO();
@@ -243,6 +252,11 @@ public class DashboardDAOImpl extends BaseDAO implements
 				fileVO.setUpdateAllowed(true);
 			else
 				fileVO.setUpdateAllowed(false);
+			String pass = rs.getString("PASSWORD");
+			if(pass == null || pass == "")
+				fileVO.setEncrypted(false);
+			else
+				fileVO.setEncrypted(true);
 			return fileVO;
 		} else if (calledFunction == "getapprovedNonAdminUsers") {
 			UserVO userVO = new UserVO();

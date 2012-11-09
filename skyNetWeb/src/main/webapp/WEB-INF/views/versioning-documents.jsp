@@ -134,11 +134,16 @@ body {
 						</thead>
 						<tbody>
 							<c:forEach var="item" items="${files}">
-								<tr >
+								<tr>
 									<td width="40px"><img height="30px" width="30px"
 										src="${item.iconFile}"></td>
 									<td>${item.versionId}</td>
-									<td><a href="${item.hyperlink }">${item.fileName}</a></td>
+									<td><form action="version" method="post"">
+											<input class="btn-link" type="hidden" name="file-id"
+												value="${item.hashedId}" /> <input class="btn-link"
+												type="hidden" name="version-id" value="${item.versionId}" /><input
+												type="submit" value="${item.fileName}" class="btn-link">
+										</form></td>
 									<td>${item.modifiedByName}</td>
 									<td>${item.modTime}</td>
 								</tr>

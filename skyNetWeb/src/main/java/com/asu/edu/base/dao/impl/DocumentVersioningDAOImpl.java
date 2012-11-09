@@ -66,8 +66,8 @@ public class DocumentVersioningDAOImpl extends BaseDAO implements
 		if (calledFunction == GET_DOCUMENT_VERSIONS) {
 			FileVersionVO fileVersionVO = new FileVersionVO();
 			fileVersionVO.setId(rs.getLong("FILE_ID"));
-			fileVersionVO.setVersionId(rs.getInt("VERSION"));
-			fileVersionVO.setModTime(rs.getDate("TIMESTAMP").toString());
+			fileVersionVO.setVersionId(rs.getString("VERSION"));
+			fileVersionVO.setModTime(rs.getDate("RECORD_TIME").toString());
 			fileVersionVO.setModifiedByName(rs.getString("FIRST_NAME") + " "
 					+ rs.getString("LAST_NAME"));
 			return fileVersionVO;

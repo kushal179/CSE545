@@ -318,7 +318,7 @@ body {
 												<a href="${item.hyperlink }">${item.fileName}</a>
 											</c:when>
 											<c:otherwise>
-												<form action="download" method="post">
+												<form action="download" method="post" <%-- onsubmit="onDownload(this); --%>">
 													<input class="btn-link" type="hidden" name="file-id"
 														value="${item.hashedId}" /> <input type="submit"
 														value="${item.fileName}" class="btn-link">
@@ -338,6 +338,7 @@ body {
 									<td style="display: none" id="lock-perm">${item.lockAllowed}</td>
 									<td style="display: none" id="is-locked">${item.lock}</td>
 									<td style="display: none" id="is-dir">${item.dir}</td>
+									<td style="display: none" id="is-enc">${item.encrypted}</td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -347,6 +348,40 @@ body {
 				</div>
 
 			</div>
+		</div>
+
+		<div class="modal hide fade" role="dialog"
+			aria-labelledby="shareModalLabel" aria-hidden="true"
+			id="enter-password-bar" style="display: none;">
+			<form id="enter-password-form" action="download" method="post">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true"></button>
+					<h3 id="myModalLabel">Encrypted file</h3>
+				</div>
+
+				<div class="modal-body">
+					<table>
+						<tr>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td><label>Enter Password : </label></td>
+							<td><input type="text" name="password" id="password">
+							</td>
+						</tr>
+					</table>
+					<input type="hidden" id="download-file-id" name="file-id" /> 
+					<input type="hidden" id="dept-id" name="dept-id" value="${deptId }" /> 
+					<input type="hidden" id="parent-file-id" name="parent-file-id" value="${parentFileId }">
+				</div>
+
+				<div class="modal-footer">
+					<input class="btn btn-primary" type="submit" name="Download"
+						value="Create" />
+					<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				</div>
+			</form>
 		</div>
 
 		<form:form action="shareComponent" modelAttribute="shareVO"
@@ -411,8 +446,8 @@ body {
 				</div>
 				<div class="modal-footer">
 					<form action="shareComponent" method="post">
-						<p class="text-error" id="selectUpdateAlso"
-							style="display: none;">Select Check-in/Check-out also if Update is selected</p>
+						<p class="text-error" id="selectUpdateAlso" style="display: none;">Select
+							Check-in/Check-out also if Update is selected</p>
 						<button class="btn btn-primary">Share</button>
 						<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 					</form>

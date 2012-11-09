@@ -92,7 +92,7 @@ body {
 
 
 															<input class="btn btn-primary" type="submit"
-																value="Submit" />
+																value="Send new password to my email" />
 														</div>
 														
 													</td>
