@@ -25,5 +25,7 @@ public interface CommonConstants {
 	public static final String REQ_PARAM_FILE_ID = "fileId";
 	public static final String REQ_PARAM_DEPTID = "deptId";
 	public static final String REQ_PARAM_PARENTID = "parentId";
+	
+	public static final String C300 = "Updating file name should be same as original file name";
 
 }

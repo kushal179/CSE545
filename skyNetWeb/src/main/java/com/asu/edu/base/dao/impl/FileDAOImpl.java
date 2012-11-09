@@ -114,7 +114,12 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		String sql = SQLConstants.LOCK_FILE;
 		return preparedStatementUpdate(sql, param, true) > 0;
 	}
-
+	public boolean version(Object[] param){
+		
+		String sql = SQLConstants.VERSION;
+		return preparedStatementUpdate(sql, param, true) > 0;
+		
+	}
 	public int deptByParent(int parentId) {
 		calledFunction = "deptByParent";
 		Object[] param = new Object[1];

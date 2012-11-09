@@ -34,6 +34,8 @@ public interface FileDAOImplInterface {
 	public int deptByParent(int parentId);
 
 	public boolean saveFolder(FileVO fileVO);
+	
+	public boolean version(Object[] param);
 
 	public boolean unshareItem(String fileid, Long byUserID, Long toUserId);
 

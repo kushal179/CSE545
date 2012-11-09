@@ -66,7 +66,6 @@ public class FileController {
 			if (path != null) {
 				path = path + "/" + multipartFile.getOriginalFilename();
 				fileVO.setPath(path);
-				System.out.println(path);
 				File file = new File(path);
 				if (!file.exists()) {
 					FileOutputStream f = new FileOutputStream(file);
@@ -85,6 +84,61 @@ public class FileController {
 				return "redirect:/error-page?error=parent Folder not found";
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+
+		return "redirect:/Dashboard?deptId=-1&folderId=-1";
+	}
+
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public String update(HttpSession session, HttpServletRequest request,
+			@RequestParam("parent-file-id") String parent_Id,
+			@RequestParam("dept-id") String dept_Id,
+			@RequestParam("file-id") String file_Id) {
+		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+		MultipartFile multipartFile = multipartRequest.getFile("file");
+		long id = Long.parseLong(util.decrypt(file_Id));
+		HashMap<String, String> param = new HashMap<String, String>();
+		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
+		if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
+			FileVO fileVO = (FileVO) fileDAO.getFile(id);
+			UserVO userVO = (UserVO) session.getAttribute(CommonConstants.USER);
+			if (fileVO != null) {
+				if (multipartFile.getOriginalFilename() == fileVO.getFileName()) {
+					String version = new java.sql.Timestamp(
+							new java.util.Date().getTime()).toString();
+					File f = new File(fileVO.getPath());
+					String path = fileVO.getPath().substring(0,
+							fileVO.getPath().lastIndexOf("/"));
+					String rename = path + f.getName() + "_" + version;
+					File renameFile = new File(rename);
+					if (f.renameTo(renameFile)) {
+						Object[] parameters = new Object[3];
+						parameters[0] = id;
+						parameters[1] = version;
+						parameters[2] = new java.sql.Timestamp(
+								new java.util.Date().getTime());
+						parameters[3] = userVO.getId();
+						if (fileDAO.version(parameters)) {
+								try {
+									FileOutputStream fos = new FileOutputStream(renameFile);
+									fos.write(multipartFile.getBytes());
+									fos.close();
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+						} else {
+							renameFile.delete();
+							return "redirect:/error-page?error=Version could not be created for file updation. Please try again";
+						}
+
+					} else {
+						return "redirect:/error-page?error=Version could not be created for file updation. Please try again";
+					}
+				} else
+					return "redirect:/Dashboard?deptId=" + dept_Id
+							+ "&folderId=-1&code=C300";
+			} else
+				return "redirect:/error-page?error=Original does not exists";
 		}
 
 		return "redirect:/Dashboard?deptId=-1&folderId=-1";
@@ -112,7 +166,7 @@ public class FileController {
 				f.mkdir();
 				if (f.isDirectory()) {
 					if (!fileDAO.saveFolder(fileVO)) {
-							f.delete();
+						f.delete();
 					}
 				} else
 					return "redirect:/error-page?error=Resource is of type file. Please upload directory";
@@ -125,7 +179,7 @@ public class FileController {
 		return "redirect:/Dashboard?deptId=-1&folderId=-1";
 	}
 
-	@RequestMapping(value = "/download", method = RequestMethod.GET)
+	@RequestMapping(value = "/download", method = RequestMethod.POST)
 	public void download(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam("file-id") String file_Id, HttpSession session) {
