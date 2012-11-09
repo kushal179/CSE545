@@ -64,9 +64,16 @@ body {
 							<tr>
 								<td><br />
 									<div align="left" style="font-size: 22px; color: #ffffff">
-										There was a problem serving your request.
+										There was a problem serving your request.<br/>
+										<%String error = (String)request.getAttribute("error");
+										if(error!=null){
+										%>
+										<div align="left" style="font-size: 22px; color: red;">
+										Possible reason: <%=error %>
+										</div>
+										<%} %>
 										<p>
-											Please click <a href="/Dashboard?deptId=-1&folderId=-1">here</a> to go to home
+											Please click <a href="Dashboard?deptId=-1&folderId=-1">here</a> to go to home
 									</div></td>
 							</tr>
 						</tbody>
