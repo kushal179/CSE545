@@ -349,7 +349,8 @@ body {
 			</div>
 		</div>
 
-		<form:form action="shareComponent" modelAttribute="shareVO">
+		<form:form action="shareComponent" modelAttribute="shareVO"
+			onsubmit="return permissionsCheckboxSelected();">
 			<!-- Modal -->
 			<div id="shareModal" class="modal hide fade" tabindex="-1"
 				role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
@@ -410,6 +411,8 @@ body {
 				</div>
 				<div class="modal-footer">
 					<form action="shareComponent" method="post">
+						<p class="text-error" id="selectUpdateAlso"
+							style="display: none;">Select Check-in/Check-out also if Update is selected</p>
 						<button class="btn btn-primary">Share</button>
 						<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 					</form>
@@ -421,7 +424,7 @@ body {
 		<hr>
 
 		<footer>
-			<p>� SkyNet - Company 2012</p>
+			<p>@SkyNet - Company 2012</p>
 		</footer>
 
 	</div>

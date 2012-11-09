@@ -215,3 +215,12 @@ function ValidateFile(sFileName) {
 function selectFileRow(row) {
 
 }
+
+function permissionsCheckboxSelected() {
+	if(($("#update")[0].checked) && !($("#lock")[0].checked)){
+		$("#selectUpdateAlso").show();
+		return false;
+	}
+	
+	return true;
+}
