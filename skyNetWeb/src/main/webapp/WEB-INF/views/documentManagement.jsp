@@ -194,16 +194,16 @@ body {
 							<input type="file" name="file" id="file-update-input"><br>
 							<table>
 								<tr>
-									<td><input type="checkbox" id="enable-encryption" /></td>
+									<td><input type="checkbox" id="update-enable-encryption" /></td>
 									<td><label>Encrypt file</label></td>
 								</tr>
 								<tr>
 									<td>&nbsp;</td>
 								</tr>
 								<tr>
-									<td><label for="password-field">Password : </label></td>
+									<td><label for="update-password-field">Password : </label></td>
 									<td><input disabled="disabled" type="password"
-										name="encrypt" id="password-field" /></td>
+										name="encrypt" id="update-password-field" /></td>
 								</tr>
 							</table>
 							<input type="hidden" id="update-file-id" name="file-id" /> <input
@@ -235,16 +235,16 @@ body {
 							<input type="file" name="file" id="file-upload-input"><br>
 							<table>
 								<tr>
-									<td><input type="checkbox" id="enable-encryption" /></td>
+									<td><input type="checkbox" id="upload-enable-encryption" /></td>
 									<td><label>Encrypt file</label></td>
 								</tr>
 								<tr>
 									<td>&nbsp;</td>
 								</tr>
 								<tr>
-									<td><label for="password-field">Password : </label></td>
+									<td><label for="upload-password-field">Password : </label></td>
 									<td><input disabled="disabled" type="password"
-										name="encrypt" id="password-field" /></td>
+										name="encrypt" id="upload-password-field" /></td>
 								</tr>
 							</table>
 							<input type="hidden" id="upload-file-id" name="file-id" /> <input

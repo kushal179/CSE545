@@ -174,11 +174,19 @@ $("#new-folder-form").submit(function() {
 	return true;
 });
 
-$("#enable-encryption").change(function() {
-	if ($('#enable-encryption').is(':checked')) {
-		$('#password-field').removeAttr('disabled');
+$("#upload-enable-encryption").change(function() {
+	if ($('#upload-enable-encryption').is(':checked')) {
+		$('#upload-password-field').removeAttr('disabled');
 	} else {
-		$('#password-field').attr('disabled', true);
+		$('#upload-password-field').attr('disabled', true);
+	}
+});
+
+$("#update-enable-encryption").change(function() {
+	if ($('#update-enable-encryption').is(':checked')) {
+		$('#update-password-field').removeAttr('disabled');
+	} else {
+		$('#update-password-field').attr('disabled', true);
 	}
 });
 
