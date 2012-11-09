@@ -96,7 +96,7 @@ body {
 					</div>
 				</noscript>
 				<div class="hero-unittitle">
-					<h3>Shared To Others</h3>
+					<h3>Shared To You</h3>
 				</div>
 
 				<div class="hero-unitops" id="selectItem">Select Item</div>

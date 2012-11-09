@@ -113,7 +113,7 @@ public class SharedToDocumentsController {
 
 			if (fileVO.isDir())
 				try {
-					fileVO.setHyperlink("Dashboard?deptId="
+					fileVO.setHyperlink("SharedToYouDocuments?deptId="
 							+ fileVO.getDeptId() + "&folderId="
 							+ URLEncoder.encode(fileVO.getHashedId(), "UTF-8"));
 				} catch (UnsupportedEncodingException e) {
