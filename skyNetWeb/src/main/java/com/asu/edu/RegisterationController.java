@@ -78,7 +78,20 @@ public class RegisterationController {
 				
 				logger.info("department is : " + registerationVO.getDepartments());
 				logger.info("role is : " + registerationVO.getRoleId());
-				
+				int role_id = registerationVO.getRoleId();
+				if(role_id != 5)
+				{
+					ArrayList<Integer> depts = registerationVO.getDepartments();
+					int no_of_depts = depts.size();
+					if(no_of_depts > 1)
+					{
+						return "register";
+					}
+					if(role_id == 2 && no_of_depts != 0)
+					{
+						return "register";
+					}
+				}
 				if (registerationDAO.registerUser(registerationVO)) {
 					logger.info("Registeration successful");
 					return "redirect:/login";
@@ -113,6 +126,9 @@ public class RegisterationController {
 			Map.Entry pairs;
 			while (it.hasNext()) {
 		        pairs = (Map.Entry)it.next();
+		        RoleVO roleVO = (RoleVO)pairs.getValue();
+		        if(roleVO.getId() == 1)
+		        	continue;
 		        rolesArray.add((RoleVO)pairs.getValue());
 		    }
 		}

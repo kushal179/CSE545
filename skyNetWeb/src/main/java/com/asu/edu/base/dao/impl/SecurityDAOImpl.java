@@ -146,17 +146,20 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 			calledFunction = GET_LOGIN_ATTEMPTS;
 			Object[] param = new Object[1];
 			param[0] = auth.getName();
-			int loginAttempts = (Integer) this.getRowByCriteria(SQLConstants.LOGIN_ATTEMPTS,param);
-			if(loginAttempts >= 2)
+			Integer loginAttempts = (Integer) this.getRowByCriteria(SQLConstants.LOGIN_ATTEMPTS,param);
+			if(loginAttempts != null)
 			{
-				//EnableCaptcha
-				setCaptchaEnabled(true);
+				if(loginAttempts >= 2)
+				{
+					//EnableCaptcha
+					setCaptchaEnabled(true);
+				}
+				Object[] updateParam = new Object[2];
+				updateParam[0] = ++loginAttempts;
+				updateParam[1] = auth.getName();
+				String sql = SQLConstants.UPDATE_LOGIN_ATTEMPTS;
+				this.preparedStatementUpdate(sql, updateParam, true);
 			}
-			Object[] updateParam = new Object[2];
-			updateParam[0] = ++loginAttempts;
-			updateParam[1] = auth.getName();
-			String sql = SQLConstants.UPDATE_LOGIN_ATTEMPTS;
-			this.preparedStatementUpdate(sql, updateParam, true);
 		}
 		throw new BadCredentialsException("Username/Password does not match for ");
 	}

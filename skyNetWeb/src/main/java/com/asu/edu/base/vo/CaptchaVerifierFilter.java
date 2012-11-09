@@ -34,10 +34,6 @@ public class CaptchaVerifierFilter extends OncePerRequestFilter {
 	private String failureUrl;
 	private CaptchaCaptureFilter captchaCaptureFilter;
 	private String privateKey;
-	@Autowired
-	private SecurityDAOImplInterface securityDAO = null;
-	@Autowired
-	private AdminDAOImplInterface adminDAO = null;
 	
 	// Inspired by log output: AbstractAuthenticationProcessingFilter.java:unsuccessfulAuthentication:320) 
 	// Delegating to authentication failure handlerorg.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler@15d4273
@@ -53,8 +49,6 @@ public class CaptchaVerifierFilter extends OncePerRequestFilter {
 		logger.debug("challenge: " + captchaCaptureFilter.getRecaptcha_challenge());
 		logger.debug("response: " + captchaCaptureFilter.getRecaptcha_response());
 		logger.debug("remoteAddr: " + captchaCaptureFilter.getRemoteAddr());
-		System.out.println("securityDAO" + securityDAO);
-		System.out.println("adminDAO" + adminDAO);
 		// Assign values only when user has submitted a Captcha value
 		if (captchaCaptureFilter.getRecaptcha_response() != null) {
 			

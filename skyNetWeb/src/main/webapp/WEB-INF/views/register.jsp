@@ -45,6 +45,31 @@ body {
 	padding: 9px 0;
 }
 </style>
+<script type="text/javascript">
+window.onload=function() {
+	
+	var sel = document.getElementById("roleId");
+     sel.onchange=function() {
+	  
+	if (this.value == 2) {
+
+				var table = document.getElementById("depts");
+				var title = document.getElementById("title");
+				table.style.display = 'none';
+				title.style.display = 'none';
+			} else {
+				var table = document.getElementById("depts");
+				var title = document.getElementById("title");
+				//.style.display="block";
+				table.style.display = '';
+				title.style.display = '';
+			}
+
+		}
+		sel.onchange(); // set the visibility onload too in case of reload
+	}
+</script>
+
 </head>
 
 <body>
@@ -125,15 +150,15 @@ body {
 																</form:select>
 														</tr>
 														<tr>
-															<td style="color: white">Department:</td>
+															<td id = "title" style="color: white">Department:</td>
+															
 															<td>
-																<table>
+															<table id = "depts">
 																	<c:forEach var="item" items="${deptList}">
 																		<tr>
+																			<td><form:checkbox path="departments"
+																					id="role_${item.id}" value="${item.id}" /></td>
 																			<td style="padding-left: 20px; padding-top: 5px;"><label style="color: white">${item.deptName}</label></td>
-																			<td style="padding-left: 20px; padding-top: 5px;"><form:checkbox path="departments"
-																					id="role_${item.id}" value="${item.id}" class="required"/></td>
-																			
 																		</tr>
 																	</c:forEach>
 																</table> 
