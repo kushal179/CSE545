@@ -6,8 +6,8 @@
 	<bean id="mailSender" class ="org.springframework.mail.javamail.JavaMailSenderImpl" >
 		<property name="host" value="smtp.gmail.com" />
 		<property name="port" value="587" />
-		<property name="username" value="kunalchilka@gmail.com" />
-		<property name="password" value="NFS_MOSTWANTED" />
+		<property name="username" value="dockloud.skynet@gmail.com" />
+		<property name="password" value="dockloud@skynet" />
 		<property name="javaMailProperties">
 		<props>
 			<prop key="mail.smtp.starttls.enable">true</prop>
@@ -19,7 +19,7 @@
 			<property name="mailSender" ref="mailSender" />
 			<property name="userEmailIds">
 				<set>
-					<value>anain@asu.edu</value>
+					<value></value>
 					
 				</set>
 			</property>			

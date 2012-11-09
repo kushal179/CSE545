@@ -42,7 +42,7 @@ public class RegisterationController {
 	private static ArrayList<DepartmentVO> deptArray;
 
 	private static ArrayList<RoleVO> rolesArray;
-
+	private static boolean flagError = false;
 	private static final Logger logger = LoggerFactory
 			.getLogger(RegisterationController.class);
 
@@ -51,7 +51,8 @@ public class RegisterationController {
 		logger.info("Welcome home! the client locale is ");
 
 		initArrays();
-		
+		String message = "";
+		model.put("errorMsg", message);
 		model.put("registerationVO", new RegisterationVO());
 		model.put("deptList", deptArray);
 		model.put("roleList", rolesArray);
@@ -85,12 +86,20 @@ public class RegisterationController {
 					int no_of_depts = depts.size();
 					if(no_of_depts > 1)
 					{
+
+						String message = "Multiple departments are not allowed for this user Role";
+						model.put("errorMsg", message);
+
 						model.put("deptList", deptArray);
 						model.put("roleList", rolesArray);
 						return "register";
 					}
 					if(role_id == 2 && no_of_depts != 0)
 					{
+
+						String message = "departments selection is not allowed for Guest user";
+						model.put("errorMsg", message);
+
 						model.put("deptList", deptArray);
 						model.put("roleList", rolesArray);
 						return "register";

@@ -65,7 +65,7 @@ public interface SQLConstants {
 	// In share dailog populate approved, non admin and not current user
 	public static final String SHARE_TO_USERS = "select u.user_name, u.id from user u where u.role_id <> ? and u.is_approved = ? and u.deactivate = ? and u.id <> ?;";
 
-	public static final String GET_EMAIL_ID = "select email from user where user_name=?;";
+	public static final String GET_EMAIL_ID = "select email from user where user_name=? and deactivate=0;";
 
 	public static final String LOGIN_ATTEMPTS = "select u.login_attempts from user u where u.user_name = ?;";
 	public static final String UPDATE_LOGIN_ATTEMPTS = "update dockloud.user set login_attempts = ? where user_name = ?;";

@@ -171,23 +171,29 @@ body {
 																</form:select>
 														</tr>
 														<tr>
+															<td></td>>
+															<td align="center" style="color: red">${errorMsg}</td>
+
+														</tr>
+														<tr>
 															<td id="title" style="color: white">Department:</td>
 
 															<td>
 																<table id="depts">
 																	<c:forEach var="item" items="${deptList}">
 																		<tr>
-																			<td><div id="deps">
-																					<form:checkbox path="departments"
-																						id="role_${item.id}" value="${item.id}" />
-																				</div></td>
 																			<td style="padding-left: 20px; padding-top: 5px;"><label
 																				style="color: white">${item.deptName}</label></td>
+																			<td><div id="deps">
+																					<form:checkbox path="departments" 
+																						id="role_${item.id}" value="${item.id}" class="required"/>
+																				</div></td>
 																		</tr>
 																	</c:forEach>
 																</table>
 															</td>
 														</tr>
+
 														<tr>
 															<td></td>
 															<td><div align="left">
