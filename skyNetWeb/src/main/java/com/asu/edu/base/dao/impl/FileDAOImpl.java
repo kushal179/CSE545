@@ -185,18 +185,14 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		EncryptDecrypt encryptDecrypt = new EncryptDecrypt();
 		Integer itemId = 0;
 		try {
-			itemId = Integer.parseInt(encryptDecrypt.decrypt(URLDecoder.decode(
-					shareVO.getItemhashedId(), "UTF-8")));
+			itemId = Integer.parseInt(encryptDecrypt.decrypt(shareVO.getItemhashedId()));
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 		Object[] param = new Object[3];
 		param[0] = itemId;
 		param[1] = fromUserId;
@@ -230,5 +226,28 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 			sql = SQLConstants.SHARE_UPDATE_ITEM;
 		}
 		return preparedStatementUpdate(sql, param, true) > 0;
+	}
+
+	@Override
+	public boolean unshareItem(String fileid, Long byUserID, Long toUserId) {
+		calledFunction = "unshareItem";
+		EncryptDecrypt encryptDecrypt = new EncryptDecrypt();
+		Integer itemId = 0;
+		try {
+			itemId = Integer.parseInt(encryptDecrypt.decrypt(fileid));
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+
+		Object[] param = new Object[3];
+		param[0] = itemId;
+		param[1] = byUserID;
+		param[2] = toUserId;
+		String sql = SQLConstants.UNSHARE_SELECT_ITEM;
+		return this.preparedStatementUpdate(sql, param, true) > 0;
 	}
 }

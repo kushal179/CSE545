@@ -75,6 +75,7 @@ public interface SQLConstants {
 
 	// Share items
 	public static final String SHARE_SELECT_ITEM = "select * from sharing where file_id = ? and user_id_by = ? and user_id_to=?;";
+	public static final String UNSHARE_SELECT_ITEM = "delete from sharing where file_id = ? and user_id_by = ? and user_id_to = ?;";
 	public static final String SHARE_INSERT_ITEM = "insert into sharing (file_id,user_id_by,user_id_to,download,file_update,checkin_out) values (?,?,?,?,?,?);";
 	public static final String SHARE_UPDATE_ITEM = "update sharing s set s.download=? , s.file_update=? , s.checkin_out=? where s.file_id=? and s.user_id_by=? and s.user_id_to=?;";
 	// *********************************

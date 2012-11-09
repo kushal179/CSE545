@@ -112,7 +112,7 @@ public class DashboardDAOImpl extends BaseDAO implements
 		ArrayList<FileVO> files = (ArrayList<FileVO>) getListByCriteria(sql,
 				params);
 
-		if (files == null) {
+		if (files != null) {
 			calledFunction = GET_SHARED_BY_USER_NAME;
 
 			sql = "select first_name, last_name from user where id in ( ";

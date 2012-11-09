@@ -2,6 +2,11 @@ function bodyload() {
 	$("#itemSelected").hide();
 }
 
+function sharedBybodyload() {
+	$("#itemSelected").hide();
+}
+
+
 function onDashboardItemselected(id) {
 	document.getElementById("itemname").innerHTML = id
 			.getElementsByTagName('td')[1].innerHTML;
@@ -117,7 +122,10 @@ function selectSharedByFileRow(id) {
 			.getElementsByTagName('td')[1].innerHTML;
 
 	var fileId = id.getElementsByTagName('td')[5].innerHTML;
-	document.getElementById("itemId").value = fileId;
+	document.getElementById("file-id").value = fileId;
+
+	var touserid = id.getElementsByTagName('td')[6].innerHTML;
+	document.getElementById("to-user-id").value = touserid;
 
 	var table = document.getElementById("fileslist");
 	for ( var i = 0, row; row = table.rows[i]; i++) {
@@ -131,7 +139,23 @@ function selectSharedByFileRow(id) {
 	$("#itemSelected").show();
 }
 
-function onheaderBarClicked() {
+
+/*function selectshareByFileRow(id) {
+	document.getElementById("itemname").innerHTML = id
+			.getElementsByTagName('td')[1].innerHTML;
+
+	var fileId = id.getElementsByTagName('td')[6].innerHTML;
+	document.getElementById("itemId").value = fileId;
+
+	
+	var table = document.getElementById("fileslist");
+	for ( var i = 0, row; row = table.rows[i]; i++) {
+		row.style.backgroundColor = '#ffffff';
+	}
+	id.style.backgroundColor = '#E2E6A8';
+	$("#fileid").val(fileId);
+}
+*/function onheaderBarClicked() {
 	var table = document.getElementById("fileslist");
 	for ( var i = 0, row; row = table.rows[i]; i++) {
 		row.style.backgroundColor = '#ffffff';

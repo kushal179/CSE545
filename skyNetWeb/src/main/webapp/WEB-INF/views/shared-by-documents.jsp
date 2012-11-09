@@ -30,7 +30,7 @@ body {
 </style>
 </head>
 
-<body onload="bodyload()">
+<body onload="sharedBybodyload()">
 
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="navbar-inner">
@@ -92,27 +92,26 @@ body {
 						</p>
 					</div>
 				</noscript>
-				<div class="hero-unittitle">
+				<div class="hero-unittitle" id="headerbar"
+					onclick="onheaderBarClicked();">
 					<h3>Shared By You</h3>
 				</div>
 
 				<div class="hero-unitops" id="selectItem">Select Item</div>
 
 				<div class="hero-unitops" id="itemSelected">
-
 					<table>
 						<tr>
-							<td><label id="itemname"></label></td>
-							<td>
-								<form action="unshare" valign="middle" method="post" style="padding-top: 10px;padding-left: 250px;">
-									<input id="unshare-file-id" name="file-id" type="hidden">
-									<i class="icon-share"></i><input type="submit" value="Unshare"
-										class="btn-link" />
-								</form>
-							</td>
+							<td width="70%"><label id="itemname"></label></td>
+							<td><form action="unshare" method="post">
+									<button id="unsharebtn" class="btn-link" type="submit">
+										<i class="icon-share"></i>Unshare
+									</button>
+									<input type="hidden" id="to-user-id" name="userIdTo" /> <input
+										type="hidden" id="file-id" name="fileid" />
+								</form></td>
 						</tr>
 					</table>
-
 				</div>
 
 				<div class="row-fluid">
@@ -127,7 +126,7 @@ body {
 								<th>Locked</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody id="fileslist">
 							<c:forEach var="item" items="${files}">
 								<tr onclick="selectSharedByFileRow(this);">
 									<td width="40px"><img height="30px" width="30px"
@@ -136,6 +135,8 @@ body {
 									<td>${item.sharedToName}</td>
 									<td>${item.modTime}</td>
 									<td>${item.type}</td>
+									<td style="display: none;" id="selectedfileid">${item.hashedId}</td>
+									<td style="display: none;" id="sharetouserid">${item.sharedToId}</td>
 									<td><c:choose>
 											<c:when test="${item.lock}">
 												<img height="25px" width="25px"
@@ -151,7 +152,6 @@ body {
 				</div>
 			</div>
 		</div>
-
 		<br /> <br />
 		<hr>
 

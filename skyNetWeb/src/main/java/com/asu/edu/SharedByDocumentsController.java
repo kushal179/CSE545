@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -14,23 +15,27 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.codec.Base64;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.asu.edu.base.dao.intrf.DashboardDAOImplInterface;
+import com.asu.edu.base.dao.intrf.FileDAOImplInterface;
 import com.asu.edu.base.vo.DepartmentVO;
 import com.asu.edu.base.vo.FileVO;
+import com.asu.edu.base.vo.ShareVO;
 import com.asu.edu.base.vo.UserVO;
 import com.asu.edu.cache.MasterCache;
+import com.asu.edu.constants.CommonConstants;
 import com.asu.edu.security.EncryptDecrypt;
 
 /**
  * Handles requests for the application home page.
  */
 @Controller
-@RequestMapping(value = "/SharedByYouDocuments")
 public class SharedByDocumentsController {
 
 	private static final int ROLE_CORPORATE_MANAGER = 5;
@@ -45,8 +50,11 @@ public class SharedByDocumentsController {
 	@Autowired
 	private DashboardDAOImplInterface dashboardDAO = null;
 
+	@Autowired
+	private FileDAOImplInterface fileDAO = null;
+
 	private EncryptDecrypt encryptDecrypt;
-	
+
 	private Map<Integer, DepartmentVO> departmentMap;
 
 	/**
@@ -58,7 +66,7 @@ public class SharedByDocumentsController {
 		encryptDecrypt = new EncryptDecrypt();
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/SharedByYouDocuments",method = RequestMethod.GET)
 	public String getDashBoardContents(
 			@RequestParam("folderId") String folderId, HttpSession session,
 			Map model) {
@@ -144,7 +152,15 @@ public class SharedByDocumentsController {
 		return "documentManagement";
 	}
 
-	static {
+	@RequestMapping(value = "/unshare", method = RequestMethod.POST)
+	public String unshareItem(@RequestParam("fileid") String fileid,
+			@RequestParam("userIdTo") String userIdTo, HttpSession session,
+			Map model) {
+		boolean unshareReult = fileDAO
+				.unshareItem(fileid, ((UserVO) (session
+						.getAttribute(CommonConstants.USER))).getId(), Long.parseLong(userIdTo));
 
+		return "redirect:/SharedByYouDocuments?folderId=-1";
 	}
+
 }

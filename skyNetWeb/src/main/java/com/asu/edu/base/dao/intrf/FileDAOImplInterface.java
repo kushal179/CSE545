@@ -2,6 +2,8 @@ package com.asu.edu.base.dao.intrf;
 
 import com.asu.edu.base.vo.FileVO;
 import com.asu.edu.base.vo.ShareVO;
+import com.asu.edu.base.vo.UserVO;
+import com.asu.edu.constants.CommonConstants;
 
 public interface FileDAOImplInterface {
 
@@ -22,15 +24,17 @@ public interface FileDAOImplInterface {
 	public int findDeptIdByDoc(Object[] param);
 
 	public boolean isLock(Object[] param);
-	
+
 	public boolean unLock(Object[] param);
-	
+
 	public boolean delete(Object[] param);
-	
+
 	public boolean deleteDir(Object[] param);
-	
+
 	public int deptByParent(int parentId);
-	
+
 	public boolean saveFolder(FileVO fileVO);
+
+	public boolean unshareItem(String fileid, Long byUserID, Long toUserId);
 
 }
