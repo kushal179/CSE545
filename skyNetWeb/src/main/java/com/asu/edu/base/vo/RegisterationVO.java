@@ -17,11 +17,13 @@ public class RegisterationVO {
 	private String userName;
 	@NotEmpty(message = "Password must not be blank.")
 	@Size(min = 6, max = 20, message = "Size should be between 6-20")
-	@Pattern(regexp="(?!^[0-9]*$)(?!^[a-zA-Z!@#$%^&*()_+=<>?]*$)^([a-zA-Z!@#$%^&*()_+=<>?0-9]{6,15})$", message="Password should be alpha-numeric")
+	@Pattern(regexp="(?!^[0-9]*$)(?!^[a-zA-Z!@#$%^&*()_+=<>?]*$)^([a-zA-Z!@#$%^&*()_+=<>?0-9]{6,15})$", message="Password should contain atleast 1 number & character with minimum 6 length")
 	private String password;
 	@NotEmpty(message = "First Name must not be blank.")
+	@Pattern(regexp="^[A-Za-z0-9!\"\\\\#$%&'*+,/:;=\\.?@_\\`{\\|}\\~\\-\\^ ]*$", message="Invalid characters")
 	private String firstName;
 	@NotEmpty(message = "Last Name must not be blank.")
+	@Pattern(regexp="^[A-Za-z0-9!\"\\\\#$%&'*+,/:;=\\.?@_\\`{\\|}\\~\\-\\^ ]*$", message="Invalid characters")
 	private String lastName;
 	@NotEmpty(message = "Email must not be blank.")
 	@Pattern(regexp = "^([a-z0-9]+)([._-]([0-9a-z_-]+))*@([a-z0-9]+)([._-]([0-9a-z]+))*([.]([a-z0-9]+){2,4})$", message = "Email-id is not valid")
