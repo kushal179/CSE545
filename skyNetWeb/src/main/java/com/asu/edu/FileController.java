@@ -96,52 +96,62 @@ public class FileController {
 			@RequestParam("file-id") String file_Id) {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		MultipartFile multipartFile = multipartRequest.getFile("file");
+		UserVO userVO = (UserVO) session
+				.getAttribute(CommonConstants.USER);
 		long id = Long.parseLong(util.decrypt(file_Id));
-		HashMap<String, String> param = new HashMap<String, String>();
-		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
-		if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
-			FileVO fileVO = (FileVO) fileDAO.getFile(id);
-			UserVO userVO = (UserVO) session.getAttribute(CommonConstants.USER);
-			if (fileVO != null) {
-				if (multipartFile.getOriginalFilename().equals(
-						fileVO.getFileName())) {
-					String version = new java.sql.Timestamp(
-							new java.util.Date().getTime()).toString();
-					File f = new File(fileVO.getPath());
-					String path = fileVO.getPath().substring(0,
-							fileVO.getPath().lastIndexOf("/"));
-					String rename = path + "/" + f.getName() + "_" + version;
-					File renameFile = new File(rename);
-					if (f.renameTo(renameFile)) {
-						Object[] parameters = new Object[3];
-						parameters[0] = id;
-						parameters[1] = version;
-						parameters[2] = new java.sql.Timestamp(
-								new java.util.Date().getTime());
-						parameters[3] = userVO.getId();
-						if (fileDAO.version(parameters)) {
-							try {
-								FileOutputStream fos = new FileOutputStream(
-										renameFile);
-								fos.write(multipartFile.getBytes());
-								fos.close();
-							} catch (IOException e) {
-								e.printStackTrace();
+		Object[] paramSQL = new Object[2];
+		paramSQL[0] = userVO.getId();
+		paramSQL[1] = id;
+		if (fileDAO.isLock(paramSQL)) {
+			HashMap<String, String> param = new HashMap<String, String>();
+			param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
+			if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
+				FileVO fileVO = (FileVO) fileDAO.getFile(id);
+				
+				if (fileVO != null) {
+					if (multipartFile.getOriginalFilename().equals(
+							fileVO.getFileName())) {
+						String version = new java.sql.Timestamp(
+								new java.util.Date().getTime()).toString();
+						version = version.replace(":", "");
+						File f = new File(fileVO.getPath());
+						String path = fileVO.getPath().substring(0,
+								fileVO.getPath().lastIndexOf("/"));
+						String rename = path + "/" + f.getName() + "_"
+								+ version;
+						File renameFile = new File(rename);
+						if (f.renameTo(renameFile)) {
+							Object[] parameters = new Object[4];
+							parameters[0] = id;
+							parameters[1] = version;
+							parameters[2] = new java.sql.Timestamp(
+									new java.util.Date().getTime());
+							parameters[3] = userVO.getId();
+							if (fileDAO.version(parameters)) {
+								try {
+									FileOutputStream fos = new FileOutputStream(
+											f);
+									fos.write(multipartFile.getBytes());
+									fos.close();
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							} else {
+								renameFile.delete();
+								return "redirect:/error-page?error=Version could not be created for file updation. Please try again";
 							}
+
 						} else {
-							renameFile.delete();
 							return "redirect:/error-page?error=Version could not be created for file updation. Please try again";
 						}
-
-					} else {
-						return "redirect:/error-page?error=Version could not be created for file updation. Please try again";
-					}
+					} else
+						return "redirect:/Dashboard?deptId=" + dept_Id
+								+ "&folderId=-1&code=C300";
 				} else
-					return "redirect:/Dashboard?deptId=" + dept_Id
-							+ "&folderId=-1&code=C300";
-			} else
-				return "redirect:/error-page?error=Original does not exists";
-		}
+					return "redirect:/error-page?error=Original does not exists";
+			}
+		} else
+			return "redirect:/error-page?error=Cannot update unlock file. Please take lock before update";
 
 		return "redirect:/Dashboard?deptId=-1&folderId=-1";
 	}
@@ -171,7 +181,7 @@ public class FileController {
 						f.delete();
 					}
 				} else
-					return "redirect:/error-page?error=Resource is of type file. Please upload directory";
+					return "redirect:/error-page?error=Resource is of type file. Please create directory";
 			} else
 				return "redirect:/error-page?error=Folder already exists";
 		} else {

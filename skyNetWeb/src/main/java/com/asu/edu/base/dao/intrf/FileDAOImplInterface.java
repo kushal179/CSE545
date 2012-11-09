@@ -2,8 +2,6 @@ package com.asu.edu.base.dao.intrf;
 
 import com.asu.edu.base.vo.FileVO;
 import com.asu.edu.base.vo.ShareVO;
-import com.asu.edu.base.vo.UserVO;
-import com.asu.edu.constants.CommonConstants;
 
 public interface FileDAOImplInterface {
 
@@ -38,5 +36,7 @@ public interface FileDAOImplInterface {
 	public boolean version(Object[] param);
 
 	public boolean unshareItem(String fileid, Long byUserID, Long toUserId);
+	
+	public boolean isOwnerLock(Object[] param);
 
 }

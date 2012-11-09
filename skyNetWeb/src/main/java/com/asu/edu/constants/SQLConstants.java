@@ -40,9 +40,11 @@ public interface SQLConstants {
 	public static final String VERSION  ="insert into versioning(file_id,version,record_time,mod_user_id) values(?,?,?,?);";
 	public static final String UNLOCK_FILE = "update files f set f.lock = 0 where locked_by=? and file_id=?";
 	public static final String DELETE = "delete from files where file_id=? and 'lock' = 0";
-	public static final String DELETE_DIR = "delete from files f where f.file_id=? and f.lock=0 and f.path like ?";
+	public static final String DELETE_DIR = "delete from files where file_id=? and 'lock'=0 and path like ?";
 
 	public static final String IS_FILE_LOCK = "select * from files f where f.lock=1 and instr((select path from files f where f.file_id=?),f.path)";
+	
+	public static final String IS_FILE_LOCK_WITH_OWNER = "select * from files f where f.lock=1 and f.locked_by=? and instr((select path from files a where a.file_id=?),f.path)";
 
 	public static final String CHECKING_FILE_OWNERSHIP = "select * from files where owner_id=? and file_id=?";
 
