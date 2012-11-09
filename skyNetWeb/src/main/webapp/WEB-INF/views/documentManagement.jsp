@@ -180,7 +180,8 @@ body {
 				<div class="modal hide fade" role="dialog"
 					aria-labelledby="shareModalLabel" aria-hidden="true"
 					id="update-bar" style="display: none;" onshow="alert('shown');">
-					<form id="update-form" action="update" method="post" enctype="multipart/form-data">
+					<form id="update-form" action="update" method="post"
+						enctype="multipart/form-data">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal"
 								aria-hidden="true"></button>
@@ -190,7 +191,7 @@ body {
 
 						<div class="modal-body">
 
-							<input type="file" name="file" id="file-upload"><br>
+							<input type="file" name="file" id="file-update-input"><br>
 							<table>
 								<tr>
 									<td><input type="checkbox" id="enable-encryption" /></td>
@@ -222,15 +223,16 @@ body {
 				<div class="modal hide fade" role="dialog"
 					aria-labelledby="shareModalLabel" aria-hidden="true"
 					id="upload-bar" style="display: none;">
-					<form id="upload-form" action="upload" method="post" enctype="multipart/form-data">
+					<form id="upload-form" action="upload" method="post"
+						enctype="multipart/form-data">
 						<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-hidden="true"></button>
-						<h3 id="myModalLabel">Upload new file</h3>
-					</div>
-						
+							<button type="button" class="close" data-dismiss="modal"
+								aria-hidden="true"></button>
+							<h3 id="myModalLabel">Upload new file</h3>
+						</div>
+
 						<div class="modal-body">
-							<input type="file" name="file" id="file-upload"><br>
+							<input type="file" name="file" id="file-upload-input"><br>
 							<table>
 								<tr>
 									<td><input type="checkbox" id="enable-encryption" /></td>
@@ -311,7 +313,13 @@ body {
 								<tr onclick="onDashboardItemselected(this);">
 									<td width="40px"><img height="30px" width="30px"
 										src="${item.iconFile}"></td>
-									<td><a href="${item.hyperlink }">${item.fileName}</a></td>
+									<td>
+										<form action="download" method="post">
+											<input class="btn-link" type="hidden" name="file-id"
+												value="${item.hashedId}" /> <input type="submit" value="${item.fileName}"
+												class="btn-link">
+										</form>
+									</td>
 									<td>${item.modTime}</td>
 									<td>${item.type}</td>
 									<td><c:choose>
@@ -372,7 +380,8 @@ body {
 								<table>
 									<tr>
 										<td style="padding-left: 20px;"><form:checkbox
-												path="permissions" id="read" value="1" checked = "checked" disabled="true" /></td>
+												path="permissions" id="read" value="1" checked="checked"
+												disabled="true" /></td>
 										<td style="padding-left: 10px; padding-top: 5px;"><label>Read</label></td>
 									</tr>
 									<tr>

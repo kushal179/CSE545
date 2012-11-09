@@ -10,8 +10,8 @@ function sharedBybodyload() {
 function onDashboardItemselected(id) {
 	document.getElementById("itemname").innerHTML = id
 			.getElementsByTagName('td')[1].innerHTML;
-	document.getElementById("fileName").innerHTML = id
-			.getElementsByTagName('td')[1].innerHTML;
+//	document.getElementById("fileName").innerHTML = id
+//			.getElementsByTagName('td')[1].innerHTML;
 
 	var fileId = id.getElementsByTagName('td')[5].innerHTML;
 	document.getElementById("itemId").value = fileId;
@@ -44,10 +44,11 @@ function onDashboardItemselected(id) {
 
 	if (!isDir) {
 		$("#version-button").show();
-
+		
 		if (updateAllowed) {
 			$("#update-button").show();
 		}
+		
 	}
 
 	if (lockAllowed) {
@@ -61,6 +62,9 @@ function onDashboardItemselected(id) {
 	} else {
 		$("#lock-button").hide();
 	}
+	
+	if(!isLocked)
+		$("#delete-button").show();
 
 }
 
@@ -117,7 +121,7 @@ function onSharedToItemselected(id) {
 
 }
 
-function selectSharedByFileRow(id) {
+function onSharedByItemselected(id) {
 	document.getElementById("itemname").innerHTML = id
 			.getElementsByTagName('td')[1].innerHTML;
 
@@ -140,22 +144,7 @@ function selectSharedByFileRow(id) {
 }
 
 
-/*function selectshareByFileRow(id) {
-	document.getElementById("itemname").innerHTML = id
-			.getElementsByTagName('td')[1].innerHTML;
-
-	var fileId = id.getElementsByTagName('td')[6].innerHTML;
-	document.getElementById("itemId").value = fileId;
-
-	
-	var table = document.getElementById("fileslist");
-	for ( var i = 0, row; row = table.rows[i]; i++) {
-		row.style.backgroundColor = '#ffffff';
-	}
-	id.style.backgroundColor = '#E2E6A8';
-	$("#fileid").val(fileId);
-}
-*/function onheaderBarClicked() {
+function onheaderBarClicked() {
 	var table = document.getElementById("fileslist");
 	for ( var i = 0, row; row = table.rows[i]; i++) {
 		row.style.backgroundColor = '#ffffff';
@@ -170,12 +159,12 @@ $("#upload-button").click(function() {
 });
 
 $("#upload-form").submit(function() {
-	var fileName = $("#file-upload").val();
+	var fileName = $("#file-upload-input").val();
 	return ValidateFile(fileName);
 });
 
 $("#update-form").submit(function() {
-	var fileName = $("#file-upload").val();
+	var fileName = $("#file-update-input").val();
 	return ValidateFile(fileName);
 });
 

@@ -23,7 +23,7 @@ public interface SQLConstants {
 	/* Dashboard DAO */
 	public static final String GET_REGULAR_USER_FILES = "select *, (files.lock=(0) OR owner_id=locked_by) as lock_allowed from files where owner_id=? and parent_id=?";
 	public static final String GET_DEPT_MANAGER_FILES = "select *, (F.lock=(0) OR (F.owner_id=? OR F.locked_by=?)) as lock_allowed from files F inner join user U on F.owner_id=U.id where F.dept_id=? and F.parent_id=? and U.role_id!=5";
-	public static final String GET_CORPORATE_MANAGER_FILES = "select *, (lock=(0) OR (owner_id=? OR locked_by=?)) as lock_allowed from files where dept_id=? and parent_id=?";
+	public static final String GET_CORPORATE_MANAGER_FILES = "select *, (files.lock=(0) OR (owner_id=? OR locked_by=?)) as lock_allowed from files where dept_id=? and parent_id=?";
 
 	/* Document versioning */
 	public static final String GET_FILE_INFO = "select * from files where file_id=?";

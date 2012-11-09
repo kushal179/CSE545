@@ -201,7 +201,7 @@ body {
 						</thead>
 						<tbody>
 							<c:forEach var="item" items="${files}">
-								<tr onclick="onDashboardItemselected(this);">
+								<tr onclick="onSharedToItemselected(this);">
 									<td width="40px"><img height="30px" width="30px"
 										src="${item.iconFile}"></td>
 									<td><a href="${item.hyperlink }">${item.fileName}</a></td>
