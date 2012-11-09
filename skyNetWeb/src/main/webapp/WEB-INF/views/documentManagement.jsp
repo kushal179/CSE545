@@ -18,8 +18,10 @@
 <!-- Le styles -->
 <link href="<c:url value="/resources/bootstrap/css/bootstrap.css" />"
 	rel="stylesheet">
-<link href="<c:url value="/resources/favicon.ico" />" rel="icon" type="image/x-icon" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<link href="<c:url value="/resources/favicon.ico" />" rel="icon"
+	type="image/x-icon" />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
 <style type="text/css">
 body {
@@ -111,11 +113,10 @@ body {
 								data-toggle="modal" id="upload-button"> <i class="icon-file"></i>Upload
 									New File
 							</a></td>
-							<td>
-								<button class="btn-link" type="button">
-									<i class="icon-folder-close"></i>New Folder
-								</button>
-							</td>
+							<td><a href="#new-folder-bar" class="btn-link"
+								data-toggle="modal" id="create-folder-button"> <i
+									class="icon-folder"></i>New Folder
+							</a></td>
 						</tr>
 					</table>
 				</div>
@@ -175,15 +176,14 @@ body {
 				<div class="modal hide fade" role="dialog"
 					aria-labelledby="shareModalLabel" aria-hidden="true"
 					id="update-bar" style="display: none;" onshow="alert('shown');">
+					<form id="update-form" action="update" method="post" >
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-hidden="true"></button>
+							<h3 id="myModalLabel">Update file</h3>
+						</div>
 
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-hidden="true"></button>
-						<h3 id="myModalLabel">Update file</h3>
-					</div>
 
-					<form id="update-form" action="upload" method="post"
-						enctype="multipart/form-data">
 						<div class="modal-body">
 
 							<input type="file" name="file" id="file-upload"><br>
@@ -192,37 +192,38 @@ body {
 									<td><input type="checkbox" id="enable-encryption" /></td>
 									<td><label>Encrypt file</label></td>
 								</tr>
-								<tr><td>&nbsp;</td></tr>
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
 								<tr>
 									<td><label for="password-field">Password : </label></td>
 									<td><input disabled="disabled" type="password"
-										name="encrypt" id="password-field" /> </td>
+										name="encrypt" id="password-field" /></td>
 								</tr>
 							</table>
-							<input type="hidden" id="update-file-id" name="file-id"/> 
-							<input type="hidden" id="dept-id" name="dept-id" value="${deptId }" /> 
-							<input type="hidden" id="parent-file-id" name="parent-file-id" value="${parentFileId }">
+							<input type="hidden" id="update-file-id" name="file-id" /> <input
+								type="hidden" id="dept-id" name="dept-id" value="${deptId }" />
+							<input type="hidden" id="parent-file-id" name="parent-file-id"
+								value="${parentFileId }">
 						</div>
-					
-					<div class="modal-footer">
-						<input class="btn btn-primary" type="submit" name="Update"
-							value="Update" />
-						<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-					</div>
+
+						<div class="modal-footer">
+							<input class="btn btn-primary" type="submit" name="Update"
+								value="Update" />
+							<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+						</div>
 					</form>
 				</div>
 
 				<div class="modal hide fade" role="dialog"
 					aria-labelledby="shareModalLabel" aria-hidden="true"
 					id="upload-bar" style="display: none;">
-
-					<div class="modal-header">
+					<form id="upload-form" action="upload" method="post">
+						<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"
 							aria-hidden="true"></button>
 						<h3 id="myModalLabel">Upload new file</h3>
 					</div>
-
-					<form id="upload-form" action="upload" method="post"
 						enctype="multipart/form-data">
 						<div class="modal-body">
 							<input type="file" name="file" id="file-upload"><br>
@@ -231,23 +232,63 @@ body {
 									<td><input type="checkbox" id="enable-encryption" /></td>
 									<td><label>Encrypt file</label></td>
 								</tr>
-								<tr><td>&nbsp;</td></tr>
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
 								<tr>
 									<td><label for="password-field">Password : </label></td>
 									<td><input disabled="disabled" type="password"
-										name="encrypt" id="password-field" /> </td>
+										name="encrypt" id="password-field" /></td>
 								</tr>
 							</table>
-							<input type="hidden" id="upload-file-id" name="file-id"/> 
-							<input type="hidden" id="dept-id" name="dept-id" value="${deptId }" /> 
-							<input type="hidden" id="parent-file-id" name="parent-file-id" value="${parentFileId }">
+							<input type="hidden" id="upload-file-id" name="file-id" /> <input
+								type="hidden" id="dept-id" name="dept-id" value="${deptId }" />
+							<input type="hidden" id="parent-file-id" name="parent-file-id"
+								value="${parentFileId }">
+						</div>
+
+						<div class="modal-footer">
+							<input class="btn btn-primary" type="submit" name="Upload"
+								value="Upload" />
+							<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 						</div>
 					</form>
-					<div class="modal-footer">
-						<input class="btn btn-primary" type="submit" name="Upload"
-							value="Upload" />
-						<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-					</div>
+				</div>
+
+				<div class="modal hide fade" role="dialog"
+					aria-labelledby="shareModalLabel" aria-hidden="true"
+					id="new-folder-bar" style="display: none;">
+					<form id="new-folder-form" action="makeNewFolder" method="post">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-hidden="true"></button>
+							<h3 id="myModalLabel">Create new folder</h3>
+						</div>
+
+
+						<div class="modal-body">
+							<table>
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td><label>Folder name : </label></td>
+									<td><input type="text" name="folder-name" id="folder-name">
+									</td>
+								</tr>
+							</table>
+							<input type="hidden" id="upload-file-id" name="file-id" /> <input
+								type="hidden" id="dept-id" name="dept-id" value="${deptId }" />
+							<input type="hidden" id="parent-file-id" name="parent-file-id"
+								value="${parentFileId }">
+						</div>
+
+						<div class="modal-footer">
+							<input class="btn btn-primary" type="submit" name="Create"
+								value="Create" />
+							<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+						</div>
+					</form>
 				</div>
 
 				<div class="row-fluid">

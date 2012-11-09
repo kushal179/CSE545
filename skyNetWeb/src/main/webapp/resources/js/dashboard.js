@@ -145,9 +145,21 @@ $("#upload-button").click(function() {
 	$("#upload-bar").show();
 });
 
-$("#upload-submit").submit(function() {
+$("#upload-form").submit(function() {
 	var fileName = $("#file-upload").val();
 	return ValidateFile(fileName);
+});
+
+$("#update-form").submit(function() {
+	var fileName = $("#file-upload").val();
+	return ValidateFile(fileName);
+});
+
+$("#new-folder-form").submit(function() {
+	var fileName = $("#folder-name").val();
+	if(fileName == "")
+		return false;
+	return true;
 });
 
 $("#enable-encryption").change(function() {
