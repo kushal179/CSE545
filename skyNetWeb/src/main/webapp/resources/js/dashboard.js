@@ -212,10 +212,6 @@ function ValidateFile(sFileName) {
 	return false;
 }
 
-function selectFileRow(row) {
-
-}
-
 function permissionsCheckboxSelected() {
 	if(($("#update")[0].checked) && !($("#lock")[0].checked)){
 		$("#selectUpdateAlso").show();
@@ -223,4 +219,14 @@ function permissionsCheckboxSelected() {
 	}
 	
 	return true;
+}
+
+function onDownload(id){
+	var isEnc = id.getElementsByTagName('input')[1].value == "true";
+	if(isEnc) {
+		$("#download-file-id").val(id.getElementsByTagName('input')[0].value);
+		$("#enter-password-bar").modal('show');
+		return false;
+	} else
+		return true;
 }

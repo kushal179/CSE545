@@ -181,6 +181,41 @@ body {
 					</form>
 				</div>
 
+				<div class="modal hide fade" role="dialog"
+					aria-labelledby="shareModalLabel" aria-hidden="true"
+					id="enter-password-bar" style="display: none;">
+					<form id="enter-password-form" action="download" method="post">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-hidden="true"></button>
+							<h3 id="myModalLabel">Encrypted file</h3>
+						</div>
+
+						<div class="modal-body">
+							<table>
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td><label>Enter Password : </label></td>
+									<td><input type="password" name="password" id="password">
+									</td>
+								</tr>
+							</table>
+							<input type="hidden" id="download-file-id" name="file-id" /> <input
+								type="hidden" id="dept-id" name="dept-id" value="${deptId }" />
+							<input type="hidden" id="parent-file-id" name="parent-file-id"
+								value="${parentFileId }">
+						</div>
+
+						<div class="modal-footer">
+							<input class="btn btn-primary" type="submit" name="Download"
+								value="Create" />
+							<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+						</div>
+					</form>
+				</div>
+
 				<div class="row-fluid">
 					<table class="table table-hover" id="fileslist">
 						<thead>
@@ -197,20 +232,20 @@ body {
 								<tr onclick="onSharedToItemselected(this);">
 									<td width="40px"><img height="30px" width="30px"
 										src="${item.iconFile}"></td>
-									<td>
-										<c:choose>
+									<td><c:choose>
 											<c:when test="${item.dir}">
 												<a href="${item.hyperlink }">${item.fileName}</a>
 											</c:when>
 											<c:otherwise>
-												<form action="download" method="post">
+												<form action="download" method="post"
+													onsubmit="return onDownload(this);">
 													<input class="btn-link" type="hidden" name="file-id"
-														value="${item.hashedId}" /> <input type="submit"
-														value="${item.fileName}" class="btn-link">
+														value="${item.hashedId}" /> <input type="hidden"
+														id="is-enc" value="${item.encrypted}"> <input
+														type="submit" value="${item.fileName}" class="btn-link">
 												</form>
 											</c:otherwise>
-										</c:choose>
-									</td>
+										</c:choose></td>
 									<td>${item.modTime}</td>
 									<td>${item.type}</td>
 									<td><c:choose>

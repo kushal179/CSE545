@@ -318,10 +318,13 @@ body {
 												<a href="${item.hyperlink }">${item.fileName}</a>
 											</c:when>
 											<c:otherwise>
-												<form action="download" method="post" <%-- onsubmit="onDownload(this); --%>">
+												<form action="download" method="post"
+													onsubmit="return onDownload(this);">
 													<input class="btn-link" type="hidden" name="file-id"
-														value="${item.hashedId}" /> <input type="submit"
-														value="${item.fileName}" class="btn-link">
+														value="${item.hashedId}" /> <input type="hidden"
+														id="is-enc" value="${item.encrypted}"><input
+														type="submit" value="${item.fileName}" class="btn-link">
+
 												</form>
 											</c:otherwise>
 										</c:choose></td>
@@ -367,13 +370,14 @@ body {
 						</tr>
 						<tr>
 							<td><label>Enter Password : </label></td>
-							<td><input type="text" name="password" id="password">
+							<td><input type="password" name="password" id="password">
 							</td>
 						</tr>
 					</table>
-					<input type="hidden" id="download-file-id" name="file-id" /> 
-					<input type="hidden" id="dept-id" name="dept-id" value="${deptId }" /> 
-					<input type="hidden" id="parent-file-id" name="parent-file-id" value="${parentFileId }">
+					<input type="hidden" id="download-file-id" name="file-id" /> <input
+						type="hidden" id="dept-id" name="dept-id" value="${deptId }" /> <input
+						type="hidden" id="parent-file-id" name="parent-file-id"
+						value="${parentFileId }">
 				</div>
 
 				<div class="modal-footer">

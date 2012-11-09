@@ -126,14 +126,11 @@ public class SharedToDocumentsController {
 
 	}
 
-	@ExceptionHandler(IOException.class)
-	public String handleIOException(IOException ex, HttpServletRequest request) {
+	@ExceptionHandler(Exception.class)
+    public String handleIOException(Exception ex, HttpServletRequest request) {
 
-		System.out.println("in exceptopn handler");
-		return "documentManagement";
-	}
+            System.out.println("in exceptopn handler");
+            return "redirect:/error-page?error=Invalid state reached";
+    }
 
-	static {
-
-	}
 }

@@ -5,12 +5,14 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -102,7 +104,8 @@ public class DashboardController {
 				break;
 			case ROLE_CORPORATE_MANAGER:
 				dept = departmentMap.get(departmentId);
-				files = dashboardDAO.getCorporateManagerFiles(user, dept, parentId);
+				files = dashboardDAO.getCorporateManagerFiles(user, dept,
+						parentId);
 				break;
 			}
 
@@ -113,9 +116,11 @@ public class DashboardController {
 			model.put("files", files);
 			model.put("deptId", departmentId);
 			model.put("deptDesc", dept.getDeptDesc());
-			model.put("parentFileId", encryptDecrypt.encrypt(String.valueOf(parentId)));
+			model.put("parentFileId",
+					encryptDecrypt.encrypt(String.valueOf(parentId)));
 			model.put("shareVO", new ShareVO());
-			model.put("shareToUsers", dashboardDAO.getapprovedNonAdminUsers(user.getId()));
+			model.put("shareToUsers",
+					dashboardDAO.getapprovedNonAdminUsers(user.getId()));
 
 			return "documentManagement";
 		}
@@ -130,7 +135,8 @@ public class DashboardController {
 
 			String hashedId;
 			try {
-				hashedId = encryptDecrypt.encrypt(String.valueOf(fileVO.getId()));
+				hashedId = encryptDecrypt
+						.encrypt(String.valueOf(fileVO.getId()));
 				fileVO.setHashedId(hashedId);
 			} catch (SecurityException e) {
 				// TODO Auto-generated catch block
@@ -153,9 +159,9 @@ public class DashboardController {
 
 			if (fileVO.isDir())
 				try {
-					fileVO.setHyperlink("Dashboard?deptId=" + fileVO.getDeptId()
-							+ "&folderId=" + URLEncoder
-							.encode(fileVO.getHashedId(), "UTF-8"));
+					fileVO.setHyperlink("Dashboard?deptId="
+							+ fileVO.getDeptId() + "&folderId="
+							+ URLEncoder.encode(fileVO.getHashedId(), "UTF-8"));
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -163,17 +169,13 @@ public class DashboardController {
 			else
 				fileVO.setHyperlink("download?id=" + fileVO.getHashedId());
 		}
-
 	}
 
-	/*@ExceptionHandler(Exception.class)
+	@ExceptionHandler(Exception.class)
 	public String handleIOException(Exception ex, HttpServletRequest request) {
 
 		System.out.println("in exceptopn handler");
-		return "error-page";
-	}*/
-
-	static {
-
+		return "redirect:/error-page?error=Invalid state reached";
 	}
+
 }

@@ -1,5 +1,7 @@
 package com.asu.edu.constants;
 
+import java.util.HashMap;
+
 public interface CommonConstants {
 
 	public static final String USER = "userVO";
@@ -27,5 +29,7 @@ public interface CommonConstants {
 	public static final String REQ_PARAM_PARENTID = "parentId";
 	
 	public static final String C300 = "Updating file name should be same as original file name";
+
+	static HashMap<String, String> ERROR_CODES = new HashMap<String, String>();
 
 }
