@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -86,7 +87,7 @@ public class FileController {
 			e.printStackTrace();
 		}
 
-		return "redirect:/Dashboard?deptId=-1&folderId=-1";
+		return "redirect:"+request.getHeader("Referer");
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -101,7 +102,7 @@ public class FileController {
 		Object[] paramSQL = new Object[2];
 		paramSQL[0] = userVO.getId();
 		paramSQL[1] = id;
-		if (fileDAO.isLock(paramSQL)) {
+		if (fileDAO.isLockOwner(paramSQL)) {
 			HashMap<String, String> param = new HashMap<String, String>();
 			param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
 			if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
@@ -151,15 +152,15 @@ public class FileController {
 			}
 		} else
 			return "redirect:/error-page?error=Cannot update unlock file. Please take lock before update";
-
-		return "redirect:/Dashboard?deptId=-1&folderId=-1";
+		
+		return "redirect:"+request.getHeader("Referer");
 	}
 
 	@RequestMapping(value = "/makeNewFolder", method = RequestMethod.POST)
 	public String makeNewFolder(HttpSession session,
 			@RequestParam("parent-file-id") String parent_Id,
 			@RequestParam("folder-name") String folderName,
-			HttpServletResponse response) {
+			HttpServletResponse response,HttpServletRequest request) {
 		int parentId = Integer.parseInt(util.decrypt(parent_Id));
 		FileVO fileVO = new FileVO();
 		fileVO.setFileName(folderName);
@@ -187,7 +188,7 @@ public class FileController {
 			return "redirect:/error-page?error=parent Folder not found";
 		}
 
-		return "redirect:/Dashboard?deptId=-1&folderId=-1";
+		return "redirect:"+request.getHeader("Referer");
 	}
 
 	@RequestMapping(value = "/download", method = RequestMethod.POST)
@@ -317,7 +318,7 @@ public class FileController {
 
 	@RequestMapping(value = "/lock", method = RequestMethod.POST)
 	private String checkOut(@RequestParam("file-id") String file_Id,
-			HttpSession session) {
+			HttpSession session,HttpServletRequest request) {
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
 
@@ -336,13 +337,13 @@ public class FileController {
 			return "redirect:/error-page?error=Not Authorized";
 		}
 
-		return "redirect:/Dashboard?deptId=-1&folderId=-1";
+		return "redirect:"+request.getHeader("Referer");
 
 	}
 
 	@RequestMapping(value = "/unlock", method = RequestMethod.POST)
 	private String checkIn(@RequestParam("file-id") String file_Id,
-			HttpSession session) {
+			HttpSession session,HttpServletRequest request) {
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
 
@@ -360,13 +361,13 @@ public class FileController {
 			return "redirect:/error-page?error=Not Authorized";
 		}
 
-		return "redirect:/Dashboard?deptId=-1&folderId=-1";
+		return "redirect:"+request.getHeader("Referer");
 
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	private String delete(@RequestParam("file-id") String file_Id,
-			HttpSession session) {
+			HttpSession session,HttpServletRequest request) {
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
 
@@ -396,7 +397,7 @@ public class FileController {
 			return "redirect:/error-page?error=Not Authorized";
 		}
 
-		return "redirect:/Dashboard?deptId=-1&folderId=-1";
+		return "redirect:"+request.getHeader("Referer");
 
 	}
 
@@ -404,11 +405,11 @@ public class FileController {
 	public String shareItem(@ModelAttribute("shareVO") ShareVO shareVO,
 			@RequestParam("dept-id") int deptId, BindingResult result,
 			ServletRequest servletRequest, Map<String, Object> model,
-			HttpSession session) {
+			HttpSession session,HttpServletRequest request) {
 		boolean shareresult = fileDAO
 				.shareItem(shareVO, ((UserVO) (session
 						.getAttribute(CommonConstants.USER))).getId());
 
-		return "redirect:/Dashboard?deptId=-1&folderId=-1";
+		return "redirect:"+request.getHeader("Referer");
 	}
 }

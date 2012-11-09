@@ -55,9 +55,13 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		if (calledFunction == "isLock") {
 			return true;
 		}
+		if (calledFunction == "isLockOwner") {
+			return true;
+		}
 		if (calledFunction == "deptByParent") {
 			return rs.getInt("DEPT_ID");
 		}
+		
 
 		return null;
 	}
@@ -149,20 +153,21 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 
 	public boolean isLock(Object[] param) {
 		calledFunction = "isLock";
-		String sql = SQLConstants.IS_FILE_LOCK_WITH_OWNER;
-		if (getRowByCriteria(sql, param) != null)
-			return true;
-		else
-			return false;
-	}
-	public boolean isOwnerLock(Object[] param) {
-		calledFunction = "isOwnerLock";
 		String sql = SQLConstants.IS_FILE_LOCK;
 		if (getRowByCriteria(sql, param) != null)
 			return true;
 		else
 			return false;
 	}
+	public boolean isLockOwner(Object[] param) {
+		calledFunction = "isLockOwner";
+		String sql = SQLConstants.IS_FILE_LOCK_WITH_OWNER;
+		if (getRowByCriteria(sql, param) != null)
+			return true;
+		else
+			return false;
+	}
+	
 
 	public boolean fileOwnerShipAuthorization(Object[] param) {
 		calledFunction = "fileOwnerShipAuthorization";

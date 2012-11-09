@@ -37,6 +37,6 @@ public interface FileDAOImplInterface {
 
 	public boolean unshareItem(String fileid, Long byUserID, Long toUserId);
 	
-	public boolean isOwnerLock(Object[] param);
+	public boolean isLockOwner(Object[] param);
 
 }
