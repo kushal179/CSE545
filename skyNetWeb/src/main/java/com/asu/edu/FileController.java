@@ -14,10 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,6 +38,8 @@ import com.asu.edu.util.Authorization;
 @Controller
 public class FileController {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(LoginController.class);
 	@Autowired
 	private FileDAOImplInterface fileDAO = null;
 
@@ -87,7 +91,7 @@ public class FileController {
 			e.printStackTrace();
 		}
 
-		return "redirect:"+request.getHeader("Referer");
+		return "redirect:" + request.getHeader("Referer");
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -152,15 +156,15 @@ public class FileController {
 			}
 		} else
 			return "redirect:/error-page?error=Cannot update unlock file. Please take lock before update";
-		
-		return "redirect:"+request.getHeader("Referer");
+
+		return "redirect:" + request.getHeader("Referer");
 	}
 
 	@RequestMapping(value = "/makeNewFolder", method = RequestMethod.POST)
 	public String makeNewFolder(HttpSession session,
 			@RequestParam("parent-file-id") String parent_Id,
 			@RequestParam("folder-name") String folderName,
-			HttpServletResponse response,HttpServletRequest request) {
+			HttpServletResponse response, HttpServletRequest request) {
 		int parentId = Integer.parseInt(util.decrypt(parent_Id));
 		FileVO fileVO = new FileVO();
 		fileVO.setFileName(folderName);
@@ -188,7 +192,7 @@ public class FileController {
 			return "redirect:/error-page?error=parent Folder not found";
 		}
 
-		return "redirect:"+request.getHeader("Referer");
+		return "redirect:" + request.getHeader("Referer");
 	}
 
 	@RequestMapping(value = "/download", method = RequestMethod.POST)
@@ -198,7 +202,10 @@ public class FileController {
 		long id = Long.parseLong(util.decrypt(file_Id));
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
-
+		if(request.getParameter("password")!=null);
+		{
+			String password = request.getParameter("password");
+		}
 		if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
 			FileVO fileVO = (FileVO) fileDAO.getFile(id);
 			if (fileVO != null) {
@@ -211,9 +218,9 @@ public class FileController {
 				try {
 					fileIn = new FileInputStream(file);
 					out = response.getOutputStream();
-					byte[] outputByte = new byte[4096];
-					while (fileIn.read(outputByte, 0, 4096) != -1) {
-						out.write(outputByte, 0, 4096);
+					byte[] outputByte = new byte[2048];
+					while (fileIn.read(outputByte, 0, 2048) != -1) {
+						out.write(outputByte, 0, 2048);
 					}
 
 					fileIn.close();
@@ -256,9 +263,9 @@ public class FileController {
 				try {
 					fileIn = new FileInputStream(file);
 					out = response.getOutputStream();
-					byte[] outputByte = new byte[4096];
-					while (fileIn.read(outputByte, 0, 4096) != -1) {
-						out.write(outputByte, 0, 4096);
+					byte[] outputByte = new byte[2048];
+					while (fileIn.read(outputByte, 0, 2048) != -1) {
+						out.write(outputByte, 0, 2048);
 					}
 
 					fileIn.close();
@@ -318,7 +325,7 @@ public class FileController {
 
 	@RequestMapping(value = "/lock", method = RequestMethod.POST)
 	private String checkOut(@RequestParam("file-id") String file_Id,
-			HttpSession session,HttpServletRequest request) {
+			HttpSession session, HttpServletRequest request) {
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
 
@@ -337,13 +344,13 @@ public class FileController {
 			return "redirect:/error-page?error=Not Authorized";
 		}
 
-		return "redirect:"+request.getHeader("Referer");
+		return "redirect:" + request.getHeader("Referer");
 
 	}
 
 	@RequestMapping(value = "/unlock", method = RequestMethod.POST)
 	private String checkIn(@RequestParam("file-id") String file_Id,
-			HttpSession session,HttpServletRequest request) {
+			HttpSession session, HttpServletRequest request) {
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
 
@@ -361,13 +368,13 @@ public class FileController {
 			return "redirect:/error-page?error=Not Authorized";
 		}
 
-		return "redirect:"+request.getHeader("Referer");
+		return "redirect:" + request.getHeader("Referer");
 
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	private String delete(@RequestParam("file-id") String file_Id,
-			HttpSession session,HttpServletRequest request) {
+			HttpSession session, HttpServletRequest request) {
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
 
@@ -397,7 +404,7 @@ public class FileController {
 			return "redirect:/error-page?error=Not Authorized";
 		}
 
-		return "redirect:"+request.getHeader("Referer");
+		return "redirect:" + request.getHeader("Referer");
 
 	}
 
@@ -405,11 +412,17 @@ public class FileController {
 	public String shareItem(@ModelAttribute("shareVO") ShareVO shareVO,
 			@RequestParam("dept-id") int deptId, BindingResult result,
 			ServletRequest servletRequest, Map<String, Object> model,
-			HttpSession session,HttpServletRequest request) {
+			HttpSession session, HttpServletRequest request) {
 		boolean shareresult = fileDAO
 				.shareItem(shareVO, ((UserVO) (session
 						.getAttribute(CommonConstants.USER))).getId());
 
-		return "redirect:"+request.getHeader("Referer");
+		return "redirect:" + request.getHeader("Referer");
+	}
+
+	@ExceptionHandler(Exception.class)
+	public String handleIOException(Exception ex, HttpServletRequest request) {
+		logger.debug(ex.getMessage());
+		return "redirect:/error-page?error=Invalid state reached";
 	}
 }
