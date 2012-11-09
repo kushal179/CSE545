@@ -10,8 +10,6 @@
 <meta name="author" content="">
 
 
-<script src="http://code.jquery.com/jquery-latest.js"></script>
-
 <script type="text/javascript"
 	src="<c:url value="/resources/jquery/jquery.js" />"></script>
 <script type="text/javascript"
@@ -188,8 +186,9 @@ body {
 																			<td style="padding-left: 20px; padding-top: 5px;"><label
 																				style="color: white">${item.deptName}</label></td>
 																			<td><div id="deps">
-																					<form:checkbox path="departments" 
-																						id="role_${item.id}" value="${item.id}" class="required"/>
+																					<form:checkbox path="departments"
+																						id="role_${item.id}" value="${item.id}"
+																						class="required" />
 																				</div></td>
 																		</tr>
 																	</c:forEach>
@@ -200,9 +199,24 @@ body {
 														<tr>
 															<td></td>
 															<td><div align="left">
-																	<captcha:captcha themeName="white"
+																	<script type="text/javascript"
+																		src="https://www.google.com/recaptcha/api/challenge?k=6LdIMtgSAAAAAHEwm2t3BSD4GBsFMKBNko6LBOH6">
+																		
+																	</script>
+																	<noscript>
+																		<iframe
+																			src="http://www.google.com/recaptcha/api/noscript?k=6LdIMtgSAAAAAHEwm2t3BSD4GBsFMKBNko6LBOH6"
+																			height="300" width="500" frameborder="0"></iframe>
+																		<br>
+																		<textarea name="recaptcha_challenge_field" rows="3"
+																			cols="40">
+     																	</textarea>
+																		<input type="hidden" name="recaptcha_response_field"
+																			value="manual_challenge">
+																	</noscript>
+																	<%-- <captcha:captcha themeName="white" 
 																		publickey="6LdIMtgSAAAAAHEwm2t3BSD4GBsFMKBNko6LBOH6"
-																		privatekey="6LdIMtgSAAAAALIW_Ec3pU6m0OUBV2BMLnNOYCVD" />
+																		privatekey="6LdIMtgSAAAAALIW_Ec3pU6m0OUBV2BMLnNOYCVD" /> --%>
 																	<br /> <font color="red"><form:errors
 																			path="captcha" /></font> <br /> <input id="submit"
 																		type="submit" value="Submit" /> <br />

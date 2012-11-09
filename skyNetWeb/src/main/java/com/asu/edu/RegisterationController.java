@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import net.tanesha.recaptcha.ReCaptcha;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -76,16 +78,17 @@ public class RegisterationController {
 						"captcha", "Captcha worong. Please try again.");
 				result.addError(fieldError);
 			} else {
-				
-				logger.info("department is : " + registerationVO.getDepartments());
+
+				logger.info("department is : "
+						+ registerationVO.getDepartments());
 				logger.info("role is : " + registerationVO.getRoleId());
 				int role_id = registerationVO.getRoleId();
-				if(role_id != 5)
-				{
+				if (role_id != 5) {
 					ArrayList<Integer> depts = registerationVO.getDepartments();
-					int no_of_depts = depts.size();
-					if(no_of_depts > 1)
-					{
+					int no_of_depts = 0;
+					if (depts != null)
+						no_of_depts = depts.size();
+					if (no_of_depts > 1) {
 
 						String message = "Multiple departments are not allowed for this user Role";
 						model.put("errorMsg", message);
@@ -94,8 +97,7 @@ public class RegisterationController {
 						model.put("roleList", rolesArray);
 						return "register";
 					}
-					if(role_id == 2 && no_of_depts != 0)
-					{
+					if (role_id == 2 && no_of_depts != 0) {
 
 						String message = "departments selection is not allowed for Guest user";
 						model.put("errorMsg", message);
@@ -121,39 +123,43 @@ public class RegisterationController {
 	}
 
 	private void initArrays() {
-		try
-		{
+		try {
 			if (deptArray == null) {
 				deptArray = new ArrayList<DepartmentVO>();
-				Map deptMap =  MasterCache.getDepartmentMap();
+				Map deptMap = MasterCache.getDepartmentMap();
 				System.out.println("dept MAP " + deptMap);
 				Iterator it = deptMap.entrySet().iterator();
 				Map.Entry pairs;
 				while (it.hasNext()) {
-					pairs = (Map.Entry)it.next();
-					deptArray.add((DepartmentVO)pairs.getValue());
+					pairs = (Map.Entry) it.next();
+					deptArray.add((DepartmentVO) pairs.getValue());
 				}
 			}
 
 			if (rolesArray == null) {
 				rolesArray = new ArrayList<RoleVO>();
-				Map rolesMap =  MasterCache.getRoleMap();
+				Map rolesMap = MasterCache.getRoleMap();
 				Iterator it = rolesMap.entrySet().iterator();
 				Map.Entry pairs;
 				while (it.hasNext()) {
-					pairs = (Map.Entry)it.next();
-					RoleVO roleVO = (RoleVO)pairs.getValue();
-					if(roleVO.getId() == 1)
+					pairs = (Map.Entry) it.next();
+					RoleVO roleVO = (RoleVO) pairs.getValue();
+					if (roleVO.getId() == 1)
 						continue;
-					rolesArray.add((RoleVO)pairs.getValue());
+					rolesArray.add((RoleVO) pairs.getValue());
 				}
 			}
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			e.getStackTrace();
 		}
 
 	}
 	
+	@ExceptionHandler(Exception.class)
+	public String handleIOException(Exception ex, HttpServletRequest request) {
+
+		System.out.println("in exceptopn handler");
+		return "redirect:/error-page?error=Check if javascript is enabled as this page is captcha enabled";
+	}
+
 }

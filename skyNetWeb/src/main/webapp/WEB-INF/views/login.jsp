@@ -37,8 +37,6 @@ body {
 }
 </style>
 
-<script src="http://code.jquery.com/jquery-latest.js"></script>
-
 
 <style type="text/css">
 * {
@@ -101,12 +99,22 @@ em {
 
 
 	<table border="0" cellpadding="0" cellspacing="0" align="center">
+		<noscript>
+			<div class="hero-unitops">
+				<p class="text-error">
+					<b>JavaScript is turned off in your web browser. Turn it on to
+						take full advantage of this site, then refresh the page.</b>
+				</p>
+			</div>
+		</noscript>
 		<tbody>
 			<tr style="height: 250px">
 				<td style="width: 450px; background-color: #333333" valign="top"
 					align="center"><br>
 					<table border="0" cellpadding="10" cellspacing="10">
 						<tbody>
+							<tr>
+							</tr>
 							<tr>
 								<td>
 									<form name='f' id="login"
@@ -117,9 +125,7 @@ em {
 												<tr>
 													<td colspan="2">
 														<div align="left" style="font-size: 22px; color: #ffffff">Sign
-															In</div>
-														<br>
-													<br>
+															In</div> <br> <br>
 													</td>
 												</tr>
 												<tr>
@@ -139,9 +145,23 @@ em {
 															<c:set var="isEnabled" value="${isEnabled}" />
 															<c:choose>
 																<c:when test="${isEnabled}">
-																	<captcha:captcha themeName="white"
+																	<script type="text/javascript"
+																		src="https://www.google.com/recaptcha/api/challenge?k=6LdIMtgSAAAAAHEwm2t3BSD4GBsFMKBNko6LBOH6">
+																	</script>
+																	<noscript>
+																		<iframe
+																			src="https://www.google.com/recaptcha/api/noscript?k=6LdIMtgSAAAAAHEwm2t3BSD4GBsFMKBNko6LBOH6"
+																			height="300" width="500" frameborder="0"></iframe>
+																		<br>
+																		<textarea name="recaptcha_challenge_field" rows="3"
+																			cols="40">
+     																	</textarea>
+																		<input type="hidden" name="recaptcha_response_field"
+																			value="manual_challenge">
+																	</noscript>
+																	<%-- <captcha:captcha themeName="white"
 																		publickey="6LdIMtgSAAAAAHEwm2t3BSD4GBsFMKBNko6LBOH6"
-																		privatekey="6LdIMtgSAAAAALIW_Ec3pU6m0OUBV2BMLnNOYCVD" />
+																		privatekey="6LdIMtgSAAAAALIW_Ec3pU6m0OUBV2BMLnNOYCVD" /> --%>
 																	<br />
 																	<font color="red"><form:errors path="captcha" /></font>
 																	<br />
@@ -157,8 +177,8 @@ em {
 																</div>
 															</c:if>
 															<input class="btn btn-primary" type="submit"
-																value="Sign in" />Submit<br />
-															<br /> <a href="register">Register</a>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
+																value="Sign in" />Submit<br /> <br /> <a
+																href="register">Register</a>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
 															<a href="forgotPassword">Forgot Password</a>
 														</div>
 													</td>
