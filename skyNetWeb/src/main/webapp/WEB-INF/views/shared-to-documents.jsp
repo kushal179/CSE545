@@ -16,6 +16,10 @@
 <!-- Le styles -->
 <link href="<c:url value="/resources/bootstrap/css/bootstrap.css" />"
 	rel="stylesheet">
+	
+<script type="text/javascript"
+	src="<c:url value="/resources/jquery/jquery.js" />"></script>
+	
 
 <style type="text/css">
 body {

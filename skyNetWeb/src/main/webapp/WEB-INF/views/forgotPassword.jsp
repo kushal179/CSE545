@@ -13,6 +13,9 @@
 	rel="stylesheet">
 <link href="<c:url value="/resources/favicon.ico" />" rel="icon" type="image/x-icon" />
 
+<script type="text/javascript"
+	src="<c:url value="/resources/jquery/jquery.js" />"></script>
+
 <style type="text/css">
 body {
 	padding-top: 60px;

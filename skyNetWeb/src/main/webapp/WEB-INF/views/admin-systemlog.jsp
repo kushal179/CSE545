@@ -17,6 +17,9 @@
         padding: 9px 0;
       }
     </style>
+    <script type="text/javascript"
+	src="<c:url value="/resources/jquery/jquery.js" />"></script>
+    
     <script type="text/javascript" 
                   src="<c:url value="/resources/js/commonprj.js" />"></script>
   </head>
