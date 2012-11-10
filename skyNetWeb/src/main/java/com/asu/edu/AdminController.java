@@ -127,6 +127,13 @@ public class AdminController {
 		model.put("logfiles", adminDAO.getLogFiles());
 		return "admin-systemlog";
 	}
+	
+	@RequestMapping(value = "/admin-backup", method = RequestMethod.GET)
+	public String admin_backup(Locale locale, Map model) {
+		logger.info("Backup screen");
+		
+		return "admin-backup";
+	}
 
 	@RequestMapping(value = "/admin/modifynapprove", method = RequestMethod.POST)
 	public String modifyAndApprove(

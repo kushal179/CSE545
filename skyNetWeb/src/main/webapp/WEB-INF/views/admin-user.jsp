@@ -22,9 +22,11 @@
 <!-- Le styles -->
 <link href="<c:url value="/resources/bootstrap/css/bootstrap.css" />"
 	rel="stylesheet">
-<link href="<c:url value="/resources/favicon.ico" />" rel="icon" type="image/x-icon" />
+<link href="<c:url value="/resources/favicon.ico" />" rel="icon"
+	type="image/x-icon" />
 <script src="<c:url value="/resources/jquery/jquery.js"/>"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <style type="text/css">
 body {
 	padding-top: 60px;
@@ -49,13 +51,14 @@ body {
 					class="icon-bar"></span> <span class="icon-bar"></span>
 				</a> <a class="brand" href="#">Doc Kloud</a>
 				<div class="nav-collapse collapse">
-					<p class="navbar-text pull-right">
-						Logged in as <a href="#" class="navbar-link">Admin</a>
-					</p>
+					<p class="navbar-text pull-right">Welcome
+						${sessionScope["userVO"].firstName}
+						${sessionScope["userVO"].lastName}</p>
 					<ul class="nav">
 						<li class="active"><a href="#">Home</a></li>
 						<li><a href="#about">About</a></li>
-						<li><a href="#contact">Logout</a></li>
+						<li><a href="changePassword">Change Password</a></li>
+						<li><a href="<c:url value="/j_spring_security_logout" />">Logout</a></li>
 					</ul>
 				</div>
 				<!--/.nav-collapse -->
@@ -79,7 +82,7 @@ body {
 						<li id="guestUsr"><a href="admin-guest">Guest Users</a></li>
 						<li class="nav-header">Operations</li>
 						<li><a href="admin-logs">System Log</a></li>
-						<li><a href="#">Back-up</a></li>
+						<li><a href="admin-backup">Back-up</a></li>
 					</ul>
 				</div>
 			</div>
@@ -150,7 +153,7 @@ body {
 		</footer>
 
 	</div>
-		<script type="text/javascript"
+	<script type="text/javascript"
 		src="<c:url value="/resources/js/commonprj.js" />"></script>
 </body>
 </html>
