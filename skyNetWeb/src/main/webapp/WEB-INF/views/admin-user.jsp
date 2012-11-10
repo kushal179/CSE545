@@ -87,7 +87,7 @@ body {
 			<div class="span9">
 				<div class="hero-unittitle" id="headerbar"
 					onclick="onheaderBarClicked();">
-					<h3>Users - Regular Employees</h3>
+					<h3>Users</h3>
 				</div>
 
 				<div class="hero-unitops" id="selectItem">Select User</div>

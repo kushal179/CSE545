@@ -99,7 +99,7 @@ public class AdminController {
 		logger.info("Admin screen");
 		selecteUserRole = "deptMgr";
 		attr.addAttribute("role_id", "deptMgr");
-		model.put("users", adminDAO.getUsersByRole(2));
+		model.put("users", adminDAO.getUsersByRole(4));
 		return "admin-user";
 	}
 
@@ -108,7 +108,7 @@ public class AdminController {
 		logger.info("Admin screen");
 		selecteUserRole = "copMgr";
 		attr.addAttribute("role_id", "copMgr");
-		model.put("users", adminDAO.getUsersByRole(4));
+		model.put("users", adminDAO.getUsersByRole(5));
 		return "admin-user";
 	}
 
@@ -117,7 +117,7 @@ public class AdminController {
 		logger.info("Admin screen");
 		selecteUserRole = "guest";
 		attr.addAttribute("role_id", "guestUsr");
-		model.put("users", adminDAO.getUsersByRole(5));
+		model.put("users", adminDAO.getUsersByRole(2));
 		return "admin-user";
 	}
 
@@ -138,10 +138,10 @@ public class AdminController {
 		int role_id = modifiedUserVO.getRoleId();
 		if (role_id != 5) {
 			ArrayList<Integer> depts = modifiedUserVO.getDeptIds();
-			if (role_id == 2 && depts != null) {
+			if (((role_id == 2) || (role_id == 1)) && depts != null) {
 				return "redirect:/admin";
 			}
-			if (role_id != 2) {
+			if ((role_id != 2)&& (role_id != 1)) {
 				int no_of_depts = depts.size();
 				if (no_of_depts > 1) {
 					return "redirect:/admin";
