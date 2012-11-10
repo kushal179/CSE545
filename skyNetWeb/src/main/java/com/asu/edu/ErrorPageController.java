@@ -18,5 +18,22 @@ public class ErrorPageController {
 		request.setAttribute("error", error);
 		return "error-page";
 	}
+	
+	@RequestMapping(value = "/error-code", method = RequestMethod.GET)
+	public String errorCode(HttpServletRequest request){
+		String error = request.getParameter("c");
+		String msg="";
+		if(error.equals("403"))
+			msg = "Access Denied";
+		if(error.equals("404"))
+			msg = "Requested Resource not found";
+		if(error.equals("400"))
+			msg = "Bad request";
+		if(error.equals("408"))
+			msg = "Request Timed out";
+		request.setAttribute("error", msg);
+		return "error-code";
+	}
+
 
 }
