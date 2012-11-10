@@ -146,7 +146,7 @@ public class FileController {
 							if (fileDAO.version(parameters)) {
 								try {
 									if (fileVO.getPassword() != null
-											|| !fileVO.getPassword().isEmpty()) {
+											|| fileVO.getPassword()!="") {
 										String password = fileVO.getPassword();
 										EncryptDecrypt crypt = new EncryptDecrypt(
 												password);
