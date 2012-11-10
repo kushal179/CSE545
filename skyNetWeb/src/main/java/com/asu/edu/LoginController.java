@@ -90,6 +90,7 @@ public class LoginController {
 		logger.info("Welcome login! screen");
 		boolean isEnabled  = securityDAO.isCaptchaEnabled();
 		model.addAttribute("isEnabled", isEnabled);
+		securityDAO.setCaptchaEnabled(false);
 		System.out.println("At Login page:" + securityDAO.isLoggedIn());
 		return "login";
 	}
@@ -205,6 +206,7 @@ public class LoginController {
 		logger.info("Welcome loginfailed! screen");
 		boolean isEnabled  = securityDAO.isCaptchaEnabled();
 		model.addAttribute("isEnabled", isEnabled);
+		securityDAO.setCaptchaEnabled(false);
 		return "login";
 	}
 

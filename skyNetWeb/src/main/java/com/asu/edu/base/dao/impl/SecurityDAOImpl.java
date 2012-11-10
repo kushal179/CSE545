@@ -117,7 +117,28 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 		}
 		return false;
 	}
-
+boolean verifyLoginAttempts(String userName)
+{
+	calledFunction = GET_LOGIN_ATTEMPTS;
+	Object[] param = new Object[1];
+	param[0] = userName;
+	Integer loginAttempts = (Integer) this.getRowByCriteria(SQLConstants.LOGIN_ATTEMPTS,param);
+	if(loginAttempts != null)
+	{
+		if(loginAttempts >= 3)
+		{
+			//EnableCaptcha
+			setCaptchaEnabled(true);
+		}
+		Object[] updateParam = new Object[2];
+		updateParam[0] = ++loginAttempts;
+		updateParam[1] = userName;
+		String sql = SQLConstants.UPDATE_LOGIN_ATTEMPTS;
+		this.preparedStatementUpdate(sql, updateParam, true);
+		return false;
+	}
+	return true;
+}
 	@Override
 	public Authentication authenticate(Authentication auth)
 			throws AuthenticationException {
@@ -126,8 +147,8 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 		prepareParams[0] = auth.getName();
 		prepareParams[1] = passwordEncoder.encodePassword((String)auth.getCredentials(),(String)auth.getName());
 		UserVO userVO = (UserVO)this.getRowByCriteria(SQLConstants.USER_LOGIN, prepareParams);
-		
-		if(userVO!=null)
+		boolean isVerified = verifyLoginAttempts(auth.getName());
+		if(userVO!=null && isVerified)
 		{
 			if(userVO.getUserName().equals(auth.getPrincipal()))
 			{
@@ -143,6 +164,7 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 		}
 		else
 		{
+			/*
 			calledFunction = GET_LOGIN_ATTEMPTS;
 			Object[] param = new Object[1];
 			param[0] = auth.getName();
@@ -159,7 +181,8 @@ public class SecurityDAOImpl extends BaseDAO implements SecurityDAOImplInterface
 				updateParam[1] = auth.getName();
 				String sql = SQLConstants.UPDATE_LOGIN_ATTEMPTS;
 				this.preparedStatementUpdate(sql, updateParam, true);
-			}
+			}*/
+			
 		}
 		throw new BadCredentialsException("Username/Password does not match for ");
 	}
