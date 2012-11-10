@@ -71,7 +71,7 @@ public class LoginController {
 						return "redirect:/admin";
 					}
 					if(MasterCache.getRoleMap().get(userVO.getRoleId()).getDesc().equals(CommonConstants.ROLE_GUEST_USR)) {
-						return "redirect:/SharedToDocument?folderId=-1";
+						return "redirect:/SharedToYouDocument?folderId=-1";
 					} 
 					
 					return "redirect:/Dashboard?deptId=-1&folderId=-1";
