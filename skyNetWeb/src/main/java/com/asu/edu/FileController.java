@@ -206,7 +206,7 @@ public class FileController {
 		{
 			String password = request.getParameter("password");
 		}
-		if (auth.isAuthorize(CommonConstants.CHECKIN_OUT, session, param)) {
+		if (auth.isAuthorize(CommonConstants.DOWNLOAD, session, param)) {
 			FileVO fileVO = (FileVO) fileDAO.getFile(id);
 			if (fileVO != null) {
 				response.setContentType(fileVO.getContentType());

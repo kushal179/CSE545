@@ -68,6 +68,7 @@ body {
 							ArrayList<Integer> depts = ((UserVO) session.getAttribute("userVO"))
 									.getDepartments();
 							Map<Integer, DepartmentVO> deptMap = MasterCache.getDepartmentMap();
+							if(depts != null){
 							for (Integer departmentId : depts) {
 								String deptDesc = deptMap.get(departmentId).getDeptDesc();
 								request.setAttribute("departDesc", deptDesc);
@@ -76,6 +77,7 @@ body {
 						<li class="liClass"><a
 							href="Dashboard?deptId=${departId}&folderId=-1">${departDesc}</a></li>
 						<%
+							}
 							}
 						%>
 						<li class="nav-header">Shared Documents</li>

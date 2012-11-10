@@ -67,11 +67,11 @@ public class LoginController {
 				{
 					session.setAttribute(CommonConstants.USER, userVO);
 					
-					if(MasterCache.getRoleMap().get(userVO.getRoleId()).equals(CommonConstants.ROLE_ADMIN)) {
+					if(MasterCache.getRoleMap().get(userVO.getRoleId()).getDesc().equals(CommonConstants.ROLE_ADMIN)) {
 						return "redirect:/admin";
 					}
-					if(MasterCache.getRoleMap().get(userVO.getRoleId()).equals(CommonConstants.ROLE_GUEST_USR)) {
-						return "redirect:/SharedByDocument?folderId=-1";
+					if(MasterCache.getRoleMap().get(userVO.getRoleId()).getDesc().equals(CommonConstants.ROLE_GUEST_USR)) {
+						return "redirect:/SharedToDocument?folderId=-1";
 					} 
 					
 					return "redirect:/Dashboard?deptId=-1&folderId=-1";

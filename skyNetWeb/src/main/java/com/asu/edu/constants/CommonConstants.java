@@ -29,6 +29,7 @@ public interface CommonConstants {
 	public static final String REQ_PARAM_PARENTID = "parentId";
 	
 	public static final String C300 = "Updating file name should be same as original file name";
+	public static final String DOWNLOAD = "download";
 
 	static HashMap<String, String> ERROR_CODES = new HashMap<String, String>();
 
