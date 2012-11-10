@@ -12,7 +12,7 @@ public interface CommonConstants {
 	public static final String ROLE_CORPORATE_MGR = "ROLE_CORPORATE_MGR";
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 
-	public static final String LOG_FILES_PATH = "/tmp";
+	public static final String LOG_FILES_PATH = "/home/ubuntu/dockloud/outlogs";
 
 	public static final int ROLE_DEPARTMENT_MGR_ID = 4;
 	public static final int ROLE_REGULAR_EMP_ID = 3;

@@ -11,7 +11,7 @@
 	</appender>
 
 	<appender name="fileAppender" class="org.apache.log4j.RollingFileAppender">
-		<param name="file" value="/tmp/logfile.log" />
+		<param name="file" value="/home/ubuntu/dockloud/outlogs/logfile.txt" />
 		<param name="appendToFile" value="false" />
 		<param name="rollingStyle" value="Size" />
 		<param name="maxSizeRollBackups" value="-1" />
