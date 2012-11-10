@@ -148,7 +148,7 @@ boolean verifyLoginAttempts(String userName)
 		prepareParams[1] = passwordEncoder.encodePassword((String)auth.getCredentials(),(String)auth.getName());
 		UserVO userVO = (UserVO)this.getRowByCriteria(SQLConstants.USER_LOGIN, prepareParams);
 		boolean isVerified = verifyLoginAttempts(auth.getName());
-		if(userVO!=null && isVerified)
+		if(userVO!=null)
 		{
 			if(userVO.getUserName().equals(auth.getPrincipal()))
 			{
