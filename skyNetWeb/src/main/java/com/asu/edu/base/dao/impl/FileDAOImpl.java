@@ -34,6 +34,7 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 			fileVO.setOwnerId(rs.getInt("OWNER_ID"));
 			fileVO.setPath(rs.getString("PATH"));
 			fileVO.setType(rs.getString("TYPE"));
+			fileVO.setPassword(rs.getString("PASSWORD"));
 			return fileVO;
 		}
 		if (calledFunction == "getParentFilePath") {
@@ -86,8 +87,8 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 	}
 
 	public boolean saveFile(FileVO fileVO) {
-		Object[] param = new Object[8];
-		param = new Object[8];
+		Object[] param = new Object[9];
+		param = new Object[9];
 		param[0] = fileVO.getPath();
 		param[1] = fileVO.getOwnerId();
 		param[2] = fileVO.getDeptId();
@@ -96,6 +97,7 @@ public class FileDAOImpl extends BaseDAO implements FileDAOImplInterface {
 		param[5] = new java.sql.Timestamp(new java.util.Date().getTime());
 		param[6] = fileVO.getContentType();
 		param[7] = new java.sql.Timestamp(new java.util.Date().getTime());
+		param[8] = fileVO.getPassword();
 		String sql = SQLConstants.SAVE_FILE;
 		return preparedStatementUpdate(sql, param, true) > 0;
 

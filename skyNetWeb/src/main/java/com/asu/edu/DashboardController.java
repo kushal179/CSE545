@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.jasypt.util.binary.BasicBinaryEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,8 +71,6 @@ public class DashboardController {
 		UserVO user = (UserVO) session.getAttribute("userVO");
 		long parentId;
 		int departmentId;
-
-		BasicBinaryEncryptor b = new BasicBinaryEncryptor();
 		
 		if (user != null) {
 

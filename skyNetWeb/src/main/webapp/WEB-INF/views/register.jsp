@@ -1,5 +1,12 @@
+<%@page import="com.asu.edu.constants.CommonConstants"%>
 <html lang="en">
 <head>
+<%
+if(session.getAttribute(CommonConstants.USER)!=null)
+{
+	session.invalidate();
+}
+%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="captcha" uri="/WEB-INF/tlds/captcha.tld"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>

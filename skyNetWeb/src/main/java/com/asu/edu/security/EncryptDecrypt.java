@@ -28,6 +28,24 @@ public class EncryptDecrypt {
 		init(pass, salt, iterations);
 
 	}
+	
+	public EncryptDecrypt(String password) throws SecurityException {
+		java.security.Security
+				.addProvider(new com.sun.crypto.provider.SunJCE());
+		char[] pass = password.toCharArray();
+
+		byte[] salt = {
+
+		(byte) 0xa3, (byte) 0x21, (byte) 0x24, (byte) 0x2c,
+
+		(byte) 0xf2, (byte) 0xd2, (byte) 0x3e, (byte) 0x19 };
+
+		int iterations = 3;
+
+		init(pass, salt, iterations);
+
+	}
+
 
 	public void init(char[] pass, byte[] salt, int iterations)
 
@@ -113,6 +131,62 @@ public class EncryptDecrypt {
 		}
 
 	}
+	
+	public synchronized byte[] encryptBytes(byte[] bt)
+
+			throws SecurityException
+
+			{
+
+				try
+
+				{
+
+					byte[] utf8 = bt;
+
+					byte[] enc = encryptCipher.doFinal(utf8);
+
+					return enc;
+
+				}
+
+				catch (Exception e)
+
+				{
+
+					throw new SecurityException("Could not encrypt: " + e.getMessage());
+
+				}
+
+			}
+	public synchronized byte[] decryptBytes(byte[] bt)
+
+			throws SecurityException
+
+			{
+
+				try
+
+				{
+
+					byte[] dec = bt;
+
+					byte[] utf8 = decryptCipher.doFinal(dec);
+
+					return utf8;
+
+				}
+
+				catch (Exception e)
+
+				{
+					e.printStackTrace();
+					throw new SecurityException("Could not decrypt: " + e.getMessage());
+
+				}
+
+			}
+	
 
 	/**
 	 * 

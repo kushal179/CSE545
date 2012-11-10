@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -73,9 +74,20 @@ public class FileController {
 				fileVO.setPath(path);
 				File file = new File(path);
 				if (!file.exists()) {
-					FileOutputStream f = new FileOutputStream(file);
-					f.write(multipartFile.getBytes());
-					f.close();
+					if (request.getParameter("encrypt") != null) {
+						String password = (String) request
+								.getParameter("encrypt");
+						fileVO.setPassword(password);
+						EncryptDecrypt crypt = new EncryptDecrypt(password);
+						FileOutputStream f = new FileOutputStream(file);
+						f.write(crypt.encryptBytes(multipartFile.getBytes()));
+						f.close();
+					} else {
+						fileVO.setPassword("");
+						FileOutputStream f = new FileOutputStream(file);
+						f.write(multipartFile.getBytes());
+						f.close();
+					}
 					if (file.isFile()) {
 						if (!fileDAO.saveFile(fileVO)) {
 							file.delete();
@@ -133,10 +145,24 @@ public class FileController {
 							parameters[3] = userVO.getId();
 							if (fileDAO.version(parameters)) {
 								try {
-									FileOutputStream fos = new FileOutputStream(
-											f);
-									fos.write(multipartFile.getBytes());
-									fos.close();
+									if (fileVO.getPassword() != null
+											|| !fileVO.getPassword().isEmpty()) {
+										String password = fileVO.getPassword();
+										EncryptDecrypt crypt = new EncryptDecrypt(
+												password);
+										FileOutputStream fos = new FileOutputStream(
+												f);
+										fos.write(crypt
+												.encryptBytes(multipartFile
+														.getBytes()));
+										fos.close();
+									} else {
+										FileOutputStream fos = new FileOutputStream(
+												f);
+										fos.write(multipartFile.getBytes());
+										fos.close();
+									}
+
 								} catch (IOException e) {
 									e.printStackTrace();
 								}
@@ -146,11 +172,12 @@ public class FileController {
 							}
 
 						} else {
+							renameFile.delete();
 							return "redirect:/error-page?error=Version could not be created for file updation. Please try again";
 						}
 					} else
-						return "redirect:/Dashboard?deptId=" + dept_Id
-								+ "&folderId=-1&code=C300";
+						return "redirect:/error-page?error="
+								+ CommonConstants.C300;
 				} else
 					return "redirect:/error-page?error=Original does not exists";
 			}
@@ -202,35 +229,75 @@ public class FileController {
 		long id = Long.parseLong(util.decrypt(file_Id));
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put(CommonConstants.REQ_PARAM_FILE_ID, file_Id);
-		if(request.getParameter("password")!=null);
-		{
-			String password = request.getParameter("password");
-		}
+
 		if (auth.isAuthorize(CommonConstants.DOWNLOAD, session, param)) {
 			FileVO fileVO = (FileVO) fileDAO.getFile(id);
 			if (fileVO != null) {
 				response.setContentType(fileVO.getContentType());
 				response.setHeader("Content-Disposition",
 						"attachment;filename=" + fileVO.getFileName());
-				File file = new File(fileVO.getPath());
-				FileInputStream fileIn;
-				ServletOutputStream out;
-				try {
-					fileIn = new FileInputStream(file);
-					out = response.getOutputStream();
-					byte[] outputByte = new byte[2048];
-					while (fileIn.read(outputByte, 0, 2048) != -1) {
-						out.write(outputByte, 0, 2048);
-					}
+				if (fileVO.getPassword() != null || fileVO.getPassword() != "") {
+					if (request.getParameter("password") != null) {
+						String password = request.getParameter("password");
+						if (password.equals(fileVO.getPassword())) {
+							EncryptDecrypt crypt = new EncryptDecrypt(password);
+							File file = new File(fileVO.getPath());
+							FileInputStream fileIn;
+							ServletOutputStream out;
+							try {
+								fileIn = new FileInputStream(file);
+								byte fileContent[] = new byte[(int) file
+										.length()];
+								fileIn.read(fileContent);
+								out = response.getOutputStream();
+								out.write(crypt.decryptBytes(fileContent));
+								/*
+								 * byte[] outputByte = new byte[2048]; while
+								 * (fileIn.read(outputByte, 0, 2048) != -1) {
+								 * outputByte = crypt.decryptBytes(outputByte);
+								 * out.write(outputByte, 0, 2048); }
+								 */
 
-					fileIn.close();
-					out.flush();
-					out.close();
-				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
+								fileIn.close();
+								out.flush();
+								out.close();
+
+							} catch (FileNotFoundException e1) {
+								e1.printStackTrace();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						} else {
+							System.out.println("Password does not match");
+						}
+
+					} else {
+						System.out.println("File is password protected");
+					}
+				} else {
+
+					File file = new File(fileVO.getPath());
+					FileInputStream fileIn;
+					ServletOutputStream out;
+					try {
+						fileIn = new FileInputStream(file);
+						out = response.getOutputStream();
+						byte[] outputByte = new byte[2048];
+						while (fileIn.read(outputByte, 0, 2048) != -1) {
+							out.write(outputByte, 0, 2048);
+						}
+
+						fileIn.close();
+						out.flush();
+						out.close();
+
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
+
 			} else {
 				System.out.println("File does not exist");
 			}
@@ -258,23 +325,63 @@ public class FileController {
 						"attachment;filename=" + fileVO.getFileName());
 				String path = fileVO.getPath() + "_" + versionId;
 				File file = new File(path);
-				FileInputStream fileIn;
-				ServletOutputStream out;
-				try {
-					fileIn = new FileInputStream(file);
-					out = response.getOutputStream();
-					byte[] outputByte = new byte[2048];
-					while (fileIn.read(outputByte, 0, 2048) != -1) {
-						out.write(outputByte, 0, 2048);
-					}
+				if (fileVO.getPassword() != null || fileVO.getPassword() != "") {
+					if (request.getParameter("password") != null) {
+						String password = request.getParameter("password");
+						if (password.equals(fileVO.getPassword())) {
+							EncryptDecrypt crypt = new EncryptDecrypt(password);
+							FileInputStream fileIn;
+							ServletOutputStream out;
+							try {
+								fileIn = new FileInputStream(file);
+								byte fileContent[] = new byte[(int) file
+										.length()];
+								fileIn.read(fileContent);
+								out = response.getOutputStream();
+								out.write(crypt.decryptBytes(fileContent));
+								/*
+								 * byte[] outputByte = new byte[2048]; while
+								 * (fileIn.read(outputByte, 0, 2048) != -1) {
+								 * outputByte = crypt.decryptBytes(outputByte);
+								 * out.write(outputByte, 0, 2048); }
+								 */
 
-					fileIn.close();
-					out.flush();
-					out.close();
-				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
+								fileIn.close();
+								out.flush();
+								out.close();
+
+							} catch (FileNotFoundException e1) {
+								e1.printStackTrace();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						} else {
+							System.out.println("Password does not match");
+						}
+
+					} else {
+						System.out.println("File is password protected");
+					}
+				} else {
+					FileInputStream fileIn;
+					ServletOutputStream out;
+
+					try {
+						fileIn = new FileInputStream(file);
+						out = response.getOutputStream();
+						byte[] outputByte = new byte[2048];
+						while (fileIn.read(outputByte, 0, 2048) != -1) {
+							out.write(outputByte, 0, 2048);
+						}
+
+						fileIn.close();
+						out.flush();
+						out.close();
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 
 			} else {
@@ -420,9 +527,16 @@ public class FileController {
 		return "redirect:" + request.getHeader("Referer");
 	}
 
+	@ExceptionHandler(MaxUploadSizeExceededException.class)
+	public String handleEString(MaxUploadSizeExceededException ex,
+			HttpServletRequest request) {
+		return "redirect:/error-page?error=File Upload exceed more than 5mb";
+	}
+
 	@ExceptionHandler(Exception.class)
 	public String handleIOException(Exception ex, HttpServletRequest request) {
-		logger.debug(ex.getMessage());
+		ex.printStackTrace();
 		return "redirect:/error-page?error=Invalid state reached";
 	}
+
 }

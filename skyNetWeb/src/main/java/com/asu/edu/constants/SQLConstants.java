@@ -33,7 +33,7 @@ public interface SQLConstants {
 
 	public static final String GET_FILE_PATH = "select path from files where file_id=?";
 
-	public static final String SAVE_FILE = "insert into files(path,owner_id,dept_id,parent_id,file_name,creation_time,type,mod_time) values(?,?,?,?,?,?,?,?)";
+	public static final String SAVE_FILE = "insert into files(path,owner_id,dept_id,parent_id,file_name,creation_time,type,mod_time,password) values(?,?,?,?,?,?,?,?,?)";
 	public static final String SAVE_FOLDER = "insert into files(path,owner_id,dept_id,parent_id,file_name,creation_time,mod_time,is_dir) values(?,?,?,?,?,?,?,1)";
 	public static final String DEPT_BY_PARENT = "select dept_id from files where file_id=?";
 	public static final String LOCK_FILE = "update files f set f.lock = 1,f.locked_by=? where file_id=?";
