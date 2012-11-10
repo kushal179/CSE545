@@ -182,13 +182,13 @@ $("#upload-enable-encryption").change(function() {
 	}
 });
 
-$("#update-enable-encryption").change(function() {
+/*$("#update-enable-encryption").change(function() {
 	if ($('#update-enable-encryption').is(':checked')) {
 		$('#update-password-field').removeAttr('disabled');
 	} else {
 		$('#update-password-field').attr('disabled', true);
 	}
-});
+});*/
 
 function ValidateFile(sFileName) {
 

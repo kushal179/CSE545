@@ -66,11 +66,15 @@ public class LoginController {
 				if (userVO.getIsApproved() == 1)
 				{
 					session.setAttribute(CommonConstants.USER, userVO);
-					if(!MasterCache.getRoleMap().get(userVO.getRoleId()).equals(CommonConstants.ROLE_GUEST_USR))
-						return "redirect:/Dashboard?deptId=-1&folderId=-1";
-					else{
-						return "redirect:/SharedByDocument?folderId=-1";
+					
+					if(MasterCache.getRoleMap().get(userVO.getRoleId()).equals(CommonConstants.ROLE_ADMIN)) {
+						return "redirect:/admin";
 					}
+					if(MasterCache.getRoleMap().get(userVO.getRoleId()).equals(CommonConstants.ROLE_GUEST_USR)) {
+						return "redirect:/SharedByDocument?folderId=-1";
+					} 
+					
+					return "redirect:/Dashboard?deptId=-1&folderId=-1";
 				}
 				else{
 					return "redirect:/temp";

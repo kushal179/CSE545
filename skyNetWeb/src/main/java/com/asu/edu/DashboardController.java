@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.jasypt.util.binary.BasicBinaryEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,11 +68,13 @@ public class DashboardController {
 		logger.info("department Id = " + deptId);
 		logger.info("folder Id = " + folderId);
 		logger.info("Dashboard screen");
-
+		
 		UserVO user = (UserVO) session.getAttribute("userVO");
 		long parentId;
 		int departmentId;
 
+		BasicBinaryEncryptor b = new BasicBinaryEncryptor();
+		
 		if (user != null) {
 
 			if (user.getRoleId() == ROLE_GUEST_USER) {
@@ -131,7 +134,6 @@ public class DashboardController {
 	private void updateHyperlinks(ArrayList<FileVO> files) {
 
 		for (FileVO fileVO : files) {
-			byte[] encodedBytes = null;
 
 			String hashedId;
 			try {
@@ -145,13 +147,9 @@ public class DashboardController {
 
 			String hashedParentId;
 			try {
-				hashedParentId = URLEncoder
-						.encode(encryptDecrypt.encrypt(String.valueOf(fileVO
-								.getParentId())), "UTF-8");
+				hashedParentId = encryptDecrypt.encrypt(String.valueOf(fileVO
+								.getParentId()));
 				fileVO.setHashedParentId(hashedParentId);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (SecurityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

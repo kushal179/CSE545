@@ -81,8 +81,7 @@ public class SharedByDocumentsController {
 			if (folderId.equals("-1")) {
 				parentId = Long.parseLong(folderId);
 			} else {
-				byte[] decodedBytes = Base64.decode(folderId.getBytes());
-				parentId = Long.valueOf(new String(decodedBytes));
+				parentId = Long.valueOf(encryptDecrypt.decrypt(folderId));
 			}
 
 			ArrayList<FileVO> files = null;
@@ -118,13 +117,9 @@ public class SharedByDocumentsController {
 
 			String hashedParentId;
 			try {
-				hashedParentId = URLEncoder
-						.encode(encryptDecrypt.encrypt(String.valueOf(fileVO
-								.getParentId())), "UTF-8");
+				hashedParentId = encryptDecrypt.encrypt(String.valueOf(fileVO
+						.getParentId()));
 				fileVO.setHashedParentId(hashedParentId);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (SecurityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -132,7 +127,7 @@ public class SharedByDocumentsController {
 
 			if (fileVO.isDir())
 				try {
-					fileVO.setHyperlink("SharedByYouDocuments?deptId="
+					fileVO.setHyperlink("SharedToYouDocuments?deptId="
 							+ fileVO.getDeptId() + "&folderId="
 							+ URLEncoder.encode(fileVO.getHashedId(), "UTF-8"));
 				} catch (UnsupportedEncodingException e) {
@@ -146,11 +141,11 @@ public class SharedByDocumentsController {
 	}
 
 	@ExceptionHandler(Exception.class)
-    public String handleIOException(Exception ex, HttpServletRequest request) {
+	public String handleIOException(Exception ex, HttpServletRequest request) {
 
-            System.out.println("in exceptopn handler");
-            return "redirect:/error-page?error=Invalid state reached";
-    }
+		System.out.println("in exceptopn handler");
+		return "redirect:/error-page?error=Invalid state reached";
+	}
 
 	@RequestMapping(value = "/unshare", method = RequestMethod.POST)
 	public String unshareItem(@RequestParam("fileid") String fileid,
@@ -164,8 +159,7 @@ public class SharedByDocumentsController {
 			boolean unshareReult = fileDAO.unshareItem(fileid,
 					((UserVO) (session.getAttribute(CommonConstants.USER)))
 							.getId(), Long.parseLong(userIdTo));
-		}
-		else {
+		} else {
 			return "redirect:/error-page?error=File already locked";
 		}
 

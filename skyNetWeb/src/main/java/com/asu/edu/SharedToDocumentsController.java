@@ -99,13 +99,9 @@ public class SharedToDocumentsController {
 
 			String hashedParentId;
 			try {
-				hashedParentId = URLEncoder
-						.encode(encryptDecrypt.encrypt(String.valueOf(fileVO
-								.getParentId())), "UTF-8");
+				hashedParentId = encryptDecrypt.encrypt(String.valueOf(fileVO
+						.getParentId()));
 				fileVO.setHashedParentId(hashedParentId);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (SecurityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -127,10 +123,10 @@ public class SharedToDocumentsController {
 	}
 
 	@ExceptionHandler(Exception.class)
-    public String handleIOException(Exception ex, HttpServletRequest request) {
+	public String handleIOException(Exception ex, HttpServletRequest request) {
 
-            System.out.println("in exceptopn handler");
-            return "redirect:/error-page?error=Invalid state reached";
-    }
+		System.out.println("in exceptopn handler");
+		return "redirect:/error-page?error=Invalid state reached";
+	}
 
 }
