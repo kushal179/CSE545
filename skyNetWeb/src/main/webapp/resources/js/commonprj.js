@@ -155,7 +155,7 @@ function modifyCheckboxSelected() {
 			count++;
 		}
 	}
-	if (count == 0 && ($("#role").val() == 2)) {
+	if (count == 0 && (($("#role").val() == 2) || ($("#role").val() == 1))) {
 		return true;
 		
 	} else if (count == 0) {
@@ -164,7 +164,7 @@ function modifyCheckboxSelected() {
 		$("#atleastOneSelection").show();
 		return false;
 
-	}else if(($("#role").val() == 2) && count>0){
+	}else if((($("#role").val() == 2) || ($("#role").val() == 1)) && count>0){
 		$("#multipleSelectionError").hide();
 		$("#atleastOneSelection").hide();
 		$("#guestDeptSelError").show();

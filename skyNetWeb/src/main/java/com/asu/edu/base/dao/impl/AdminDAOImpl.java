@@ -65,7 +65,7 @@ public class AdminDAOImpl extends BaseDAO implements AdminDAOImplInterface {
 				updateWithDepts(userVo);
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -74,21 +74,18 @@ public class AdminDAOImpl extends BaseDAO implements AdminDAOImplInterface {
 	public ArrayList<LogFilesVO> getLogFiles() {
 		calledFunction = "getLogFiles";
 
-/*		Object[] param = new Object[1];
-		param[0] = 1;
-		String sql = SQLConstants.LOG_FILES;
-		ArrayList<LogFilesVO> result = (ArrayList<LogFilesVO>) this
-				.getListByCriteria(sql, param);
-		return result;
-*/
+		/*
+		 * Object[] param = new Object[1]; param[0] = 1; String sql =
+		 * SQLConstants.LOG_FILES; ArrayList<LogFilesVO> result =
+		 * (ArrayList<LogFilesVO>) this .getListByCriteria(sql, param); return
+		 * result;
+		 */
 		String path = CommonConstants.LOG_FILES_PATH;
 		ArrayList<LogFilesVO> files = new ArrayList<LogFilesVO>();
 		File folder = new File(path);
-		if(folder != null)
-		{
+		if (folder != null) {
 			File[] listOfFiles = folder.listFiles();
-			if(listOfFiles != null)
-			{
+			if (listOfFiles != null) {
 				for (int i = 0; i < listOfFiles.length; i++) {
 					if (listOfFiles[i].isFile()) {
 						LogFilesVO logFileVO = new LogFilesVO();
@@ -154,22 +151,24 @@ public class AdminDAOImpl extends BaseDAO implements AdminDAOImplInterface {
 
 		// modify depts for this user
 		ArrayList<Integer> depts = user.getDeptIds();
-		ArrayList<Integer> deptsArray = new ArrayList<Integer>();
-		for (int i = 0; i < depts.size(); i++) {
-			if (depts.get(i) > 0)
-				deptsArray.add(depts.get(i));
-		}
+		if (depts != null) {
+			ArrayList<Integer> deptsArray = new ArrayList<Integer>();
+			for (int i = 0; i < depts.size(); i++) {
+				if (depts.get(i) > 0)
+					deptsArray.add(depts.get(i));
+			}
 
-		param = new Object[deptsArray.size() * 2];
-		sql = SQLConstants.ADD_DEPT_FOR_USER;
-		for (int i = 0; i < deptsArray.size(); i++) {
-			sql += "(?,?)";
-			if (i < deptsArray.size() - 1)
-				sql += " , ";
-			param[2 * i] = user.getUserId();
-			param[2 * i + 1] = deptsArray.get(i);
+			param = new Object[deptsArray.size() * 2];
+			sql = SQLConstants.ADD_DEPT_FOR_USER;
+			for (int i = 0; i < deptsArray.size(); i++) {
+				sql += "(?,?)";
+				if (i < deptsArray.size() - 1)
+					sql += " , ";
+				param[2 * i] = user.getUserId();
+				param[2 * i + 1] = deptsArray.get(i);
+			}
+			this.preparedStatementUpdate(sql, param, true);
 		}
-		this.preparedStatementUpdate(sql, param, true);
 	}
 
 	@Override
@@ -238,7 +237,6 @@ public class AdminDAOImpl extends BaseDAO implements AdminDAOImplInterface {
 		param[1] = userId;
 		String sql = SQLConstants.DEACTIVATE_USER;
 		this.preparedStatementUpdate(sql, param, true);
-		
-		
+
 	}
 }

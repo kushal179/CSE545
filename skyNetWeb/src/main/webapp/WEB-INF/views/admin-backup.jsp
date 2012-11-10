@@ -23,8 +23,6 @@ body {
 <script type="text/javascript"
 	src="<c:url value="/resources/jquery/jquery.js" />"></script>
 
-<script type="text/javascript"
-	src="<c:url value="/resources/js/commonprj.js" />"></script>
 </head>
 
 <body>
@@ -66,40 +64,18 @@ body {
 								Employees</a></li>
 						<li id="guestUsr"><a href="admin-guest">Guest Users</a></li>
 						<li class="nav-header">Operations</li>
-						<li class="active"><a href="admin-logs">System Log</a></li>
-						<li><a href="admin-backup">Back-up</a></li>
+						<li><a href="admin-logs">System Log</a></li>
+						<li class="active"><a href="admin-backup">Back-up</a></li>
 					</ul>
 				</div>
 			</div>
 
 			<div class="span9">
 				<div class="hero-unittitle">
-					<h3>System Logs</h3>
+					<h3>Backup Status</h3>
 				</div>
 
-				<div class="hero-unitops" id="actionbar">Download Files</div>
-				<div class="row-fluid">
-					<table class="table table-hover" id="contentsTable">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>PathName</th>
-								<th>ModifiedDate</th>
-							</tr>
-						</thead>
-						<tbody id="contentsTableBody">
-							<c:set var="count" value="0" scope="page" />
-							<c:forEach var="item" items="${logfiles}">
-								<tr>
-									<c:set var="count" value="${count + 1}" scope="page" />
-									<td>${count}</td>
-									<td><a href="${item.hyperLink}">${item.pathName}</a></td>
-									<td>${item.modifiedDate}</td>
-								</tr>
-							</c:forEach>
-						</tbody>
-					</table>
-				</div>
+				<div class="hero-unitops" id="actionbar">Backup created</div>
 			</div>
 		</div>
 		<br />
